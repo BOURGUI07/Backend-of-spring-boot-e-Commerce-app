@@ -30,44 +30,31 @@ import lombok.NoArgsConstructor;
  * @author hp
  */
 @Entity
-@Table(name="product")
+@Table(name="orders")
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product extends BaseEntity{
+public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Integer id;
     
-    @Column(name="product_name",nullable=false,unique=true,length=100)
-    private String name;
-    
-    @Column(name="description",length=500)
-    private String desc;
-    
-    @Column(name="SKU", nullable=false, unique=true, length=20)
-    private String SKU;
-    
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name="category_id")
-    private Category category;
+    @JoinColumn(name="user_id",nullable=false)
+    private User user;
+    
+    @Column(name="total")
+    private Double total;
     
     @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="inventory_id")
-    private Inventory inventory;
+    @JoinColumn(name="paymentDetail_id")
+    private PaymentDetail paymentDetail;
     
-    @Column(name="price")
-    private Double price;
     
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JsonBackReference
-    @JoinColumn(name="discount_id")
-    private Discount dicount;
-    
-    @OneToMany(mappedBy="product", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="order",cascade=CascadeType.ALL)
     @JsonManagedReference
-    private List<OrderItem> orderItems=new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
 }
