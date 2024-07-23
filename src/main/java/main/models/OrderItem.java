@@ -5,8 +5,6 @@
 package main.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,11 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,44 +24,28 @@ import lombok.NoArgsConstructor;
  * @author hp
  */
 @Entity
-@Table(name="product")
+@Table(name="order_item")
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product extends BaseEntity{
+public class OrderItem extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Integer id;
     
-    @Column(name="product_name",nullable=false,unique=true,length=100)
-    private String name;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name="order_id")
+    private Order order;
     
-    @Column(name="description",length=500)
-    private String desc;
-    
-    @Column(name="SKU", nullable=false, unique=true, length=20)
-    private String SKU;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name="category_id")
-    private Category category;
+    @JoinColumn(name="product_id")
+    private Product product;
     
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="inventory_id")
-    private Inventory inventory;
-    
-    @Column(name="price")
-    private Double price;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JsonBackReference
-    @JoinColumn(name="discount_id")
-    private Discount dicount;
-    
-    @OneToMany(mappedBy="product", cascade=CascadeType.ALL)
-    @JsonManagedReference
-    private List<OrderItem> orderItems=new ArrayList<>();
+    @Column(name="quantity")
+    private Integer quantity;
 }
