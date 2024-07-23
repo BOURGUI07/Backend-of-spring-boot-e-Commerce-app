@@ -24,7 +24,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 public class BaseEntity implements Serializable{
     @CreatedDate
-    @Column(name="createdAt", nullable=false)
+    @Column(name="createdAt", nullable=false,updatable=false)
     @JsonIgnore
     private Instant createdAt;
     
