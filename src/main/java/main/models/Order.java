@@ -54,7 +54,12 @@ public class Order extends BaseEntity{
     private PaymentDetail paymentDetail;
     
     
-    @OneToMany(mappedBy="order",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="order",cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();
+    
+    public void addOrderItem(OrderItem orderItem){
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
 }

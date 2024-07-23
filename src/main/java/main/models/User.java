@@ -5,6 +5,7 @@
 package main.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,10 +39,10 @@ public class User extends BaseEntity{
     @Column(name="id")
     private Integer id;
     
-    @Column(name="username")
+    @Column(name="username",unique=true,nullable=false)
     private String username;
     
-    @Column(name="password")
+    @Column(name="password",unique=true,nullable=false)
     private String password;
     
     @Column(name="firstname")
@@ -49,6 +50,9 @@ public class User extends BaseEntity{
     
     @Column(name="lastname")
     private String lastname;
+    
+    @Column(name="email")
+    private String email;
     
     @Column(name="phone")
     private String phone;
@@ -59,7 +63,12 @@ public class User extends BaseEntity{
     private Role role;
     
     
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL,orphanRemoval=true)
     @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
+    
+    public void removeOrder(Order order){
+        orders.add(order);
+        order.setUser(this);
+    }
 }
