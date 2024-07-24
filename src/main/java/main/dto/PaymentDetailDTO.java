@@ -19,7 +19,7 @@ public record PaymentDetailDTO(
         @NotNull
         Integer orderId,
         @Positive
-        Integer amount,
+        Double amount,
         @NotNull
         PaymentProvider provider,
         @NotNull
