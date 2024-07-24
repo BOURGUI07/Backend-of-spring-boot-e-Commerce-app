@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author hp
  */
-public record Category(
+public record CategoryDTO(
         @NotNull
         Integer id,
         @NotBlank
