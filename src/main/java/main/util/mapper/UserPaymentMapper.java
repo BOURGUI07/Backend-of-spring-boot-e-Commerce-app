@@ -7,7 +7,6 @@ package main.util.mapper;
 import lombok.RequiredArgsConstructor;
 import main.dto.UserPaymentDTO;
 import main.models.UserPayment;
-import main.repo.UserPaymentRepo;
 import main.repo.UserRepo;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserPaymentMapper {
-    private final UserPaymentRepo repo;
     private final UserRepo userRepo;
     
     

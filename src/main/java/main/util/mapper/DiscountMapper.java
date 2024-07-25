@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class DiscountMapper {
-    private final DiscountRepo repo;
     private final ProductRepo productRepo;
     
     public Discount toEntity(DiscountDTO x){

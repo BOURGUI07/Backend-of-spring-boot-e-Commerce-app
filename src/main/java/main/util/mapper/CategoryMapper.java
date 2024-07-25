@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryMapper {
-    private final CategoryRepo repo;
     private final ProductRepo productRepo;
     
     public Category toEntity(CategoryDTO x){

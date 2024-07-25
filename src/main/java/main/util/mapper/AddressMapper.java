@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AddressMapper {
-    private final AddressRepo repo;
     private final UserRepo userRepo;
     
     public UserAddress toEntity(UserAddressDTO x){

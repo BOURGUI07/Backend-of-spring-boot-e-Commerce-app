@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import main.dto.UserDTO;
 import main.models.User;
 import main.repo.OrderRepo;
-import main.repo.UserRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserMapper {
-    private final UserRepo repo;
     private final OrderRepo orderRepo;
     
     public User toEntity(UserDTO x){

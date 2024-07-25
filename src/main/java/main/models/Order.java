@@ -18,6 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -46,20 +47,27 @@ public class Order extends BaseEntity{
     @JoinColumn(name="user_id",nullable=false)
     private User user;
     
-    @Column(name="total")
-    private Double total;
-    
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="paymentDetail_id")
     private PaymentDetail paymentDetail;
-    
     
     @OneToMany(mappedBy="order",cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();
     
+    @Transient
+    private Double total;
+    
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
         orderItem.setOrder(this);
+        recalculateTotal();
+    }
+    
+    public void recalculateTotal() {
+        this.total = orderItems.stream()
+                               .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                               .sum();
     }
 }
+
