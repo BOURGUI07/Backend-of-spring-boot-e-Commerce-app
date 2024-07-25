@@ -64,10 +64,12 @@ public class Order extends BaseEntity{
         recalculateTotal();
     }
     
-    public void recalculateTotal() {
+    private void recalculateTotal() {
         this.total = orderItems.stream()
-                               .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                               .mapToDouble(item -> item.getProduct().discountedPrice() * item.getQuantity())
                                .sum();
     }
+    
+    
 }
 

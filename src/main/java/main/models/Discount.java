@@ -41,7 +41,7 @@ public class Discount extends BaseEntity{
     @Column(name="description", length=500)
     private String desc;
     
-    @Column(name="dicount_percent")
+    @Column(name="discount_percent")
     private double percent;
     
     @Column(name="active")

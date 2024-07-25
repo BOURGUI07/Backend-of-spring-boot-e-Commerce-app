@@ -63,7 +63,7 @@ public class UserShoppingSession extends BaseEntity{
     
     private void recalculateTotal() {
         this.total = cartItems.stream()
-                               .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                               .mapToDouble(item -> item.getProduct().discountedPrice() * item.getQuantity())
                                .sum();
     }
 }
