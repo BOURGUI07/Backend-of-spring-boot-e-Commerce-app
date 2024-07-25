@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
+import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
@@ -32,26 +33,26 @@ public class OrderService {
     private final PaymentDetailRepo paymentRepo;
     private final OrderMapper mapper;
     
-    public Page<OrderDTO> findAll(int page, int size){
+    public Page<OrderResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page, size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
     
-    public OrderDTO findById(Integer id){
+    public OrderResponseDTO findById(Integer id){
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> 
             new EntityNotFoundException("Order with id: " + id + " isn't found" ));
     }
     
     
     @Transactional
-    public OrderDTO create(OrderDTO x){
+    public OrderResponseDTO create(OrderDTO x){
         var o = mapper.toEntity(x);
         var saved = repo.save(o);
         return mapper.toDTO(saved);
     }
     
     @Transactional
-    public OrderDTO update(Integer id,OrderDTO x){
+    public OrderResponseDTO update(Integer id,OrderDTO x){
         var o = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Order with id: " + id + " isn't found" ));
         var list = x.orderItemIds();
@@ -70,7 +71,7 @@ public class OrderService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
-    public List<OrderDTO> findOrdersByUser(Integer id){
+    public List<OrderResponseDTO> findOrdersByUser(Integer id){
         return repo.findByUserId(id).stream().map(mapper::toDTO).collect(Collectors.toList());
     }
 
