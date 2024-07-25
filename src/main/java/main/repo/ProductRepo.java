@@ -6,6 +6,8 @@ package main.repo;
 
 import java.util.List;
 import main.models.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +18,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepo extends JpaRepository<Product,Integer> {
     List<Product> findByCategoryId(Integer id);
+    @Override
+    Page<Product> findAll(Pageable pageable);
 }
