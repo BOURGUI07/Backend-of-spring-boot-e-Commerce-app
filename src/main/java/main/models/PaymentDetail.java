@@ -41,7 +41,7 @@ public class PaymentDetail extends BaseEntity{
     private Order order;
     
     @Column(name="amount",nullable=false)
-    private Double amount;
+    private final Double amount = order.getTotal();
     
     @Enumerated(EnumType.STRING)
     @Column(name="payment_provider",nullable=false)

@@ -6,6 +6,7 @@ package main.util.mapper;
 
 import lombok.RequiredArgsConstructor;
 import main.dto.PaymentDetailDTO;
+import main.dto.PaymentDetailResponseDTO;
 import main.models.PaymentDetail;
 import main.repo.OrderRepo;
 import org.springframework.stereotype.Service;
@@ -21,16 +22,15 @@ public class PaymentDetailMapper {
     
     public PaymentDetail toEntity(PaymentDetailDTO x){
         var d = new PaymentDetail();
-        d.setAmount(x.amount());
         d.setPaymentProvider(x.provider());
         d.setPaymentStatus(x.status());
         orepo.findById(x.orderId()).ifPresent(d::setOrder);
         return d;
     }
     
-    public PaymentDetailDTO toDTO(PaymentDetail d){
+    public PaymentDetailResponseDTO toDTO(PaymentDetail d){
         var order = d.getOrder();
-        return order!=null ? new PaymentDetailDTO(d.getId(),order.getId(),d.getAmount(),
+        return order!=null ? new PaymentDetailResponseDTO(d.getId(),order.getId(),d.getAmount(),
         d.getPaymentProvider(),d.getPaymentStatus()):null;
     }
 }
