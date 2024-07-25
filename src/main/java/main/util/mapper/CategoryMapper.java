@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
 import main.models.Category;
-import main.repo.CategoryRepo;
 import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
 

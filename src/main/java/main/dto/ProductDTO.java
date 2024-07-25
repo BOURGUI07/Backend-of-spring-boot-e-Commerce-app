@@ -27,11 +27,9 @@ public record ProductDTO(
         String sku,
         @Positive(message="Product price must be positive")
         Double price,
-        @NotNull
         Integer categoryId,
         @NotNull
         Integer inventoryId,
-        @NotNull
         Integer discountId,
         List<Integer> orderItemsIds
         ) {
