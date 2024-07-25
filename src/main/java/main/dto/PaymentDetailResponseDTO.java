@@ -5,6 +5,7 @@
 package main.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import main.util.PaymentProvider;
 import main.util.PaymentStatus;
 
@@ -12,11 +13,13 @@ import main.util.PaymentStatus;
  *
  * @author hp
  */
-public record PaymentDetailDTO(
+public record PaymentDetailResponseDTO(
         @NotNull
         Integer id,
         @NotNull
         Integer orderId,
+        @Positive
+        Double amount,
         @NotNull
         PaymentProvider provider,
         @NotNull
