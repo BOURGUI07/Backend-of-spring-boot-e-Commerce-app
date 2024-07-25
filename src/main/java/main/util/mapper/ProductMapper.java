@@ -28,10 +28,14 @@ public class ProductMapper {
     
     public Product toEntity(ProductDTO x){
         var p = new Product();
-        var category = categoryRepo.findById(x.categoryId());
-        category.ifPresent(p::setCategory);
-        var discount = discountRepo.findById(x.discountId());
-        discount.ifPresent(p::setDiscount);
+        if(x.categoryId()!=null){
+            var category = categoryRepo.findById(x.categoryId());
+            category.ifPresent(p::setCategory);
+        }
+        if(x.discountId()!=null){
+            var discount = discountRepo.findById(x.discountId());
+            discount.ifPresent(p::setDiscount);
+        }
         var inventory = inventoryRepo.findById(x.inventoryId());
         inventory.ifPresent(p::setInventory);
         var list = x.orderItemsIds();

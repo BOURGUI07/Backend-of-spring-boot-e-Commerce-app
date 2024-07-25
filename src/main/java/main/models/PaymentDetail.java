@@ -41,7 +41,7 @@ public class PaymentDetail extends BaseEntity{
     private Order order;
     
     @Column(name="amount",nullable=false)
-    private final Double amount = order.getTotal();
+    private Double amount;
     
     @Enumerated(EnumType.STRING)
     @Column(name="payment_provider",nullable=false)
@@ -50,4 +50,10 @@ public class PaymentDetail extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name="payment_status",nullable=false)
     private PaymentStatus paymentStatus;
+    
+    public void setOrder(Order order){
+        if(order!=null){
+            this.amount=order.getTotal();
+        }
+    }
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import main.dto.DiscountDTO;
 import main.models.Discount;
-import main.repo.DiscountRepo;
 import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
 

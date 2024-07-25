@@ -6,7 +6,8 @@ package main.util.mapper;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import main.dto.UserDTO;
+import main.dto.UserRegistrationDTO;
+import main.dto.UserResponseDTO;
 import main.models.User;
 import main.repo.OrderRepo;
 import org.springframework.stereotype.Service;
@@ -20,33 +21,24 @@ import org.springframework.stereotype.Service;
 public class UserMapper {
     private final OrderRepo orderRepo;
     
-    public User toEntity(UserDTO x){
+    public User toEntity(UserRegistrationDTO x){
         var u = new User();
-        u.setEmail(x.getEmail());
-        u.setFirstname(x.getFirstname());
-        u.setLastname(x.getLastname());
-        u.setPassword(x.getPassword());
-        u.setUsername(x.getUsername());
-        u.setPhone(x.getPhone());
-        u.setRole(x.getRole());
-        var orderList = x.getOrderIds();
+        u.setEmail(x.email());
+        u.setFirstname(x.firstname());
+        u.setLastname(x.lastname());
+        u.setPassword(x.password());
+        u.setUsername(x.username());
+        u.setPhone(x.phone());
+        u.setRole(x.role());
+        var orderList = x.orderIds();
         if(orderList!=null){
             u.setOrders(orderRepo.findAllById(orderList));
         }
         return u;
     }
     
-    public UserDTO toDTO(User u){
-        var x = new UserDTO();
-        x.setId(u.getId());
-        x.setEmail(u.getEmail());
-        x.setFirstname(u.getFirstname());
-        x.setLastname(u.getLastname());
-        x.setUsername(u.getUsername());
-        x.setPhone(u.getPhone());
-        x.setRole(u.getRole());
+    public UserResponseDTO toDTO(User u){
         var list = u.getOrders().stream().map(o -> o.getId()).collect(Collectors.toList());
-        x.setOrderIds(list);
-        return x;
+        return new UserResponseDTO(u.getId(),u.getUsername(),u.getFirstname(),u.getLastname(),u.getEmail(),u.getPhone(),u.getRole(),list);
     }
 }

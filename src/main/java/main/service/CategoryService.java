@@ -60,6 +60,13 @@ public class CategoryService {
     
     @Transactional
     public void delete(Integer id){
-        repo.findById(id).ifPresent(repo::delete);
+        var opC = repo.findById(id);
+        if(opC.isPresent()){
+            var c = opC.get();
+            var list = c.getProducts();
+            list.forEach(c::removeProduct);
+            prepo.saveAll(list);
+            repo.delete(c);
+        }
     }
 }

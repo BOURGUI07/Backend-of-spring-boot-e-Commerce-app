@@ -57,9 +57,13 @@ public class ProductService {
     public ProductDTO update(Integer id, ProductDTO x){
         var product = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Product with id " + id + " isn't found"));
-        categoryRepo.findById(x.categoryId()).ifPresent(product::setCategory);
+        if(x.categoryId()!=null){
+            categoryRepo.findById(x.categoryId()).ifPresent(product::setCategory);
+        }
+        if(x.discountId()!=null){
+            discountRepo.findById(x.discountId()).ifPresent(product::setDiscount);
+        }
         invRepo.findById(x.inventoryId()).ifPresent(product::setInventory);
-        discountRepo.findById(x.discountId()).ifPresent(product::setDiscount);
         product.setDesc(x.desc());
         product.setName(x.name());
         product.setSku(x.sku());
