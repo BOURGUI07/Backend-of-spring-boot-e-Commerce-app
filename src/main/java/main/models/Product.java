@@ -75,4 +75,9 @@ public class Product extends BaseEntity{
         orderItems.add(orderItem);
         orderItem.setProduct(this);
     }
+    
+    public Double discountedPrice(){
+        Double actualPrice = (price!=null) ? price :0.0;
+        return (discount!=null && discount.isActive())? actualPrice*(1-discount.getPercent()):actualPrice;
+    }
 }

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderItemDTO;
 import main.exception.EntityNotFoundException;
-import main.models.OrderItem;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.ProductRepo;
