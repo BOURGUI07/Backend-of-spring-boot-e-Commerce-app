@@ -50,4 +50,9 @@ public class Discount extends BaseEntity{
     @OneToMany(mappedBy="discount")
     @JsonManagedReference
     private List<Product> products=new ArrayList<>();
+    
+    public void removeProduct(Product p){
+        products.remove(p);
+        p.setDiscount(null);
+    }
 }
