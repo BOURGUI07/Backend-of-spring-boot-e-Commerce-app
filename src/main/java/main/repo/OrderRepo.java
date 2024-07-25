@@ -6,6 +6,8 @@ package main.repo;
 
 import java.util.List;
 import main.models.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +19,6 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepo extends JpaRepository<Order,Integer>{
     List<Order> findByTotalBetween(Double minTotal,Double maxTotal);
     List<Order> findByUserId(Integer id);
+    @Override
+    Page<Order> findAll(Pageable pageable);
 }
