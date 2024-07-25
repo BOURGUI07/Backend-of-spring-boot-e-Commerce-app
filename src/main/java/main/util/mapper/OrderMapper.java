@@ -7,6 +7,7 @@ package main.util.mapper;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
+import main.dto.OrderResponseDTO;
 import main.models.Order;
 import main.repo.OrderItemRepo;
 import main.repo.PaymentDetailRepo;
@@ -36,12 +37,12 @@ public class OrderMapper {
         return o;
     }
     
-    public OrderDTO toDTO(Order o){
+    public OrderResponseDTO toDTO(Order o){
         var list = o.getOrderItems().stream().map(x -> x.getId()).collect(Collectors.toList());
         var user = o.getUser();
         var payment = o.getPaymentDetail();
         return (user != null && payment != null) ? 
-                new OrderDTO(o.getId(), user.getId(), o.getTotal(), payment.getId(), list) : null;
+                new OrderResponseDTO(o.getId(), user.getId(), o.getTotal(), payment.getId(), list) : null;
     }
 }
 

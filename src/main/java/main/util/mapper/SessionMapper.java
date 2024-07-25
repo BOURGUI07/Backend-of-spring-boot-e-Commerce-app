@@ -6,6 +6,7 @@ package main.util.mapper;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.models.UserShoppingSession;
 import main.repo.CartItemRepo;
@@ -22,19 +23,19 @@ public class SessionMapper {
     private final UserRepo urepo;
     private final CartItemRepo crepo;
     
-    public UserShoppingSessionDTO toDTO(UserShoppingSession s){
+    public SessionResponseDTO toDTO(UserShoppingSession s){
         var list = s.getCartItems().stream().map(x -> x.getId()).collect(Collectors.toList());
         var user = s.getUser();
-        return user!=null ? new UserShoppingSessionDTO(s.getId(),user.getId(),s.getTotal(),list):null;
+        return user!=null ? new SessionResponseDTO(s.getId(),user.getId(),s.getTotal(),list):null;
     }
     
     public UserShoppingSession toEntity(UserShoppingSessionDTO x){
         var s = new UserShoppingSession();
-        s.setTotal(x.total());
         urepo.findById(x.userId()).ifPresent(s::setUser);
         var list = x.cartItemIds();
         if(list!=null){
-            s.setCartItems(crepo.findAllById(list));
+            var cartlist = crepo.findAllById(list);
+            cartlist.forEach(s::addCartItem);
         }
         return s;
     }
