@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import main.dto.PaymentDetailDTO;
 import main.models.PaymentDetail;
 import main.repo.OrderRepo;
-import main.repo.PaymentDetailRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PaymentDetailMapper {
-    private final PaymentDetailRepo repo;
     private final OrderRepo orepo;
     
     public PaymentDetail toEntity(PaymentDetailDTO x){

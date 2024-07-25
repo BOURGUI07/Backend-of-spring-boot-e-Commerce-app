@@ -7,7 +7,6 @@ package main.util.mapper;
 import lombok.RequiredArgsConstructor;
 import main.dto.InventoryDTO;
 import main.models.Inventory;
-import main.repo.InventoryRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class InventoryMapper {
-    private final InventoryRepo repo;
     
     public Inventory toEntity(InventoryDTO x){
         var i = new Inventory();

@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
 import main.models.Order;
 import main.repo.OrderItemRepo;
-import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
 import main.repo.UserRepo;
 import org.springframework.stereotype.Service;
@@ -21,20 +20,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class OrderMapper {
-    private final OrderRepo repo;
     private final UserRepo userRepo;
     private final OrderItemRepo detailRepo;
     private final PaymentDetailRepo paymentRepo;
     
-    
     public Order toEntity(OrderDTO x){
         var o = new Order();
-        o.setTotal(x.total());
         userRepo.findById(x.userId()).ifPresent(o::setUser);
         paymentRepo.findById(x.paymentDetailId()).ifPresent(o::setPaymentDetail);
         var list = x.orderItemIds();
-        if(list!=null){
-            o.setOrderItems(detailRepo.findAllById(list));
+        if(list != null){
+            var orderItems = detailRepo.findAllById(list);
+            orderItems.forEach(o::addOrderItem);
         }
         return o;
     }
@@ -43,6 +40,8 @@ public class OrderMapper {
         var list = o.getOrderItems().stream().map(x -> x.getId()).collect(Collectors.toList());
         var user = o.getUser();
         var payment = o.getPaymentDetail();
-        return (user!=null && payment!=null)? new OrderDTO(o.getId(),user.getId(),o.getTotal(),payment.getId(),list):null;
+        return (user != null && payment != null) ? 
+                new OrderDTO(o.getId(), user.getId(), o.getTotal(), payment.getId(), list) : null;
     }
 }
+

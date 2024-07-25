@@ -7,7 +7,6 @@ package main.util.mapper;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderItemDTO;
 import main.models.OrderItem;
-import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class OrderItemMapper {
-    private final OrderItemRepo repo;
     private final ProductRepo prepo;
     private final OrderRepo orepo;
     

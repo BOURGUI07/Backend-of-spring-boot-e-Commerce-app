@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface OrderRepo extends JpaRepository<Order,Integer>{
-    List<Order> findByTotalBetween(Double minTotal,Double maxTotal);
     List<Order> findByUserId(Integer id);
     @Override
     Page<Order> findAll(Pageable pageable);

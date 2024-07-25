@@ -12,7 +12,6 @@ import main.repo.CategoryRepo;
 import main.repo.DiscountRepo;
 import main.repo.InventoryRepo;
 import main.repo.OrderItemRepo;
-import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductMapper {
-    private final ProductRepo repo;
     private final CategoryRepo categoryRepo;
     private final OrderItemRepo detailRepo;
     private final DiscountRepo discountRepo;

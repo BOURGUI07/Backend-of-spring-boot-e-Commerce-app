@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CartItemMapper {
-    private final CartItemRepo repo;
     private final SessionRepo sessionRepo;
     private final ProductRepo productRepo;
     
