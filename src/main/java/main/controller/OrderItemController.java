@@ -8,9 +8,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import main.dto.ProductDTO;
+import main.dto.CategoryDTO;
+import main.dto.OrderItemDTO;
+import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
-import main.service.ProductService;
+import main.service.OrderItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +33,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hp
  */
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/orderitems")
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
-public class ProductController {
-    private final ProductService service;
+public class OrderItemController {
+    private final OrderItemService service;
     
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(
+    public ResponseEntity<Page<OrderItemDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
         var result = service.findAll(page, size);
@@ -50,7 +52,7 @@ public class ProductController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
+    public ResponseEntity<OrderItemDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         try{
             return ResponseEntity.status(HttpStatus.OK).body(product);
@@ -62,7 +64,7 @@ public class ProductController {
     }
     
     @PostMapping
-    public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
+    public ResponseEntity<OrderItemDTO> create(@Valid @RequestBody  OrderItemDTO x){
         var createdProduct = service.create(x);
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -72,7 +74,7 @@ public class ProductController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
+    public ResponseEntity<OrderItemDTO> update(@PathVariable Integer id, @Valid @RequestBody  OrderItemDTO x){
         var updatedProduct = service.update(id, x);
         try{
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
@@ -95,27 +97,9 @@ public class ProductController {
         }
     }
     
-    @GetMapping("/search")
-    public ResponseEntity<Page<ProductDTO>> search(
-            @RequestParam(required=false) String name,
-            @RequestParam(required=false) String desc,
-            @RequestParam(required=false) Boolean discountStatus,
-            @RequestParam(required=false) String categoryName,
-            @RequestParam(required=false) Double minPrice,
-            @RequestParam(required=false) Double maxPrice,
-            @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size
-    ){
-        var result = service.search(name, desc, discountStatus, categoryName, minPrice, maxPrice, page, size);
-        if(result.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-    
-    @GetMapping("/category/{id}")
-    public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(@PathVariable Integer id){
-        var list = service.findProductsWithCategoryId(id);
+    @GetMapping("/product/{id}")
+    public ResponseEntity<List<OrderItemDTO>> findOrderDetailsWithProductId(@PathVariable Integer id){
+        var list = service.findOrderDetailsforProduct(id);
         try{
             if(list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

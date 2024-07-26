@@ -62,7 +62,7 @@ public class CartItemService {
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Cart Item with id: " + id + " isn't found"));
     }
     @Cacheable(value="allCartItems", key = "'findAll_' + #page + '_' + #size")
-    public Page<CartItemDTO> finAll(int page, int size){
+    public Page<CartItemDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     
@@ -97,5 +97,5 @@ public class CartItemService {
     }, allEntries=true)
     public void clearCache(){
         
-    }
+    } 
 }

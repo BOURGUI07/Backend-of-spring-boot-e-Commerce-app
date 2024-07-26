@@ -47,7 +47,7 @@ public class InventoryService {
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"));
     }
     @Cacheable(value="allInventories", key = "'findAll_' + #page + '_' + #size")
-    public Page<InventoryDTO> finAll(int page, int size){
+    public Page<InventoryDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     

@@ -107,6 +107,9 @@ public class OrderService {
     }
     
     public List<OrderResponseDTO> findOrdersByUser(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findByUserId(id).stream().map(mapper::toDTO).collect(Collectors.toList());
     }
     
