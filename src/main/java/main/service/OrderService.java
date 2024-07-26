@@ -19,6 +19,8 @@ import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
 import main.repo.UserRepo;
 import main.util.mapper.OrderMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,12 +39,12 @@ public class OrderService {
     private final PaymentDetailRepo paymentRepo;
     private final OrderMapper mapper;
     private Validator validator;
-    
+    @Cacheable(value="allOrders", key = "'findAll_' + #page + '_' + #size")
     public Page<OrderResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page, size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
-    
+    @Cacheable(value="orderById", key="#id")
     public OrderResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -53,6 +55,9 @@ public class OrderService {
     
     
     @Transactional
+    @CacheEvict(value={
+        "allOrders", "orderById"
+    }, allEntries=true)
     public OrderResponseDTO create(OrderDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
@@ -64,6 +69,9 @@ public class OrderService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allOrders", "orderById"
+    }, allEntries=true)
     public OrderResponseDTO update(Integer id,OrderDTO x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -88,6 +96,9 @@ public class OrderService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allOrders", "orderById"
+    }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -97,6 +108,13 @@ public class OrderService {
     
     public List<OrderResponseDTO> findOrdersByUser(Integer id){
         return repo.findByUserId(id).stream().map(mapper::toDTO).collect(Collectors.toList());
+    }
+    
+    @CacheEvict(value={
+        "allOrders", "orderById"
+    }, allEntries=true)
+    public void clearCache(){
+        
     }
 
 }
