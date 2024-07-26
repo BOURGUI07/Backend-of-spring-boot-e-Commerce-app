@@ -4,10 +4,12 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.CategoryDTO;
 import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.exception.EntityNotFoundException;
@@ -39,6 +41,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class SessionController {
     private final SessionService service;
     
+    @Operation(summary="Retrieve All user shopping sessions", description="Paginated Retrieval for all user shopping sessions")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of user shopping sessions is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of user shopping sessions List")
+    })
     @GetMapping
     public ResponseEntity<Page<SessionResponseDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -50,6 +57,13 @@ public class SessionController {
         return ResponseEntity.ok(result);
     }
     
+    
+    @Operation(summary="Get shopping session By Id", description="Retrieve a single shopping session by Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="shopping session isn't found"),
+        @ApiResponse(responseCode="200", description="shopping session was successfully Found"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<SessionResponseDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -63,6 +77,11 @@ public class SessionController {
     }
     
     @PostMapping
+    @Operation(summary="Create a new  User Shopping Session")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="User Shopping Session is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     public ResponseEntity<SessionResponseDTO> create(@Valid @RequestBody UserShoppingSessionDTO x){
         var createdProduct = service.create(x);
         try{
@@ -73,6 +92,13 @@ public class SessionController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update shopping session")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="shopping session isn't found"),
+        @ApiResponse(responseCode="200", description="shopping session was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<SessionResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody  UserShoppingSessionDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -85,6 +111,12 @@ public class SessionController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete shopping session By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="shopping session isn't found"),
+        @ApiResponse(responseCode="204", description="shopping session was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);

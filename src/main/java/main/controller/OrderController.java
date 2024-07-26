@@ -4,6 +4,9 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -39,6 +42,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderService service;
     
+    @Operation(summary="Retrieve All orders", description="Paginated Retrieval for all orders")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of orders is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of orders List")
+    })
     @GetMapping
     public ResponseEntity<Page<OrderResponseDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -50,6 +58,14 @@ public class OrderController {
         return ResponseEntity.ok(result);
     }
     
+    
+    
+    @Operation(summary="Get Order By Id", description="Retrieve a single Order by Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Order isn't found"),
+        @ApiResponse(responseCode="200", description="Order was successfully Found"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -63,6 +79,11 @@ public class OrderController {
     }
     
     @PostMapping
+    @Operation(summary="Create a new  Order")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="Order is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     public ResponseEntity<OrderResponseDTO> create(@Valid @RequestBody  OrderDTO x){
         var createdProduct = service.create(x);
         try{
@@ -73,6 +94,13 @@ public class OrderController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update order")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="order isn't found"),
+        @ApiResponse(responseCode="200", description="order was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<OrderResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody  OrderDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -85,6 +113,12 @@ public class OrderController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete order By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="order isn't found"),
+        @ApiResponse(responseCode="204order", description="order was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);

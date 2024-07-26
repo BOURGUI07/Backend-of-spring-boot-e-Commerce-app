@@ -4,10 +4,12 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.CategoryDTO;
 import main.dto.DiscountDTO;
 import main.exception.EntityNotFoundException;
 import main.service.DiscountService;
@@ -37,6 +39,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DiscountController {
     private final DiscountService service;
+    
+    @Operation(summary="Retrieve All discounts", description="Paginated Retrieval for all discounts")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of discounts is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of discounts List")
+    })
     @GetMapping
     public ResponseEntity<Page<DiscountDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -48,6 +56,13 @@ public class DiscountController {
         return ResponseEntity.ok(result);
     }
     
+    
+    @Operation(summary="Get Discount By Id", description="Retrieve a single Discount by Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Discount isn't found"),
+        @ApiResponse(responseCode="200", description="Discount was successfully Found"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<DiscountDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -61,6 +76,11 @@ public class DiscountController {
     }
     
     @PostMapping
+    @Operation(summary="Create a new  Discount")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="Discount is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     public ResponseEntity<DiscountDTO> create(@Valid @RequestBody  DiscountDTO x){
         var createdProduct = service.create(x);
         try{
@@ -71,6 +91,13 @@ public class DiscountController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update discount")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="discount isn't found"),
+        @ApiResponse(responseCode="200", description="discount was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<DiscountDTO> update(@PathVariable Integer id, @Valid @RequestBody  DiscountDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -83,6 +110,12 @@ public class DiscountController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete discount By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="discount isn't found"),
+        @ApiResponse(responseCode="204", description="discount was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);
