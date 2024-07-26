@@ -12,7 +12,6 @@ import java.util.List;
  * @author hp
  */
 public record OrderDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer userId,

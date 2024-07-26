@@ -13,7 +13,6 @@ import java.util.List;
  * @author hp
  */
 public record OrderResponseDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer userId,

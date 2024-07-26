@@ -5,7 +5,6 @@
 package main.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
  * @author hp
  */
 public record DiscountDTO(
-        @NotNull
         Integer id,
         @NotBlank
         String name,

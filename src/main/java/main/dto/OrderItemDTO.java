@@ -12,7 +12,6 @@ import jakarta.validation.constraints.Positive;
  * @author hp
  */
 public record OrderItemDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer orderId,

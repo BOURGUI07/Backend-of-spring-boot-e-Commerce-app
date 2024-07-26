@@ -12,7 +12,6 @@ import jakarta.validation.constraints.Positive;
  * @author hp
  */
 public record CartItemDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer sessionId,
@@ -21,5 +20,4 @@ public record CartItemDTO(
         @Positive
         Integer quantity
         ) {
-
 }
