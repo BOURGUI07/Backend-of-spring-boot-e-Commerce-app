@@ -32,6 +32,9 @@ public class UserAddressService {
     private Validator validator;
     
     public UserAddressDTO findById(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findById(id).map(mapper::toDTO)
                 .orElseThrow(() -> new EntityNotFoundException("Address with id: " + id + " isn't found"));
     }
@@ -53,6 +56,9 @@ public class UserAddressService {
     
     @Transactional
     public UserAddressDTO update(Integer id, UserAddressDTO x){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -71,6 +77,9 @@ public class UserAddressService {
     
     @Transactional
     public void delete(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         repo.findById(id).ifPresent(repo::delete);
     }
     

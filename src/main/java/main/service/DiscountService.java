@@ -36,6 +36,9 @@ public class DiscountService {
     }
     
     public DiscountDTO findById(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException(""
                 + "Discount with id: "  + id + " isn't found"));
     }
@@ -53,6 +56,9 @@ public class DiscountService {
     
     @Transactional
     public DiscountDTO update(Integer id, DiscountDTO x){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -73,6 +79,9 @@ public class DiscountService {
     
     @Transactional
     public void delete(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         var d = repo.findById(id);
         if(d.isPresent()){
             var dd = d.get();

@@ -46,6 +46,9 @@ public class CategoryService {
     
     @Cacheable(value="categoryById", key="#id")
     public CategoryDTO findById(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() ->
                 new EntityNotFoundException("Category with id " + id + " isn't found")
         );
@@ -74,6 +77,9 @@ public class CategoryService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         var c = repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Category with id " + id + " isn't found"));
         c.setDesc(x.desc());
@@ -91,6 +97,9 @@ public class CategoryService {
         "allCategories", "categoryById"
     }, allEntries=true)
     public void delete(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         var opC = repo.findById(id);
         if(opC.isPresent()){
             var c = opC.get();
