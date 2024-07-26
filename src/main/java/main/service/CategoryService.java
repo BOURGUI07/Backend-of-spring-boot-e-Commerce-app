@@ -5,7 +5,10 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.stream.Collectors;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
 import main.exception.EntityNotFoundException;
@@ -27,11 +30,13 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@Data
 public class CategoryService {
     private final CategoryRepo repo;
     private final ProductRepo prepo;
     private final CategoryMapper mapper;
     private final CategorySpecification specification;
+    private Validator validator;
     
     @Cacheable(value="allCategories", key = "'findAll_' + #page + '_' + #size")
     public Page<CategoryDTO> findAll(int page, int size){
@@ -51,6 +56,10 @@ public class CategoryService {
         "allCategories", "categoryById"
     }, allEntries=true)
     public CategoryDTO create(CategoryDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var c = mapper.toEntity(x);
         var saved = repo.save(c);
         return mapper.toDTO(saved);
@@ -61,6 +70,10 @@ public class CategoryService {
         "allCategories", "categoryById"
     }, allEntries=true)
     public CategoryDTO update(Integer id, CategoryDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var c = repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Category with id " + id + " isn't found"));
         c.setDesc(x.desc());

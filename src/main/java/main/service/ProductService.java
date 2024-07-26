@@ -5,8 +5,11 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.ProductDTO;
 import main.exception.EntityNotFoundException;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@Data
 public class ProductService {
     private final ProductRepo repo;
     private final CategoryRepo categoryRepo;
@@ -39,6 +43,7 @@ public class ProductService {
     private final OrderItemRepo orepo;
     private final ProductMapper mapper;
     private final ProductSpecification specification;
+    private Validator validator;
     
     @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size")
     public Page<ProductDTO> findAll(int page, int size){
@@ -58,6 +63,10 @@ public class ProductService {
         "allProducts", "productById"
     }, allEntries=true)
     public ProductDTO create(ProductDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var product = mapper.toEntity(x);
         var savedProduct = repo.save(product);
         return mapper.toDTO(savedProduct);
@@ -68,6 +77,10 @@ public class ProductService {
         "allProducts", "productById"
     }, allEntries=true)
     public ProductDTO update(Integer id, ProductDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var product = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Product with id " + id + " isn't found"));
         if(x.categoryId()!=null){

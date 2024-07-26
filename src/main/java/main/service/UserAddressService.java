@@ -5,6 +5,9 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.UserAddressDTO;
 import main.exception.EntityNotFoundException;
@@ -21,10 +24,12 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@Data
 public class UserAddressService {
     private final AddressMapper mapper;
     private final AddressRepo repo;
     private final UserRepo urepo;
+    private Validator validator;
     
     public UserAddressDTO findById(Integer id){
         return repo.findById(id).map(mapper::toDTO)
@@ -37,6 +42,10 @@ public class UserAddressService {
     
     @Transactional
     public UserAddressDTO create(UserAddressDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var a = mapper.toEntity(x);
         var saved = repo.save(a);
         return mapper.toDTO(saved);
@@ -44,6 +53,10 @@ public class UserAddressService {
     
     @Transactional
     public UserAddressDTO update(Integer id, UserAddressDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var a = repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Address with id: " + id + " isn't found"));
         a.setAddressLine1(x.addressLine1());

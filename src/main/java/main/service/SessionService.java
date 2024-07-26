@@ -5,6 +5,9 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
@@ -23,11 +26,13 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@Data
 public class SessionService {
     private final UserRepo urepo;
     private final CartItemRepo crepo;
     private final SessionRepo repo;
     private final SessionMapper mapper;
+    private Validator validator;
     
     public Page<SessionResponseDTO> findAll(int page, int size){
         var p = PageRequest.of(page,size);
@@ -41,6 +46,10 @@ public class SessionService {
     
     @Transactional
     public SessionResponseDTO create(UserShoppingSessionDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var s = mapper.toEntity(x);
         var saved = repo.save(s);
         return mapper.toDTO(saved);
@@ -48,6 +57,10 @@ public class SessionService {
     
     @Transactional
     public SessionResponseDTO update(Integer id, UserShoppingSessionDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var s = repo.findById(id).orElseThrow(() ->
             new EntityNotFoundException("User Session with id: " + id + " isn't found"));
         

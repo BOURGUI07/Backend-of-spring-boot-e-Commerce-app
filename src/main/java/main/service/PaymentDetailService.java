@@ -5,6 +5,8 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class PaymentDetailService {
     private final OrderRepo orepo;
     private final PaymentDetailRepo repo;
     private final PaymentDetailMapper mapper;
+    private Validator validator;
     
     public Page<PaymentDetailResponseDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page,size)).map(mapper::toDTO);
@@ -42,6 +45,10 @@ public class PaymentDetailService {
     
     @Transactional
     public PaymentDetailResponseDTO create(PaymentDetailDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var p = mapper.toEntity(x);
         var saved = repo.save(p);
         return mapper.toDTO(saved);
@@ -49,6 +56,10 @@ public class PaymentDetailService {
     
     @Transactional
     public PaymentDetailResponseDTO update(Integer id, PaymentDetailDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var p  =repo.findById(id).orElseThrow(() -> 
                 new EntityNotFoundException("Payment Detail with id: " + id + " isn't found")
         );
