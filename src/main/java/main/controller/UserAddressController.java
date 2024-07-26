@@ -6,11 +6,10 @@ package main.controller;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import main.dto.ProductDTO;
+import main.dto.UserAddressDTO;
 import main.exception.EntityNotFoundException;
-import main.service.ProductService;
+import main.service.UserAddressService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hp
  */
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/addresses")
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
-public class ProductController {
-    private final ProductService service;
+public class UserAddressController {
+    private final UserAddressService service;
     
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(
+    public ResponseEntity<Page<UserAddressDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
         var result = service.findAll(page, size);
@@ -50,7 +49,7 @@ public class ProductController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
+    public ResponseEntity<UserAddressDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         try{
             return ResponseEntity.status(HttpStatus.OK).body(product);
@@ -62,7 +61,7 @@ public class ProductController {
     }
     
     @PostMapping
-    public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
+    public ResponseEntity<UserAddressDTO> create(@Valid @RequestBody  UserAddressDTO x){
         var createdProduct = service.create(x);
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -72,7 +71,7 @@ public class ProductController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
+    public ResponseEntity<UserAddressDTO> update(@PathVariable Integer id, @Valid @RequestBody  UserAddressDTO x){
         var updatedProduct = service.update(id, x);
         try{
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
@@ -95,32 +94,10 @@ public class ProductController {
         }
     }
     
-    @GetMapping("/search")
-    public ResponseEntity<Page<ProductDTO>> search(
-            @RequestParam(required=false) String name,
-            @RequestParam(required=false) String desc,
-            @RequestParam(required=false) Boolean discountStatus,
-            @RequestParam(required=false) String categoryName,
-            @RequestParam(required=false) Double minPrice,
-            @RequestParam(required=false) Double maxPrice,
-            @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size
-    ){
-        var result = service.search(name, desc, discountStatus, categoryName, minPrice, maxPrice, page, size);
-        if(result.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-    
-    @GetMapping("/category/{id}")
-    public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(@PathVariable Integer id){
-        var list = service.findProductsWithCategoryId(id);
+    @GetMapping("/user/{id}")
+    public ResponseEntity<UserAddressDTO> findAddressByUser(@PathVariable Integer id){
         try{
-            if(list.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(list);
+            return ResponseEntity.status(HttpStatus.OK).body(service.findAddressByUserId(id));
         }catch(IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }catch(EntityNotFoundException e){

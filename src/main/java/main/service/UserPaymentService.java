@@ -99,6 +99,9 @@ public class UserPaymentService {
     }
     
     public UserPaymentDTO findPaymentByUserId(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findByUserId(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException(""
                 + "User with id: " + id + " isn't found"));
     }
