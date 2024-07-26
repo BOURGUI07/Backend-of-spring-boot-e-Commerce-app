@@ -4,7 +4,6 @@
  */
 package main.dto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 /**
@@ -12,7 +11,6 @@ import jakarta.validation.constraints.PositiveOrZero;
  * @author hp
  */
 public record InventoryDTO(
-        @NotNull
         Integer id,
         @PositiveOrZero
         Integer quantity

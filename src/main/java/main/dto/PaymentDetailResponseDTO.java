@@ -14,7 +14,6 @@ import main.util.PaymentStatus;
  * @author hp
  */
 public record PaymentDetailResponseDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer orderId,

@@ -12,7 +12,6 @@ import jakarta.validation.constraints.NotNull;
  * @author hp
  */
 public record UserAddressDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer userId,

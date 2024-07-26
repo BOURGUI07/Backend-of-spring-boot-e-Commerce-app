@@ -16,10 +16,7 @@ import main.util.Role;
  * @author hp
  */
 public record UserRegistrationDTO (
-        
-    @NotNull
-     Integer id,
-
+      
     @NotBlank
      String username,
 

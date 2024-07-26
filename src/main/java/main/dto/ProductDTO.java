@@ -16,7 +16,6 @@ import java.util.List;
  * @author hp
  */
 public record ProductDTO(
-        @NotBlank
         Integer Id,
         @NotBlank
         @Size(min=3,max=100,message="Product name must be between 3 and 100 characters")
@@ -33,5 +32,4 @@ public record ProductDTO(
         Integer discountId,
         List<Integer> orderItemsIds
         ) {
-    
 }

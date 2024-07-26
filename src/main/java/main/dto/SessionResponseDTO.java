@@ -14,7 +14,6 @@ import java.util.List;
  * @author hp
  */
 public record SessionResponseDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer userId,

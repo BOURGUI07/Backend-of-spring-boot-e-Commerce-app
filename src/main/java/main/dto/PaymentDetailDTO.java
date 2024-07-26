@@ -14,8 +14,6 @@ import main.util.PaymentStatus;
  */
 public record PaymentDetailDTO(
         @NotNull
-        Integer id,
-        @NotNull
         Integer orderId,
         @NotNull
         PaymentProvider provider,

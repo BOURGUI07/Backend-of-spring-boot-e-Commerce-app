@@ -14,7 +14,6 @@ import main.util.PaymentType;
  * @author hp
  */
 public record UserPaymentDTO(
-        @NotNull
         Integer id,
         @NotNull
         Integer userId,

@@ -14,8 +14,6 @@ import java.util.List;
  */
 public record UserShoppingSessionDTO(
         @NotNull
-        Integer id,
-        @NotNull
         Integer userId,
         @NotEmpty
         List<Integer> cartItemIds

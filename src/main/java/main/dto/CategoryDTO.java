@@ -5,7 +5,6 @@
 package main.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
  * @author hp
  */
 public record CategoryDTO(
-        @NotNull
         Integer id,
         @NotBlank
         @Size(min=3,max=100,message="Category name must be"
