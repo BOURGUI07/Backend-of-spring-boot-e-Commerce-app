@@ -9,7 +9,6 @@ import main.models.OrderItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @author hp
  */
 @Repository
-public interface OrderItemRepo extends JpaRepository<OrderItem,Integer>, JpaSpecificationExecutor<OrderItem>{
+public interface OrderItemRepo extends JpaRepository<OrderItem,Integer>{
     List<OrderItem> findByProductId(Integer id);
     @Override
     Page<OrderItem> findAll(Pageable pageable);

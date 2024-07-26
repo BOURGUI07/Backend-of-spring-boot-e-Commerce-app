@@ -5,8 +5,11 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
@@ -26,12 +29,14 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@Data
 public class OrderService {
     private final OrderRepo repo;
     private final UserRepo userRepo;
     private final OrderItemRepo detailRepo;
     private final PaymentDetailRepo paymentRepo;
     private final OrderMapper mapper;
+    private Validator validator;
     
     public Page<OrderResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page, size);
@@ -46,6 +51,10 @@ public class OrderService {
     
     @Transactional
     public OrderResponseDTO create(OrderDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var o = mapper.toEntity(x);
         var saved = repo.save(o);
         return mapper.toDTO(saved);
@@ -53,6 +62,10 @@ public class OrderService {
     
     @Transactional
     public OrderResponseDTO update(Integer id,OrderDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var o = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Order with id: " + id + " isn't found" ));
         var list = x.orderItemIds();

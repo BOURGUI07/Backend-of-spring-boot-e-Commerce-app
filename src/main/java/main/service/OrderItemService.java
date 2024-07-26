@@ -5,8 +5,11 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderItemDTO;
 import main.exception.EntityNotFoundException;
@@ -24,14 +27,20 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@Data
 public class OrderItemService {
     private final OrderItemMapper mapper;
     private final OrderItemRepo repo;
     private final ProductRepo prepo;
     private final OrderRepo orepo;
+    private Validator validator;
     
     @Transactional
     public OrderItemDTO update(Integer id, OrderItemDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"));
         o.setQuantity(x.quantity());
         prepo.findById(x.productid()).ifPresent(o::setProduct);
@@ -50,6 +59,10 @@ public class OrderItemService {
     
     @Transactional
     public OrderItemDTO create(OrderItemDTO x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var s = mapper.toEntity(x);
         var saved = repo.save(s);
         return mapper.toDTO(saved);
