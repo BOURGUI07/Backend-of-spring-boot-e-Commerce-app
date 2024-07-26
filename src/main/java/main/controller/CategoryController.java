@@ -4,11 +4,13 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
-import main.dto.ProductDTO;
 import main.exception.EntityNotFoundException;
 import main.service.CategoryService;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
     private final CategoryService service;
     
+    @Operation(summary="Retrieve All categories", description="Paginated Retrieval for all categories")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of categories is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of category List")
+    })
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -49,6 +56,14 @@ public class CategoryController {
         return ResponseEntity.ok(result);
     }
     
+    
+    
+    @Operation(summary="Get Category By Id", description="Retrieve a single Categoryby Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Category isn't found"),
+        @ApiResponse(responseCode="200", description="Category was successfully Found"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -62,6 +77,11 @@ public class CategoryController {
     }
     
     @PostMapping
+    @Operation(summary="Create a new  Category")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="Category is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     public ResponseEntity<CategoryDTO> create(@Valid @RequestBody  CategoryDTO x){
         var createdProduct = service.create(x);
         try{
@@ -72,6 +92,13 @@ public class CategoryController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update category")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="category isn't found"),
+        @ApiResponse(responseCode="200", description="category was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<CategoryDTO> update(@PathVariable Integer id, @Valid @RequestBody  CategoryDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -84,6 +111,12 @@ public class CategoryController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete category By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="category isn't found"),
+        @ApiResponse(responseCode="204", description="category was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);

@@ -4,6 +4,9 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAddressController {
     private final UserAddressService service;
     
+    @Operation(summary="Retrieve All user addresses", description="Paginated Retrieval for all user addresses")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of user addresses is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of user addresses List")
+    })
     @GetMapping
     public ResponseEntity<Page<UserAddressDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -48,6 +56,13 @@ public class UserAddressController {
         return ResponseEntity.ok(result);
     }
     
+    
+    @Operation(summary="Get User Address By Id", description="Retrieve a single User Address by Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="User Address isn't found"),
+        @ApiResponse(responseCode="200", description="User Address was successfully Found"),
+        @ApiResponse(responseCode="400", description="ClUser Addressient Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UserAddressDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -61,6 +76,11 @@ public class UserAddressController {
     }
     
     @PostMapping
+    @Operation(summary="Create a new  User Address")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="User Address is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     public ResponseEntity<UserAddressDTO> create(@Valid @RequestBody  UserAddressDTO x){
         var createdProduct = service.create(x);
         try{
@@ -71,6 +91,13 @@ public class UserAddressController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update User Address")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="User Address isn't found"),
+        @ApiResponse(responseCode="200", description="User Address was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<UserAddressDTO> update(@PathVariable Integer id, @Valid @RequestBody  UserAddressDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -83,6 +110,12 @@ public class UserAddressController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete User Address By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="User Address isn't found"),
+        @ApiResponse(responseCode="204", description="User Address was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);

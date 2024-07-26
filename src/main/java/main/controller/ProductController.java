@@ -4,6 +4,9 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -38,6 +41,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
     private final ProductService service;
     
+    @Operation(summary="Retrieve All Products", description="Paginated Retrieval for all products")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of products is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of Product List")
+    })
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -49,6 +57,14 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
     
+    
+    
+    @Operation(summary="Get Product By Id", description="Retrieve a single product by Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Product isn't found"),
+        @ApiResponse(responseCode="200", description="Product was successfully Found"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -61,6 +77,11 @@ public class ProductController {
         }
     }
     
+    @Operation(summary="Create a new  Product")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="Product is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     @PostMapping
     public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
         var createdProduct = service.create(x);
@@ -72,6 +93,13 @@ public class ProductController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update Product")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Product isn't found"),
+        @ApiResponse(responseCode="200", description="Product was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -84,6 +112,12 @@ public class ProductController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete Product By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Product isn't found"),
+        @ApiResponse(responseCode="204", description="Product was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);

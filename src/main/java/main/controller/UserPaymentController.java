@@ -4,6 +4,9 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -40,6 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserPaymentController {
     private final UserPaymentService service;
     
+    @Operation(summary="Retrieve All user payments", description="Paginated Retrieval for all user payments")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of user payments is empty"),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of user payments List")
+    })
     @GetMapping
     public ResponseEntity<Page<UserPaymentDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -51,6 +59,13 @@ public class UserPaymentController {
         return ResponseEntity.ok(result);
     }
     
+    
+    @Operation(summary="Get User Payment By Id", description="Retrieve a single User Payment by Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="User Payment isn't found"),
+        @ApiResponse(responseCode="200", description="User Payment was successfully Found"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UserPaymentDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -64,6 +79,11 @@ public class UserPaymentController {
     }
     
     @PostMapping
+    @Operation(summary="Create a new  User Payment")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="201", description="User Payment is successfully created"),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+    })
     public ResponseEntity<UserPaymentDTO> create(@Valid @RequestBody  UserPaymentDTO x){
         var createdProduct = service.create(x);
         try{
@@ -74,6 +94,13 @@ public class UserPaymentController {
     }
     
     @PutMapping("/{id}")
+    @Operation(summary="Update User Payment")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="User Payment isn't found"),
+        @ApiResponse(responseCode="200", description="User Payment was successfully Updated"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body")
+    })
     public ResponseEntity<UserPaymentDTO> update(@PathVariable Integer id, @Valid @RequestBody UserPaymentDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -86,6 +113,12 @@ public class UserPaymentController {
     }
     
     @DeleteMapping("/{id}")
+    @Operation(summary="Delete User Payment By Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="User Payment isn't found"),
+        @ApiResponse(responseCode="204", description="User Payment was successfully Deleted"),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+    })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);
