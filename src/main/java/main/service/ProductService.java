@@ -120,6 +120,9 @@ public class ProductService {
     }
     
     public List<ProductDTO> findProductsWithCategoryId(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findByCategoryId(id).stream().map(mapper::toDTO).collect(Collectors.toList());
     }
     
