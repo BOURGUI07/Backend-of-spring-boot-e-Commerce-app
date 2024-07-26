@@ -45,7 +45,7 @@ public class Discount extends BaseEntity{
     private double percent;
     
     @Column(name="active")
-    private boolean  active;
+    private Boolean  active;
     
     @OneToMany(mappedBy="discount")
     @JsonManagedReference

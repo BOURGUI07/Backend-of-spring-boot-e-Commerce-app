@@ -16,8 +16,13 @@ import main.repo.InventoryRepo;
 import main.repo.OrderItemRepo;
 import main.repo.ProductRepo;
 import main.util.mapper.ProductMapper;
+import main.util.specification.ProductSpecification;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,13 +38,15 @@ public class ProductService {
     private final InventoryRepo invRepo;
     private final OrderItemRepo orepo;
     private final ProductMapper mapper;
+    private final ProductSpecification specification;
     
-    
+    @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size")
     public Page<ProductDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page,size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
     
+    @Cacheable(value="productById", key="#id")
     public ProductDTO findById(Integer id){
         var opProduct = repo.findById(id);
         return opProduct.map(mapper::toDTO).orElseThrow(
@@ -47,6 +54,9 @@ public class ProductService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allProducts", "productById"
+    }, allEntries=true)
     public ProductDTO create(ProductDTO x){
         var product = mapper.toEntity(x);
         var savedProduct = repo.save(product);
@@ -54,6 +64,9 @@ public class ProductService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allProducts", "productById"
+    }, allEntries=true)
     public ProductDTO update(Integer id, ProductDTO x){
         var product = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Product with id " + id + " isn't found"));
@@ -77,6 +90,9 @@ public class ProductService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allProducts", "productById"
+    }, allEntries=true)
     public void delete(Integer id){
         repo.findById(id).ifPresent(repo::delete);
     }
@@ -85,5 +101,23 @@ public class ProductService {
         return repo.findByCategoryId(id).stream().map(mapper::toDTO).collect(Collectors.toList());
     }
     
-    
+    public Page<ProductDTO> search(String name, String desc, Boolean discountStatus, String categoryName, Double minPrice, Double maxPrice, int page, int size){
+        var pageable = PageRequest.of(page, size);
+        var spec = Specification.where(specification.hasName(name)
+                .and(specification.hasDesc(desc))
+                .and(specification.hasCategoryName(categoryName))
+                .and(specification.hasDiscountStatus(discountStatus))
+                .and(specification.hasPriceBetween(minPrice, maxPrice))
+        );
+        
+        var products = repo.findAll(spec, pageable);
+        var productDTOs = products.stream().map(mapper::toDTO).collect(Collectors.toList());
+        return new PageImpl<>(productDTOs,pageable, products.getTotalElements());
+    }
+    @CacheEvict(value={
+        "allProducts", "productById"
+    }, allEntries=true)
+    public void clearCache(){
+        
+    }
 }
