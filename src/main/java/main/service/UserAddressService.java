@@ -14,6 +14,8 @@ import main.exception.EntityNotFoundException;
 import main.repo.AddressRepo;
 import main.repo.UserRepo;
 import main.util.mapper.AddressMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class UserAddressService {
     private final AddressRepo repo;
     private final UserRepo urepo;
     private Validator validator;
-    
+    @Cacheable(value="userAddressById", key="#id")
     public UserAddressDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -38,12 +40,15 @@ public class UserAddressService {
         return repo.findById(id).map(mapper::toDTO)
                 .orElseThrow(() -> new EntityNotFoundException("Address with id: " + id + " isn't found"));
     }
-    
+    @Cacheable(value="allUserAddresses", key = "'findAll_' + #page + '_' + #size")
     public Page<UserAddressDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allUserAddresses", "userAddressById"
+    }, allEntries=true)
     public UserAddressDTO create(UserAddressDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
@@ -55,6 +60,9 @@ public class UserAddressService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allUserAddresses", "userAddressById"
+    }, allEntries=true)
     public UserAddressDTO update(Integer id, UserAddressDTO x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -76,6 +84,9 @@ public class UserAddressService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allUserAddresses", "userAddressById"
+    }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -86,5 +97,12 @@ public class UserAddressService {
     public UserAddressDTO findAddressByUserId(Integer id){
         return repo.findByUserId(id).map(mapper::toDTO)
                 .orElseThrow(() -> new EntityNotFoundException("User with id: " + id + " isn't found"));
+    }
+    
+    @CacheEvict(value={
+        "allUserAddresses", "userAddressById"
+    }, allEntries=true)
+    public void clearCache(){
+        
     }
 }

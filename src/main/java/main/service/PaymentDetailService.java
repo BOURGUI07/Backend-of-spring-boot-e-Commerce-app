@@ -17,6 +17,8 @@ import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
 import main.util.PaymentStatus;
 import main.util.mapper.PaymentDetailMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -32,11 +34,11 @@ public class PaymentDetailService {
     private final PaymentDetailRepo repo;
     private final PaymentDetailMapper mapper;
     private Validator validator;
-    
+    @Cacheable(value="allPaymentDetails", key = "'findAll_' + #page + '_' + #size")
     public Page<PaymentDetailResponseDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page,size)).map(mapper::toDTO);
     }
-    
+    @Cacheable(value="paymentDetailById", key="#id")
     public PaymentDetailResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -47,6 +49,9 @@ public class PaymentDetailService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allPaymentDetails", "paymentDetailById"
+    }, allEntries=true)
     public PaymentDetailResponseDTO create(PaymentDetailDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
@@ -58,6 +63,9 @@ public class PaymentDetailService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allPaymentDetails", "paymentDetailById"
+    }, allEntries=true)
     public PaymentDetailResponseDTO update(Integer id, PaymentDetailDTO x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -77,6 +85,9 @@ public class PaymentDetailService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allPaymentDetails", "paymentDetailById"
+    }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -90,5 +101,12 @@ public class PaymentDetailService {
     
     public List<PaymentDetailResponseDTO> findPaymentsWithAmountGreaterThan(Double amount){
         return repo.findByAmountGreaterThanEqual(amount).stream().map(mapper::toDTO).collect(Collectors.toList());
+    }
+    
+    @CacheEvict(value={
+        "allPaymentDetails", "paymentDetailById"
+    }, allEntries=true)
+    public void clearCache(){
+        
     }
 }

@@ -15,6 +15,8 @@ import main.repo.CartItemRepo;
 import main.repo.ProductRepo;
 import main.repo.SessionRepo;
 import main.util.mapper.CartItemMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class CartItemService {
     private Validator validator;
     
     @Transactional
+    @CacheEvict(value={
+        "allCartItems", "cartItemById"
+    }, allEntries=true)
     public CartItemDTO update(Integer id, CartItemDTO x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -49,19 +54,22 @@ public class CartItemService {
         var saved = repo.save(o);
         return mapper.toDTO(saved);
     }
-    
+    @Cacheable(value="cartItemById", key="#id")
     public CartItemDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Cart Item with id: " + id + " isn't found"));
     }
-    
+    @Cacheable(value="allCartItems", key = "'findAll_' + #page + '_' + #size")
     public Page<CartItemDTO> finAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allCartItems", "cartItemById"
+    }, allEntries=true)
     public CartItemDTO create(CartItemDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
@@ -74,11 +82,20 @@ public class CartItemService {
     }
     
     @Transactional
+    @CacheEvict(value={
+        "allCartItems", "cartItemById"
+    }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
         repo.findById(id).ifPresent(repo::delete);
     }
-
+    
+    @CacheEvict(value={
+        "allCartItems", "cartItemById"
+    }, allEntries=true)
+    public void clearCache(){
+        
+    }
 }
