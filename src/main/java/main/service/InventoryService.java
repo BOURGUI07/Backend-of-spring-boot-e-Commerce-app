@@ -26,6 +26,9 @@ public class InventoryService {
     
     @Transactional
     public InventoryDTO update(Integer id, InventoryDTO x){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"));
         o.setQuantity(x.quantity());
         var saved = repo.save(o);
@@ -33,6 +36,9 @@ public class InventoryService {
     }
     
     public InventoryDTO findById(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"));
     }
     
@@ -49,6 +55,9 @@ public class InventoryService {
     
     @Transactional
     public void delete(Integer id){
+        if(id<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
         repo.findById(id).ifPresent(repo::delete);
     }
 }
