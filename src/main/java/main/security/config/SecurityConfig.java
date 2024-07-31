@@ -4,6 +4,8 @@
  */
 package main.security.config;
 
+import main.security.service.CustomAccessDeniedHandler;
+import main.security.service.CustomBasicAuthEntryPoint;
 import main.util.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,7 +69,8 @@ public class SecurityConfig {
         http.csrf(x->x.disable());
         
         http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+        http.httpBasic(x->x.authenticationEntryPoint(new CustomBasicAuthEntryPoint()));
+        http.exceptionHandling(x-> x.accessDeniedHandler(new CustomAccessDeniedHandler()));
         
         return http.build();
     }
