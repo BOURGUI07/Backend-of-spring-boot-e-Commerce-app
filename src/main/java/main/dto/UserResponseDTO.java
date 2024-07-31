@@ -26,6 +26,8 @@ public record UserResponseDTO(
      String phone,
 
      Role role,
+     
+     boolean enabled,
 
      List<Integer> orderIds
         ) {
