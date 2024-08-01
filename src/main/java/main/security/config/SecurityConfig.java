@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -27,6 +28,7 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
 @Configuration
 @EnableWebSecurity
 @Profile("!production")
+@EnableMethodSecurity
 public class SecurityConfig {
     @Bean
     public PasswordEncoder encoder(){
@@ -51,20 +53,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/invalidSession", "/expiredSession").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/search").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/admin").permitAll()
-                .requestMatchers("/api/products").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/categories").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/orders").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/discounts").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/cartitems").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/inventories").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/orderitems").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/addresses").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/payment_details").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/sessions").hasAnyRole(RoleEnum.ADMIN.name())
-                .requestMatchers("/api/user_payments").hasAnyRole(RoleEnum.ADMIN.name())
                 .anyRequest().authenticated()
         );
         

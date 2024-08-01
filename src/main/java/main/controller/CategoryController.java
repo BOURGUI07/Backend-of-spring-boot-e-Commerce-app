@@ -16,6 +16,7 @@ import main.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,6 +66,7 @@ public class CategoryController {
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         try{
@@ -82,6 +84,7 @@ public class CategoryController {
         @ApiResponse(responseCode="201", description="Category is successfully created"),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDTO> create(@Valid @RequestBody  CategoryDTO x){
         var createdProduct = service.create(x);
         try{
@@ -99,6 +102,7 @@ public class CategoryController {
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDTO> update(@PathVariable Integer id, @Valid @RequestBody  CategoryDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -117,6 +121,7 @@ public class CategoryController {
         @ApiResponse(responseCode="204", description="category was successfully Deleted"),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);
