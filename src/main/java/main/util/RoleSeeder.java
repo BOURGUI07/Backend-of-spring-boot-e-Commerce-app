@@ -28,10 +28,11 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
     }
     
     private void loadRoles(){
-        var roleNames = new RoleEnum[]{RoleEnum.USER, RoleEnum.ADMIN};
+        var roleNames = new RoleEnum[]{RoleEnum.USER, RoleEnum.ADMIN,RoleEnum.SUPERADMIN};
         Map<RoleEnum,String> map = Map.of(
                 RoleEnum.USER, "User Role",
-                RoleEnum.ADMIN, "Admin Role"
+                RoleEnum.ADMIN, "Admin Role",
+                RoleEnum.SUPERADMIN, "Super Admin Role"
                 );
         Arrays.stream(roleNames).forEach((RoleEnum roleName) -> {
             var role = repo.findByName(roleName);

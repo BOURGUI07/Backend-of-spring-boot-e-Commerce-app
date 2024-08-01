@@ -60,7 +60,7 @@ public class UserAuthenticationController {
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
     @PostMapping("/admin")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasRole('SUPERADMIN')")
     public ResponseEntity<UserRegistrationResponseDTO> registerAdmin(
             @Valid @RequestBody UserRegistrationRequestDTO x){
         
