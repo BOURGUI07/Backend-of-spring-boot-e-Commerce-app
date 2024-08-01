@@ -21,13 +21,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class UserMapper {
-    private final OrderRepo orderRepo;
+public class AdminUserMapper {
+     private final OrderRepo orderRepo;
     private final PasswordEncoder encoder;
     private final RoleRepo repo;
     
     public User toEntity(UserRegistrationRequestDTO x){
-        var role = repo.findByName(RoleEnum.USER);
+        var role = repo.findByName(RoleEnum.ADMIN);
         var u = new User();
         u.setEmail(x.email());
         u.setFirstname(x.firstname());
