@@ -17,6 +17,7 @@ import main.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,6 +67,7 @@ public class ProductController {
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         try{
@@ -83,6 +85,7 @@ public class ProductController {
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
         var createdProduct = service.create(x);
         try{
@@ -100,6 +103,7 @@ public class ProductController {
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -118,6 +122,7 @@ public class ProductController {
         @ApiResponse(responseCode="204", description="Product was successfully Deleted"),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);
@@ -148,6 +153,7 @@ public class ProductController {
     }
     
     @GetMapping("/category/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(@PathVariable Integer id){
         var list = service.findProductsWithCategoryId(id);
         try{

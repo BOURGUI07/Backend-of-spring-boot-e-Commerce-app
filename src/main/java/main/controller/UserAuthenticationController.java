@@ -15,6 +15,7 @@ import main.dto.UserRegistrationResponseDTO;
 import main.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,6 +60,7 @@ public class UserAuthenticationController {
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
     @PostMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserRegistrationResponseDTO> registerAdmin(
             @Valid @RequestBody UserRegistrationRequestDTO x){
         
