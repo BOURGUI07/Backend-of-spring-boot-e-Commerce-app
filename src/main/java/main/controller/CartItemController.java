@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
 public class CartItemController {
     private final CartItemService service;
     
@@ -57,7 +57,6 @@ public class CartItemController {
         }
         return ResponseEntity.ok(result);
     }
-    
     
     @Operation(summary="Get Cart Item By Id", description="Retrieve a single Cart Item by Id")
     @ApiResponses(value={

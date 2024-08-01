@@ -10,5 +10,6 @@ package main.util;
  */
 public enum RoleEnum {
     USER,
-    ADMIN
+    ADMIN,
+    SUPER_ADMIN
 }
