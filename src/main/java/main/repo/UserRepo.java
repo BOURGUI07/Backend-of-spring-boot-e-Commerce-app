@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepo extends JpaRepository<User,Integer>{
     Optional<User> findByUsernameIgnoreCase(String username);
+    boolean existsByUsername(String username);
     Optional<User> findByEmailIgnoreCase(String email);
     @Override
     Page<User> findAll(Pageable pageable);

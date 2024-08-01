@@ -121,7 +121,7 @@ public class CategoryController {
         @ApiResponse(responseCode="204", description="category was successfully Deleted"),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);

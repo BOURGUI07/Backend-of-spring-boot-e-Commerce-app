@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+@PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 public class OrderController {
     private final OrderService service;
     

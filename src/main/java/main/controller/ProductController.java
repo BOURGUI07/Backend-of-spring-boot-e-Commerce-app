@@ -67,7 +67,7 @@ public class ProductController {
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         try{
@@ -85,7 +85,7 @@ public class ProductController {
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
     @PostMapping
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
         var createdProduct = service.create(x);
         try{
@@ -103,7 +103,7 @@ public class ProductController {
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body")
     })
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
         var updatedProduct = service.update(id, x);
         try{
@@ -122,7 +122,7 @@ public class ProductController {
         @ApiResponse(responseCode="204", description="Product was successfully Deleted"),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id")
     })
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         try{
             service.delete(id);
