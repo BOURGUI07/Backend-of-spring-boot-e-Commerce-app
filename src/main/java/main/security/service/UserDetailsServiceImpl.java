@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         var user = repo.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException(""
                         + "User Details with username: " + username+ " isn't found!"));
-        var authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
+        var authorities = List.of(new SimpleGrantedAuthority(user.getRole().getName().name()));
         return new User(username, user.getPassword(),authorities);
     }
     

@@ -22,9 +22,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(
             HttpServletRequest request,
             HttpServletResponse response,
-            AccessDeniedException accessDeniedException)
+            org.springframework.security.access.AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
-        
+              
         // Populate dynamic values
         LocalDateTime currentTimeStamp = LocalDateTime.now();
         String message = (accessDeniedException != null && accessDeniedException.getMessage() != null) ? accessDeniedException.getMessage()
@@ -42,7 +42,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         
         
         //don't forget to remove defaults customization in http.basic(WithDefaults()) in security config!
-        
     }
 
 }

@@ -6,13 +6,13 @@ package main.dto;
 
 
 import java.util.List;
-import main.util.Role;
+import main.models.Role;
 
 /**
  *
  * @author hp
  */
-public record UserResponseDTO(
+public record UserRegistrationResponseDTO(
      Integer id,
 
      String username,
@@ -27,8 +27,6 @@ public record UserResponseDTO(
 
      Role role,
      
-     boolean enabled,
-
      List<Integer> orderIds
         ) {
 

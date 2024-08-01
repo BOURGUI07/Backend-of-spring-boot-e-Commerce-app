@@ -6,15 +6,15 @@ package main.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
-import main.util.Role;
 
 /**
  *
  * @author hp
  */
-public record UserRegistrationDTO (
+public record UserRegistrationRequestDTO (
       
     @NotBlank
      String username,
@@ -34,13 +34,11 @@ public record UserRegistrationDTO (
      String lastname,
 
     @Email(message = "email should be valid")
+    @NotNull
      String email,
-
-    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")
+    
      String phone,
-
-     Role role,
-
+    
      List<Integer> orderIds
         ){
 

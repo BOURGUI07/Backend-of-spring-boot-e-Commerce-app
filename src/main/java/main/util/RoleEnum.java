@@ -8,7 +8,7 @@ package main.util;
  *
  * @author hp
  */
-public enum Role {
+public enum RoleEnum {
     USER,
     ADMIN
 }
