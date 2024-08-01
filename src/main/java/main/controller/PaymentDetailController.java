@@ -36,10 +36,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/payment_details")
-@PreAuthorize("hasRole('ADMIN')")
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
 public class PaymentDetailController {
     private final PaymentDetailService service;
     
