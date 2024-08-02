@@ -12,6 +12,8 @@ import main.models.User;
 import main.repo.OrderRepo;
 import main.repo.RoleRepo;
 import main.util.RoleEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,13 @@ import org.springframework.stereotype.Service;
  * @author hp
  */
 @Service
-@RequiredArgsConstructor
 public class UserMapper {
+    @Autowired
+    public UserMapper(OrderRepo orderRepo,@Lazy PasswordEncoder encoder, RoleRepo repo) {
+        this.orderRepo = orderRepo;
+        this.encoder = encoder;
+        this.repo = repo;
+    }
     private final OrderRepo orderRepo;
     private final PasswordEncoder encoder;
     private final RoleRepo repo;
