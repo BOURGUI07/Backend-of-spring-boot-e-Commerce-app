@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import main.dto.UserLoginRequestDTO;
+import main.dto.UserLoginResponseDTO;
 import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
 import main.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hp
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/auth")
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
@@ -41,7 +44,7 @@ public class UserAuthenticationController {
         @ApiResponse(responseCode="201", description="User is successfully Registered"),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<UserRegistrationResponseDTO> registerUser(
             @Valid @RequestBody UserRegistrationRequestDTO x){
         
@@ -52,6 +55,21 @@ public class UserAuthenticationController {
         }
     }
     
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDTO> loginUser(
+            @RequestBody @Valid UserLoginRequestDTO x
+    ){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(service.loginUser(x));
+        }catch(ConstraintViolationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }catch(BadCredentialsException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
     
     
     @Operation(summary="Register a new  Admin")
@@ -59,7 +77,7 @@ public class UserAuthenticationController {
         @ApiResponse(responseCode="201", description="Admin is successfully Registered"),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
-    @PostMapping("/admin")
+    @PostMapping("/admin/register")
     @PreAuthorize("hasRole('SUPERADMIN')")
     public ResponseEntity<UserRegistrationResponseDTO> registerAdmin(
             @Valid @RequestBody UserRegistrationRequestDTO x){
