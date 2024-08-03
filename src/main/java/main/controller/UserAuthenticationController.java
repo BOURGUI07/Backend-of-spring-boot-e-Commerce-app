@@ -65,8 +65,6 @@ public class UserAuthenticationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }catch(BadCredentialsException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
