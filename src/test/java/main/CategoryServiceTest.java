@@ -4,24 +4,20 @@
  */
 package main;
 
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import main.dto.ProductDTO;
+import main.dto.CategoryDTO;
 import main.exception.EntityNotFoundException;
-import main.models.Inventory;
+import main.models.Category;
 import main.models.Product;
 import main.repo.CategoryRepo;
-import main.repo.DiscountRepo;
-import main.repo.InventoryRepo;
-import main.repo.OrderItemRepo;
 import main.repo.ProductRepo;
-import main.service.ProductService;
-import main.util.mapper.ProductMapper;
-import main.util.specification.ProductSpecification;
+import main.service.CategoryService;
+import main.util.mapper.CategoryMapper;
+import main.util.specification.CategorySpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +25,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doNothing;
@@ -41,59 +35,40 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 
 /**
  *
  * @author hp
  */
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTest {
+public class CategoryServiceTest {
     @Mock
-    private  ProductRepo repo;
+    private  CategoryRepo repo;
     @Mock
-    private  CategoryRepo categoryRepo;
+    private  ProductRepo prepo;
     @Mock
-    private  DiscountRepo discountRepo;
+    private  CategoryMapper mapper;
     @Mock
-    private  InventoryRepo invRepo;
-    @Mock
-    private  OrderItemRepo orepo;
-    @Mock
-    private  ProductMapper mapper;
-    @InjectMocks
-    private ProductService service;
-    
     private Validator validator;
     
-    private ProductDTO x;
-    private Product p = new Product();
-    private Inventory i = new Inventory();
+    @InjectMocks
+    private CategoryService service;
     
-    public ProductServiceTest() {
-        i.setId(1);
-        i.setQuantity(10);
-        x = new ProductDTO(1,"name","desc","sku", 10.4,null,1,null, new ArrayList<>());
-        p.setCategory(null);
-        p.setDiscount(null);
-        p.setInventory(i);
-        p.setDesc("desc");
-        p.setPrice(10.4);
-        p.setSku("sku");
-        p.setName("name");
-        p.setId(1);
+    private Category p = new Category(1,"name","desc",new ArrayList<>());
+    private CategoryDTO x = new CategoryDTO(1,"name","desc",null);
+    
+    public CategoryServiceTest() {
     }
     
     @BeforeAll
     public static void setUpClass() {
-        
     }
     
     @AfterAll
     public static void tearDownClass() {
     }
     
-    @BeforeEach
+     @BeforeEach
     public void setUp() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         service.setValidator(validator);
@@ -149,7 +124,7 @@ public class ProductServiceTest {
     @Test
     void testFindAll(){
         var pageable = PageRequest.of(0, 10);
-        Page<Product> productPage = new PageImpl<>(List.of(p));
+        Page<Category> productPage = new PageImpl<>(List.of(p));
         
         when(repo.findAll(pageable)).thenReturn(productPage);
         when(mapper.toDTO(p)).thenReturn(x);
@@ -170,40 +145,4 @@ public class ProductServiceTest {
         service.delete(1);
         verify(repo,times(1)).delete(p);
     }
-    
-    @Test
-    void testValidation(){
-        //Test InventoryId Nullability
-        var product1 = new ProductDTO(1,"name","desc","sku", 10.4,null,null,null, new ArrayList<>());
-        assertThrows(ConstraintViolationException.class, () -> {
-            service.create(product1);
-        });
-        
-        //Test Product Price Positivity
-        var product2 = new ProductDTO(1,"name","desc","sku",0.0,null,1,null, new ArrayList<>());
-        assertThrows(ConstraintViolationException.class, () -> {
-            service.create(product2);
-        });
-        
-        //Test Product Name Blank state
-        var product3 = new ProductDTO(1,"","desc","sku",5.0,null,1,null, new ArrayList<>());
-        assertThrows(ConstraintViolationException.class, () -> {
-            service.create(product3);
-        });
-        
-        //Test Product SKU Blank state
-        var product4 = new ProductDTO(1,"name","desc","",5.0,null,1,null, new ArrayList<>());
-        assertThrows(ConstraintViolationException.class, () -> {
-            service.create(product4);
-        });
-    }
-   
-    @Test
-    void testProductsWithCategoryId(){
-        when(repo.findByCategoryId(1)).thenReturn(List.of(p));
-        when(mapper.toDTO(p)).thenReturn(x);
-        assertEquals(x, service.findProductsWithCategoryId(1).get(0));
-    }
-    
-   
 }
