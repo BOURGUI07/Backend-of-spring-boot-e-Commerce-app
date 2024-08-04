@@ -5,14 +5,15 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import main.dto.UserPaymentDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.UserPaymentDTOPage;
 import main.service.UserPaymentService;
 import main.util.PaymentProvider;
 import main.util.PaymentType;
@@ -47,8 +48,12 @@ public class UserPaymentController {
     
     @Operation(summary="Retrieve All user payments", description="Paginated Retrieval for all user payments")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of user payments is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of user payments List")
+        @ApiResponse(responseCode="204", description="List of user payments is empty",content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of user payments List",
+                 content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = UserPaymentDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<UserPaymentDTO>> findAll(
@@ -64,83 +69,81 @@ public class UserPaymentController {
     
     @Operation(summary="Get User Payment By Id", description="Retrieve a single User Payment by Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="User Payment isn't found"),
-        @ApiResponse(responseCode="200", description="User Payment was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="User Payment isn't found",
+                content=@Content),
+        @ApiResponse(responseCode="200", description="User Payment was successfully Found",
+                content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = UserPaymentDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id",
+                content=@Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserPaymentDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
     
     @PostMapping
     @Operation(summary="Create a new  User Payment")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="User Payment is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="User Payment is successfully created",
+                content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = UserPaymentDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body",
+                content=@Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<UserPaymentDTO> create(@Valid @RequestBody  UserPaymentDTO x){
         var createdProduct = service.create(x);
-        try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+       
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update User Payment")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="User Payment isn't found"),
-        @ApiResponse(responseCode="200", description="User Payment was successfully Updated"),
+        @ApiResponse(responseCode="404", description="User Payment isn't found",content=@Content),
+        @ApiResponse(responseCode="200", description="User Payment was successfully Updated",
+                content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = UserPaymentDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", content=@Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<UserPaymentDTO> update(@PathVariable Integer id, @Valid @RequestBody UserPaymentDTO x){
         var updatedProduct = service.update(id, x);
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
+        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+ 
     }
     
     @DeleteMapping("/{id}")
     @Operation(summary="Delete User Payment By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="User Payment isn't found"),
-        @ApiResponse(responseCode="204", description="User Payment was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="User Payment isn't found",content=@Content),
+        @ApiResponse(responseCode="204", description="User Payment was successfully Deleted",content=@Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id",content=@Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+ 
     }
     
     @GetMapping("/user/{id}")
     public ResponseEntity<UserPaymentDTO> findPaymentByUserId(@PathVariable Integer id){
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(service.findPaymentByUserId(id));
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    
+        
     }
 
     @GetMapping("/provider/{providerName}")

@@ -5,6 +5,8 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.ConstraintViolationException;
@@ -12,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.UserAddressDTO;
 import main.exception.EntityNotFoundException;
+import main.page_dtos.UserAddressDTOPage;
 import main.service.UserAddressService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,8 +47,11 @@ public class UserAddressController {
     
     @Operation(summary="Retrieve All user addresses", description="Paginated Retrieval for all user addresses")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of user addresses is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of user addresses List")
+        @ApiResponse(responseCode="204", description="List of user addresses is empty",
+                content=@Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of user addresses List",
+                content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = UserAddressDTOPage.class)) })
     })
     @GetMapping
     public ResponseEntity<Page<UserAddressDTO>> findAll(
