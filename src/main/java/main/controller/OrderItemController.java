@@ -82,7 +82,8 @@ public class OrderItemController {
     @Operation(summary="Create a new  OrderItem")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="OrderItem is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body"
+                + " Or Ordered Quantity That Exceeds Product Inventory")
     })
     public ResponseEntity<OrderItemDTO> create(@Valid @RequestBody  OrderItemDTO x){
         var createdProduct = service.create(x);
@@ -99,7 +100,8 @@ public class OrderItemController {
         @ApiResponse(responseCode="404", description="order item isn't found"),
         @ApiResponse(responseCode="200", description="order item was successfully Updated"),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body "
+                + "Or Ordered Quantity That Exceeds Product Inventory")
     })
     public ResponseEntity<OrderItemDTO> update(@PathVariable Integer id, @Valid @RequestBody  OrderItemDTO x){
         var updatedProduct = service.update(id, x);

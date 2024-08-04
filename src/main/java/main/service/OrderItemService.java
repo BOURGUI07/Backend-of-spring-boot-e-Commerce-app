@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderItemDTO;
 import main.exception.EntityNotFoundException;
+import main.exception.InsufficientInventoryException;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.ProductRepo;
@@ -49,12 +50,19 @@ public class OrderItemService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"));
-        o.setQuantity(x.quantity());
-        prepo.findById(x.productid()).ifPresent(o::setProduct);
-        orepo.findById(x.orderId()).ifPresent(o::setOrder);
-        var saved = repo.save(o);
-        return mapper.toDTO(saved);
+        var product = prepo.findById(x.productid())
+                .orElseThrow(() -> new EntityNotFoundException("Product with id: " + x.productid() + "isn't found"));
+        if(x.quantity()>product.getInventory().getQuantity()){
+            throw new InsufficientInventoryException("Quantity Ordered Exceeds Product Inventory");
+        }else{
+            var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"));
+            o.setQuantity(x.quantity());
+            prepo.findById(x.productid()).ifPresent(o::setProduct);
+            orepo.findById(x.orderId()).ifPresent(o::setOrder);
+            var saved = repo.save(o);
+            return mapper.toDTO(saved);
+        }
+        
     }
     @Cacheable(value="orderItemById", key="#id")
     public OrderItemDTO findById(Integer id){
@@ -77,9 +85,16 @@ public class OrderItemService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var s = mapper.toEntity(x);
-        var saved = repo.save(s);
-        return mapper.toDTO(saved);
+        var product = prepo.findById(x.productid())
+                .orElseThrow(() -> new EntityNotFoundException("Product with id: " + x.productid() + "isn't found"));
+        if(x.quantity()>product.getInventory().getQuantity()){
+            throw new InsufficientInventoryException("Quantity Ordered Exceeds Product Inventory");
+        }else{
+            var s = mapper.toEntity(x);
+            var saved = repo.save(s);
+            return mapper.toDTO(saved);
+        }
+        
     }
     
     @Transactional
