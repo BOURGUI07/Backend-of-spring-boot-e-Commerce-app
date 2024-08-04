@@ -5,13 +5,14 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.CartItemDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.CartItemDTOPage;
 import main.service.CartItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,8 +45,12 @@ public class CartItemController {
     
     @Operation(summary="Retrieve All CartItems", description="Paginated Retrieval for all cart items")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of cart item is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of cart item List")
+        @ApiResponse(responseCode="204", description="List of cart item is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of cart item List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CartItemDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<CartItemDTO>> findAll(
@@ -60,71 +65,76 @@ public class CartItemController {
     
     @Operation(summary="Get Cart Item By Id", description="Retrieve a single Cart Item by Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Cart Item isn't found"),
-        @ApiResponse(responseCode="200", description="Cart Item was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Cart Item isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Cart Item was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CartItemDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<CartItemDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+      
     }
     
     @PostMapping
     @Operation(summary="Create a new  CartItem")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="CartItem is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="CartItem is successfully created",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CartItemDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<CartItemDTO> create(@Valid @RequestBody  CartItemDTO x){
         var createdProduct = service.create(x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+      
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update cart item")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="cart item isn't found"),
-        @ApiResponse(responseCode="200", description="cart item was successfully Updated"),
+        @ApiResponse(responseCode="404", description="cart item isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="cart item was successfully Updated",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CartItemDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<CartItemDTO> update(@PathVariable Integer id, @Valid @RequestBody  CartItemDTO x){
         var updatedProduct = service.update(id, x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @Operation(summary="Delete cart item By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="cart item isn't found"),
-        @ApiResponse(responseCode="204", description="cart item was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="cart item isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="204", description="cart item was successfully Deleted", 
+                     content = @Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
 }

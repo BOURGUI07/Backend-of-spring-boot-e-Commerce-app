@@ -5,13 +5,14 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.InventoryDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.InventoryDTOPage;
 import main.service.InventoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,8 +45,12 @@ public class InventoryController {
     
     @Operation(summary="Retrieve All inventories", description="Paginated Retrieval for all inventories")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of inventories is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of inventories List")
+        @ApiResponse(responseCode="204", description="List of inventories is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of inventories List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = InventoryDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<InventoryDTO>> findAll(
@@ -61,71 +66,76 @@ public class InventoryController {
     
     @Operation(summary="Get Inventory By Id", description="Retrieve a single Inventory by Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Inventory isn't found"),
-        @ApiResponse(responseCode="200", description="Inventory was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Inventory isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Inventory was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = InventoryDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<InventoryDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @PostMapping
     @Operation(summary="Create a new  Inventory")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="Inventory is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="Inventory is successfully created",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = InventoryDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<InventoryDTO> create(@Valid @RequestBody  InventoryDTO x){
         var createdProduct = service.create(x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update inventory")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="inventory isn't found"),
-        @ApiResponse(responseCode="200", description="inventory was successfully Updated"),
+        @ApiResponse(responseCode="404", description="inventory isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="inventory was successfully Updated",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = InventoryDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<InventoryDTO> update(@PathVariable Integer id, @Valid @RequestBody  InventoryDTO x){
         var updatedProduct = service.update(id, x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+      
     }
     
     @DeleteMapping("/{id}")
     @Operation(summary="Delete inventory By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="inventory isn't found"),
-        @ApiResponse(responseCode="204", description="inventory was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="inventory isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="204", description="inventory was successfully Deleted", 
+                     content = @Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
 }
