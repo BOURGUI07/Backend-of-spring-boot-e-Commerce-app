@@ -72,8 +72,10 @@ public class Product extends BaseEntity{
     private List<OrderItem> orderItems=new ArrayList<>();
     
     public void addOrderItem(OrderItem orderItem){
-        orderItems.add(orderItem);
-        orderItem.setProduct(this);
+        if(orderItem.getQuantity()<=inventory.getQuantity()){
+            orderItems.add(orderItem);
+            orderItem.setProduct(this);
+        }
     }
     
     public Double discountedPrice(){
