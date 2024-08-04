@@ -5,13 +5,14 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.CategoryDTOPage;
 import main.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -43,8 +44,12 @@ public class CategoryController {
     
     @Operation(summary="Retrieve All categories", description="Paginated Retrieval for all categories")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of categories is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of category List")
+        @ApiResponse(responseCode="204", description="List of categories is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of category List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CategoryDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> findAll(
@@ -61,76 +66,81 @@ public class CategoryController {
     
     @Operation(summary="Get Category By Id", description="Retrieve a single Categoryby Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Category isn't found"),
-        @ApiResponse(responseCode="200", description="Category was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Category isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Category was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CategoryDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+       
     }
     
     @PostMapping
     @Operation(summary="Create a new  Category")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="Category is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="Category is successfully created",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CategoryDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ResponseEntity<CategoryDTO> create(@Valid @RequestBody  CategoryDTO x){
         var createdProduct = service.create(x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+       
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update category")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="category isn't found"),
-        @ApiResponse(responseCode="200", description="category was successfully Updated"),
+        @ApiResponse(responseCode="404", description="category isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="category was successfully Updated",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CategoryDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ResponseEntity<CategoryDTO> update(@PathVariable Integer id, @Valid @RequestBody  CategoryDTO x){
         var updatedProduct = service.update(id, x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @DeleteMapping("/{id}")
     @Operation(summary="Delete category By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="category isn't found"),
-        @ApiResponse(responseCode="204", description="category was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="category isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="204", description="category was successfully Deleted", 
+                     content = @Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @GetMapping("/search")

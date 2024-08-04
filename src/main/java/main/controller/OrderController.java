@@ -5,15 +5,16 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.OrderResponseDTOPage;
 import main.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -46,8 +47,12 @@ public class OrderController {
     
     @Operation(summary="Retrieve All orders", description="Paginated Retrieval for all orders")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of orders is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of orders List")
+        @ApiResponse(responseCode="204", description="List of orders is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of orders List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = OrderResponseDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<OrderResponseDTO>> findAll(
@@ -64,86 +69,85 @@ public class OrderController {
     
     @Operation(summary="Get Order By Id", description="Retrieve a single Order by Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Order isn't found"),
-        @ApiResponse(responseCode="200", description="Order was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Order isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Order was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = OrderResponseDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @PostMapping
     @Operation(summary="Create a new  Order")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="Order is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="Order is successfully created",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = OrderResponseDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
+                     content = @Content)
     })
     public ResponseEntity<OrderResponseDTO> create(@Valid @RequestBody  OrderDTO x){
         var createdProduct = service.create(x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update order")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="order isn't found"),
-        @ApiResponse(responseCode="200", description="order was successfully Updated"),
+        @ApiResponse(responseCode="404", description="order isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="order was successfully Updated",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = OrderResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<OrderResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody  OrderDTO x){
         var updatedProduct = service.update(id, x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @DeleteMapping("/{id}")
     @Operation(summary="Delete order By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="order isn't found"),
-        @ApiResponse(responseCode="204order", description="order was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="order isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="204order", description="order was successfully Deleted", 
+                     content = @Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @GetMapping("/user/{id}")
     public ResponseEntity<List<OrderResponseDTO>> findOrdersWithUserId(@PathVariable Integer id){
         var list = service.findOrdersByUser(id);
-        try{
+        
             if(list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             return ResponseEntity.status(HttpStatus.OK).body(list);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
 }

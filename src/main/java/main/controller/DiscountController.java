@@ -5,13 +5,14 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.DiscountDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.DiscountDTOPage;
 import main.service.DiscountService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,8 +45,12 @@ public class DiscountController {
     
     @Operation(summary="Retrieve All discounts", description="Paginated Retrieval for all discounts")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of discounts is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of discounts List")
+        @ApiResponse(responseCode="204", description="List of discounts is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of discounts List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = DiscountDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<DiscountDTO>> findAll(
@@ -61,71 +66,76 @@ public class DiscountController {
     
     @Operation(summary="Get Discount By Id", description="Retrieve a single Discount by Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Discount isn't found"),
-        @ApiResponse(responseCode="200", description="Discount was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Discount isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Discount was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = DiscountDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<DiscountDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+       
     }
     
     @PostMapping
     @Operation(summary="Create a new  Discount")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="Discount is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="Discount is successfully created",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = DiscountDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<DiscountDTO> create(@Valid @RequestBody  DiscountDTO x){
         var createdProduct = service.create(x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update discount")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="discount isn't found"),
-        @ApiResponse(responseCode="200", description="discount was successfully Updated"),
+        @ApiResponse(responseCode="404", description="discount isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="discount was successfully Updated",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = DiscountDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<DiscountDTO> update(@PathVariable Integer id, @Valid @RequestBody  DiscountDTO x){
         var updatedProduct = service.update(id, x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
     
     @DeleteMapping("/{id}")
     @Operation(summary="Delete discount By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="discount isn't found"),
-        @ApiResponse(responseCode="204", description="discount was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="discount isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="204", description="discount was successfully Deleted", 
+                     content = @Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        
     }
 }
