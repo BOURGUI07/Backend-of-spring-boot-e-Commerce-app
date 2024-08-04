@@ -5,14 +5,15 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import main.dto.ProductDTO;
-import main.exception.EntityNotFoundException;
+import main.page_dtos.ProductDTOPage;
 import main.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,8 +45,12 @@ public class ProductController {
     
     @Operation(summary="Retrieve All Products", description="Paginated Retrieval for all products")
     @ApiResponses(value={
-        @ApiResponse(responseCode="204", description="List of products is empty"),
-        @ApiResponse(responseCode="200", description="Successfull Retrieval of Product List")
+        @ApiResponse(responseCode="204", description="List of products is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of Product List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = ProductDTOPage.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> findAll(
@@ -62,76 +67,81 @@ public class ProductController {
     
     @Operation(summary="Get Product By Id", description="Retrieve a single product by Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Product isn't found"),
-        @ApiResponse(responseCode="200", description="Product was successfully Found"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Product isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Product was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = ProductDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+       
     }
     
     @Operation(summary="Create a new  Product")
     @ApiResponses(value={
-        @ApiResponse(responseCode="201", description="Product is successfully created"),
-        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
+        @ApiResponse(responseCode="201", description="Product is successfully created",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = ProductDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
         var createdProduct = service.create(x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-        }catch(ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+      
     }
     
     @PutMapping("/{id}")
     @Operation(summary="Update Product")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Product isn't found"),
-        @ApiResponse(responseCode="200", description="Product was successfully Updated"),
+        @ApiResponse(responseCode="404", description="Product isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Product was successfully Updated",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = ProductDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
-                + "a Non Valid Entity Body")
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
         var updatedProduct = service.update(id, x);
-        try{
+        
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
-        }catch(IllegalArgumentException | ConstraintViolationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+      
     }
     
     @DeleteMapping("/{id}")
     @Operation(summary="Delete Product By Id")
     @ApiResponses(value={
-        @ApiResponse(responseCode="404", description="Product isn't found"),
-        @ApiResponse(responseCode="204", description="Product was successfully Deleted"),
-        @ApiResponse(responseCode="400", description="Client Entered a Negative id")
+        @ApiResponse(responseCode="404", description="Product isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="204", description="Product was successfully Deleted", 
+                     content = @Content),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
-        try{
+        
             service.delete(id);
             return ResponseEntity.noContent().build();
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+      
     }
     
     @GetMapping("/search")
@@ -156,15 +166,11 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(@PathVariable Integer id){
         var list = service.findProductsWithCategoryId(id);
-        try{
+        
             if(list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             return ResponseEntity.status(HttpStatus.OK).body(list);
-        }catch(IllegalArgumentException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+      
     }
 }
