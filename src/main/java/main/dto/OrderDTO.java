@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
@@ -17,6 +18,8 @@ public record OrderDTO(
         Integer userId,
         @NotNull
         Integer paymentDetailId,
+        @NotNull(message="The Order Item List is Required")
+        @NotEmpty(message="The Order Item List should Contain at least one element")
         List<Integer> orderItemIds
         ) {
 

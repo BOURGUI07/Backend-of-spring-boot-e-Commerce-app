@@ -14,9 +14,13 @@ import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
+import main.exception.InsufficientInventoryException;
+import main.models.OrderItem;
+import main.models.Product;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
+import main.repo.ProductRepo;
 import main.repo.UserRepo;
 import main.util.mapper.OrderMapper;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,7 +42,12 @@ public class OrderService {
     private final OrderItemRepo detailRepo;
     private final PaymentDetailRepo paymentRepo;
     private final OrderMapper mapper;
+    private final ProductRepo productRepo;
     private Validator validator;
+    
+    
+    
+    
     @Cacheable(value="allOrders", key = "'findAll_' + #page + '_' + #size")
     public Page<OrderResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page, size);
@@ -63,9 +72,35 @@ public class OrderService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var o = mapper.toEntity(x);
-        var saved = repo.save(o);
-        return mapper.toDTO(saved);
+        var user = userRepo.findById(x.userId())
+                .orElseThrow(() -> new EntityNotFoundException("User with id: " + x.userId() + " isn't found"));
+        if(x.orderItemIds()!=null && !x.orderItemIds().isEmpty()){
+            var orderItems = detailRepo.findAllById(x.orderItemIds());
+            var desiredProductIds = orderItems.stream().map(e -> e.getProduct().getId()).toList();
+            var availableProducts = productRepo.findAllById(desiredProductIds);
+            if(desiredProductIds.size()==availableProducts.size()){
+                var map = orderItems.stream().collect(Collectors.toMap(OrderItem::getProduct, OrderItem::getQuantity));
+               
+                var isOrderedQuantityAvailable = availableProducts.stream().allMatch(p -> p.getInventory().getQuantity()>=map.get(p));
+                if(isOrderedQuantityAvailable){
+                    availableProducts.forEach(p -> p.getInventory().setQuantity(p.getInventory().getQuantity()-map.get(p)));
+                    productRepo.saveAll(availableProducts);
+                    detailRepo.saveAll(orderItems);
+                    var o = mapper.toEntity(x);
+                    user.addOrder(o);
+                    userRepo.save(user);
+                    var saved = repo.save(o);
+                    return mapper.toDTO(saved);
+                }else{
+                    throw new InsufficientInventoryException("At Least One Product Ordered Quantity Exceeds Inventory");
+                }
+            }else{
+                throw new EntityNotFoundException("At least One Product Wasn't Found");
+            }
+        }else{
+            throw new IllegalArgumentException("Either the order item list is null or empty");
+        }
+        
     }
     
     @Transactional
