@@ -4,16 +4,16 @@
  */
 package main.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,39 +24,42 @@ import lombok.NoArgsConstructor;
  * @author hp
  */
 @Entity
-@Table(name="discount")
+@Table(name="reviews")
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Discount extends BaseEntity{
+public class Reviews extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
     private Integer id;
     
-    @Column(name="discount_name",unique=true,nullable=false,length=100)
-    private String name;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name="user_id")
+    private User user;
     
-    @Column(name="description", length=500)
-    private String desc;
     
-    @Column(name="discount_percent")
-    private double percent;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name="product_id")
+    private Product product;
     
-    @Column(name="active")
-    private Boolean  active;
+    @Column(name="title")
+    private String title;
     
-    @OneToMany(mappedBy="discount")
-    @JsonManagedReference
-    private List<Product> products=new ArrayList<>();
+    @Column(name="content")
+    private String content;
     
-    public void removeProduct(Product p){
-        products.remove(p);
-        p.setDiscount(null);
+    @Column(name="rating", nullable=false)
+    private Integer rating;
+    
+    public String getTitle(){
+        return title!=null?title:"";
     }
     
-    public Boolean getActive(){
-        return (active==null)? false:active;
+    public String getContent(){
+        return content!=null?content:"";
     }
 }

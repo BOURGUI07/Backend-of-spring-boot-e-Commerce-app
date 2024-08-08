@@ -55,4 +55,8 @@ public class PaymentDetail extends BaseEntity{
             this.amount=order.getTotal();
         }
     }
+    
+    public PaymentStatus getPaymentStatus(){
+        return paymentStatus==null? PaymentStatus.PENDING:paymentStatus;
+    }
 }

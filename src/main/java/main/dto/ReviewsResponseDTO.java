@@ -4,20 +4,17 @@
  */
 package main.dto;
 
-
-import main.util.PaymentProvider;
-import main.util.PaymentStatus;
-
 /**
  *
  * @author hp
  */
-public record PaymentDetailResponseDTO(
+public record ReviewsResponseDTO(
         Integer id,
-        Integer orderId,
-        Double amount,
-        PaymentProvider provider,
-        PaymentStatus status
+        String username,
+        String productName,
+        Integer rating,
+        String title,
+        String content
         ) {
-
+    
 }

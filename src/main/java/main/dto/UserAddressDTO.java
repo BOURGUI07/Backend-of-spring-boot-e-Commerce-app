@@ -15,7 +15,7 @@ public record UserAddressDTO(
         Integer id,
         @NotNull
         Integer userId,
-        @NotBlank
+        @NotBlank(message="addressLine1 shouldn't be blank")
         String addressLine1,
         String addressLine2,
         @NotBlank
