@@ -40,6 +40,11 @@ public class ReviewsService {
         return repo.findByProductId(pageable, productId).map(mapper::toDTO);
     }
     
+    public Page<ReviewsResponseDTO> findAll(int page, int size, String name){
+        var pageable = PageRequest.of(page, size);
+        return repo.findByProductName(pageable, name).map(mapper::toDTO);
+    }
+    
     
     @Cacheable(value="reviewById", key="#id")
     public ReviewsResponseDTO findById(Integer id){
