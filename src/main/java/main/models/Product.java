@@ -83,6 +83,10 @@ public class Product extends BaseEntity{
         }
     }
     
+    public void addReview(Reviews r){
+        reviews.add(r);
+    }
+    
     public Double discountedPrice(){
         Double actualPrice = (price!=null) ? price :0.0;
         return (discount!=null && discount.getActive())? actualPrice*(1-discount.getPercent()):actualPrice;
