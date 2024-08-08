@@ -37,13 +37,13 @@ public class Reviews extends BaseEntity{
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", updatable=false)
     private User user;
     
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name="product_id")
+    @JoinColumn(name="product_id", updatable=false)
     private Product product;
     
     @Column(name="title")
@@ -61,5 +61,15 @@ public class Reviews extends BaseEntity{
     
     public String getContent(){
         return content!=null?content:"";
+    }
+    
+    public void setUser(User user){
+        user.addReview(this);
+        this.user = user;
+    }
+    
+    public void setProduct(Product product){
+        product.addReview(this);
+        this.product=product;
     }
 }

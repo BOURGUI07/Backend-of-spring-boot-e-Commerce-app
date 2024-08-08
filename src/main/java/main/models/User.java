@@ -75,6 +75,10 @@ public class User extends BaseEntity implements UserDetails{
     @JsonManagedReference
     private List<Reviews> reviews = new ArrayList<>();
     
+    public void addReview(Reviews r){
+        reviews.add(r);
+    }
+    
     public void addOrder(Order order){
         orders.add(order);
         order.setUser(this);

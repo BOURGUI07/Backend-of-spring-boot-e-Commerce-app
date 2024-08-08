@@ -12,18 +12,13 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author hp
  */
-public record ReviewsRequestDTO(
-            @NotNull(message="userId is required")
-            Integer userId,
-            @NotNull(message="productId is required")
-            Integer productId,
+public record ReviewsUpdateRequestDTO(
             @NotNull(message="rating is required")
             @Min(value=1, message="Rating must be at least 1")
             @Max(value=5, message="Rating must be at most 5")
             Integer rating,
             String title,
             String content
-        
         ) {
 
 }

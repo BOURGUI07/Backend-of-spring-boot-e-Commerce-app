@@ -27,8 +27,18 @@ public class ReviewsMapper {
         r.setContent(x.content());
         r.setRating(x.rating());
         r.setTitle(x.title());
-        userRepo.findById(x.userId()).ifPresent(r::setUser);
-        productRepo.findById(x.productId()).ifPresent(r::setProduct);
+        var opUser = userRepo.findById(x.userId());
+        if(opUser.isPresent()){
+            var user = opUser.get();
+            r.setUser(user);
+            userRepo.save(user);
+        }
+        var opProduct = productRepo.findById(x.productId());
+        if(opProduct.isPresent()){
+            var product = opProduct.get();
+            r.setProduct(product);
+            productRepo.save(product);
+        }
         return r;
     }
     
