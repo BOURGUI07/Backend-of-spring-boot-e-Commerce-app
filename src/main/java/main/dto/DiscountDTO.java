@@ -5,6 +5,7 @@
 package main.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 
@@ -14,12 +15,13 @@ import java.util.List;
  */
 public record DiscountDTO(
         Integer id,
-        @NotBlank
+        @NotBlank(message="discount name is required")
         String name,
         String desc,
         @Positive
         double percent,
         Boolean active,
+        @NotEmpty(message="discount product list should contain at least one product")
         List<Integer> productIds
         ) {
 

@@ -13,11 +13,10 @@ import main.util.PaymentStatus;
  * @author hp
  */
 public record PaymentDetailDTO(
-        @NotNull
+        @NotNull(message="order Id is required")
         Integer orderId,
-        @NotNull
+        @NotNull(message="payment provider is required")
         PaymentProvider provider,
-        @NotNull
         PaymentStatus status
         ) {
 

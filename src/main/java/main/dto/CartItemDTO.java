@@ -13,11 +13,12 @@ import jakarta.validation.constraints.Positive;
  */
 public record CartItemDTO(
         Integer id,
-        @NotNull
+        @NotNull(message="session Id is required")
         Integer sessionId,
-        @NotNull
+        @NotNull(message="Product Id is required")
         Integer productId,
-        @Positive
+        @NotNull(message="Product Quantity is required")
+        @Positive(message="Product Quantity Must be positive")
         Integer quantity
         ) {
 }

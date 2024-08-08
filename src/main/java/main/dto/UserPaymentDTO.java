@@ -5,6 +5,7 @@
 package main.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import main.util.PaymentProvider;
 import main.util.PaymentType;
@@ -15,15 +16,16 @@ import main.util.PaymentType;
  */
 public record UserPaymentDTO(
         Integer id,
-        @NotNull
+        @NotNull(message="user id is required")
         Integer userId,
-        @NotNull
+        @NotNull(message="payment type is required")
         PaymentType type,
-        @NotNull
+        @NotNull(message="payment provider is required")
         PaymentProvider provider,
-        @NotNull
+        @NotNull(message="account number is required")
+        @Positive
         Integer accountNo,
-        @NotNull
+        @NotNull(message="cart expiration date is required")
         LocalDate expiryDate
         ) {
 

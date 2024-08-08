@@ -4,8 +4,7 @@
  */
 package main.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+
 import main.util.PaymentProvider;
 import main.util.PaymentStatus;
 
@@ -15,13 +14,9 @@ import main.util.PaymentStatus;
  */
 public record PaymentDetailResponseDTO(
         Integer id,
-        @NotNull
         Integer orderId,
-        @Positive
         Double amount,
-        @NotNull
         PaymentProvider provider,
-        @NotNull
         PaymentStatus status
         ) {
 

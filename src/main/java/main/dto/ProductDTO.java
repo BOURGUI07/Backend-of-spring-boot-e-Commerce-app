@@ -27,7 +27,7 @@ public record ProductDTO(
         @Positive(message="Product price must be positive")
         Double price,
         Integer categoryId,
-        @NotNull
+        @NotNull(message="inventory id required")
         Integer inventoryId,
         Integer discountId,
         List<Integer> orderItemsIds

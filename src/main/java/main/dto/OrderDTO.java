@@ -14,11 +14,10 @@ import java.util.List;
  */
 public record OrderDTO(
         Integer id,
-        @NotNull
+        @NotNull(message="user Id is required")
         Integer userId,
-        @NotNull
+        @NotNull(message="payment detail Id is required")
         Integer paymentDetailId,
-        @NotNull(message="The Order Item List is Required")
         @NotEmpty(message="The Order Item List should Contain at least one element")
         List<Integer> orderItemIds
         ) {
