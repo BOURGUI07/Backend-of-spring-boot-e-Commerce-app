@@ -71,6 +71,11 @@ public class Product extends BaseEntity{
     @JsonManagedReference
     private List<OrderItem> orderItems=new ArrayList<>();
     
+    
+    @OneToMany(mappedBy="product", cascade=CascadeType.ALL,orphanRemoval=true)
+    @JsonManagedReference
+    private List<Reviews> reviews = new ArrayList<>();
+    
     public void addOrderItem(OrderItem orderItem){
         if(orderItem.getQuantity()<=inventory.getQuantity()){
             orderItems.add(orderItem);

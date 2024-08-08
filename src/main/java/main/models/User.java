@@ -70,6 +70,11 @@ public class User extends BaseEntity implements UserDetails{
     @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
     
+    
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL,orphanRemoval=true)
+    @JsonManagedReference
+    private List<Reviews> reviews = new ArrayList<>();
+    
     public void addOrder(Order order){
         orders.add(order);
         order.setUser(this);
