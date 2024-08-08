@@ -70,10 +70,11 @@ public class User extends BaseEntity implements UserDetails{
     @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
     
-    public void removeOrder(Order order){
+    public void addOrder(Order order){
         orders.add(order);
         order.setUser(this);
     }
+ 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
