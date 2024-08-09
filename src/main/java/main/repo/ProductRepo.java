@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepo extends JpaRepository<Product,Integer> , JpaSpecificationExecutor<Product>{
     List<Product> findByCategoryId(Integer id);
+    List<Product> findByCategoryName(String name);
+    List<Product> findByDiscountActive(Boolean active);
     @Override
     Page<Product> findAll(Pageable pageable);
 }
