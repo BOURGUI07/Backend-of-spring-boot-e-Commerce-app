@@ -26,3 +26,4 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **Comprehensive Exception Handling**: Ensures that the application gracefully handles and logs exceptions, providing meaningful error messages.
 - **Detailed Swagger Documentation**: Automatically generated API documentation for easy exploration and testing of endpoints.
 - **Unit Testing**: Extensive use of JUnit and Mockito for reliable and maintainable tests.
+- **CSV Exporting**: Ability to export reports into CSV files based on SQL querying retrieval, enabling easy data analysis and sharing.
