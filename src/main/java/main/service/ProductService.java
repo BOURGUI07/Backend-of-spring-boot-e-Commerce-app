@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.ProductDTO;
+import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.repo.CategoryRepo;
 import main.repo.DiscountRepo;
@@ -22,6 +23,7 @@ import main.util.mapper.ProductMapper;
 import main.util.specification.ProductSpecification;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -71,8 +73,12 @@ public class ProductService {
             throw new ConstraintViolationException(violations);
         }
         var product = mapper.toEntity(x);
-        var savedProduct = repo.save(product);
-        return mapper.toDTO(savedProduct);
+        try{
+            var saved = repo.save(product);
+            return mapper.toDTO(saved);
+        }catch(DataIntegrityViolationException e){
+            throw new AlreadyExistsException("A product with this name already exists.");
+        }
     }
     
     @Transactional
@@ -104,8 +110,12 @@ public class ProductService {
         if(list!=null){
             product.setOrderItems(orepo.findAllById(list));
         }
-        var savedProduct = repo.save(product);
-        return mapper.toDTO(savedProduct);
+        try{
+            var saved = repo.save(product);
+            return mapper.toDTO(saved);
+        }catch(DataIntegrityViolationException e){
+            throw new AlreadyExistsException("A product with this name already exists.");
+        }
     }
     
     @Transactional
