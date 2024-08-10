@@ -23,10 +23,10 @@ public class ReviewsMapper {
     private final ProductRepo productRepo;
     
     public Reviews toEntity(ReviewsRequestDTO x){
-        var r = new Reviews();
-        r.setContent(x.content());
-        r.setRating(x.rating());
-        r.setTitle(x.title());
+        var r = new Reviews()
+        .setContent(x.content())
+        .setRating(x.rating())
+        .setTitle(x.title());
         var opUser = userRepo.findById(x.userId());
         if(opUser.isPresent()){
             var user = opUser.get();

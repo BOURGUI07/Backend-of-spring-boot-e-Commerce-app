@@ -21,9 +21,9 @@ public class CategoryMapper {
     private final ProductRepo productRepo;
     
     public Category toEntity(CategoryDTO x){
-        var c = new Category();
-        c.setDesc(x.desc());
-        c.setName(x.name());
+        var c = new Category()
+        .setDesc(x.desc())
+        .setName(x.name());
         var list = x.productIds();
         if(list!=null){
             c.setProducts(productRepo.findAllById(list));

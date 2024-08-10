@@ -21,11 +21,11 @@ public class UserPaymentMapper {
     
     
     public UserPayment toEntity(UserPaymentDTO x){
-        var p = new UserPayment();
-        p.setAccountNumber(x.accountNo());
-        p.setPaymentProvider(x.provider());
-        p.setExpiryDate(x.expiryDate());
-        p.setPaymentType(x.type());
+        var p = new UserPayment()
+        .setAccountNumber(x.accountNo())
+        .setPaymentProvider(x.provider())
+        .setExpiryDate(x.expiryDate())
+        .setPaymentType(x.type());
         userRepo.findById(x.userId()).ifPresent(p::setUser);
         return p;
     }

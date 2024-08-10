@@ -22,8 +22,7 @@ public class OrderItemMapper {
     private final OrderRepo orepo;
     
     public OrderItem toEntity(OrderItemDTO x){
-        var o = new OrderItem();
-        o.setQuantity(x.quantity());
+        var o = new OrderItem().setQuantity(x.quantity());
         prepo.findById(x.productid()).ifPresent(o::setProduct);
         orepo.findById(x.orderId()).ifPresent(o::setOrder);
         return o;

@@ -88,7 +88,11 @@ public class ProductService {
             throw new IllegalArgumentException("id must be positive");
         }
         var product = repo.findById(id).orElseThrow(() -> 
-            new EntityNotFoundException("Product with id " + id + " isn't found"));
+            new EntityNotFoundException("Product with id " + id + " isn't found"))
+                .setDesc(x.desc())
+                .setName(x.name())
+                .setSku(x.sku())
+                .setPrice(x.price());
         if(x.categoryId()!=null){
             categoryRepo.findById(x.categoryId()).ifPresent(product::setCategory);
         }
@@ -96,10 +100,6 @@ public class ProductService {
             discountRepo.findById(x.discountId()).ifPresent(product::setDiscount);
         }
         invRepo.findById(x.inventoryId()).ifPresent(product::setInventory);
-        product.setDesc(x.desc());
-        product.setName(x.name());
-        product.setSku(x.sku());
-        product.setPrice(x.price());
         var list = x.orderItemsIds();
         if(list!=null){
             product.setOrderItems(orepo.findAllById(list));

@@ -34,8 +34,9 @@ public class InventoryService {
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
-        var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"));
-        o.setQuantity(x.quantity());
+        var o = repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"))
+        .setQuantity(x.quantity());
         var saved = repo.save(o);
         return mapper.toDTO(saved);
     }

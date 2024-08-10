@@ -86,10 +86,10 @@ public class ReviewsService {
             throw new ConstraintViolationException(violations);
         }
         var review = repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Review with id: " + id + " isn't found"));
-        review.setRating(x.rating());
-        review.setTitle(x.title());
-        review.setContent(x.content());
+                .orElseThrow(() -> new EntityNotFoundException("Review with id: " + id + " isn't found"))
+        .setRating(x.rating())
+        .setTitle(x.title())
+        .setContent(x.content());
         var savedReview = repo.save(review);
         return mapper.toDTO(savedReview);
     }

@@ -55,8 +55,9 @@ public class OrderItemService {
         if(x.quantity()>product.getInventory().getQuantity()){
             throw new InsufficientInventoryException("Quantity Ordered Exceeds Product Inventory");
         }else{
-            var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"));
-            o.setQuantity(x.quantity());
+            var o = repo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"))
+            .setQuantity(x.quantity());
             prepo.findById(x.productid()).ifPresent(o::setProduct);
             orepo.findById(x.orderId()).ifPresent(o::setOrder);
             var saved = repo.save(o);

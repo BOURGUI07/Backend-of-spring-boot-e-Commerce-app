@@ -20,12 +20,12 @@ public class AddressMapper {
     private final UserRepo userRepo;
     
     public UserAddress toEntity(UserAddressDTO x){
-        var a = new UserAddress();
-        a.setAddressLine1(x.addressLine1());
-        a.setAddressLine2(x.addressLine2());
-        a.setCity(x.city());
-        a.setPostalCode(x.postalcode());
-        a.setCountry(x.country());
+        var a = new UserAddress()
+        .setAddressLine1(x.addressLine1())
+        .setAddressLine2(x.addressLine2())
+        .setCity(x.city())
+        .setPostalCode(x.postalcode())
+        .setCountry(x.country());
         var user = userRepo.findById(x.userId());
         if(user.isPresent()){
             a.setUser(user.get());

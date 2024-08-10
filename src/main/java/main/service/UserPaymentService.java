@@ -76,12 +76,12 @@ public class UserPaymentService {
             throw new ConstraintViolationException(violations);
         }
         var p = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(""
-                + "User Payment with id: " + id + " isn't found"));
+                + "User Payment with id: " + id + " isn't found"))
         
-        p.setAccountNumber(x.accountNo());
-        p.setExpiryDate(x.expiryDate());
-        p.setPaymentProvider(x.provider());
-        p.setPaymentType(x.type());
+        .setAccountNumber(x.accountNo())
+        .setExpiryDate(x.expiryDate())
+        .setPaymentProvider(x.provider())
+        .setPaymentType(x.type());
         userRepo.findById(x.userId()).ifPresent(p::setUser);
         var saved = repo.save(p);
         return mapper.toDTO(saved);

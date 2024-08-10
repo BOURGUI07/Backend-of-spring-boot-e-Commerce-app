@@ -21,9 +21,9 @@ public class PaymentDetailMapper {
     private final OrderRepo orepo;
     
     public PaymentDetail toEntity(PaymentDetailDTO x){
-        var d = new PaymentDetail();
-        d.setPaymentProvider(x.provider());
-        d.setPaymentStatus(x.status());
+        var d = new PaymentDetail()
+        .setPaymentProvider(x.provider())
+        .setPaymentStatus(x.status());
         orepo.findById(x.orderId()).ifPresent(d::setOrder);
         return d;
     }

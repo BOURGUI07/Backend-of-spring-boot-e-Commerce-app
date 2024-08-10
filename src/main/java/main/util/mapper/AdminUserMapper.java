@@ -28,13 +28,13 @@ public class AdminUserMapper {
     
     public User toEntity(UserRegistrationRequestDTO x){
         var role = repo.findByName(RoleEnum.ADMIN);
-        var u = new User();
-        u.setEmail(x.email());
-        u.setFirstname(x.firstname());
-        u.setLastname(x.lastname());
-        u.setPassword(encoder.encode(x.password()));
-        u.setUsername(x.username());
-        u.setPhone(x.phone());
+        var u = new User()
+        .setEmail(x.email())
+        .setFirstname(x.firstname())
+        .setLastname(x.lastname())
+        .setPassword(encoder.encode(x.password()))
+        .setUsername(x.username())
+        .setPhone(x.phone());
         role.ifPresent(u::setRole);
         var orderList = x.orderIds();
         if(orderList!=null){

@@ -22,6 +22,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +39,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
+@DynamicInsert
+@DynamicUpdate
 public class User extends BaseEntity implements UserDetails{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
