@@ -20,6 +20,7 @@ public record ProductDTO(
         @NotBlank
         @Size(min=3,max=100,message="Product name must be between 3 and 100 characters")
         String name,
+        @Size(max=500,message="Product desc must be at max 500 characters")
         String desc,
         @NotBlank
         @Size(max=16)

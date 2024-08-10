@@ -28,6 +28,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     
+    @ExceptionHandler(AlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ResourceError> handleAlreadyExistsException(AlreadyExistsException ex) {
+        var errorResponse = new ResourceError(HttpStatus.CONFLICT.value(), ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
     
     @ExceptionHandler(InsufficientInventoryException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

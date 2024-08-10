@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
+import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.repo.CategoryRepo;
 import main.repo.ProductRepo;
@@ -18,6 +19,7 @@ import main.util.mapper.CategoryMapper;
 import main.util.specification.CategorySpecification;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -64,8 +66,12 @@ public class CategoryService {
             throw new ConstraintViolationException(violations);
         }
         var c = mapper.toEntity(x);
-        var saved = repo.save(c);
-        return mapper.toDTO(saved);
+        try{
+            var saved = repo.save(c);
+            return mapper.toDTO(saved);
+        }catch(DataIntegrityViolationException e){
+            throw new AlreadyExistsException("A category with this name already exists.");
+        }
     }
     
     @Transactional
@@ -88,8 +94,12 @@ public class CategoryService {
         if(list!=null){
             c.setProducts(prepo.findAllById(list));
         }
-        var saved  = repo.save(c);
-        return mapper.toDTO(saved);
+        try{
+            var saved = repo.save(c);
+            return mapper.toDTO(saved);
+        }catch(DataIntegrityViolationException e){
+            throw new AlreadyExistsException("A category with this name already exists.");
+        }
     }
     
     @Transactional
