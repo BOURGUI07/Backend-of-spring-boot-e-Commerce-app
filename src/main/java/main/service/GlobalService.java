@@ -12,25 +12,22 @@ import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
 import main.dto.OrderProductByCategoryDTO;
 import main.dto.OrdersQtyDTO;
-import main.dto.ProductDTO;
+import main.dto.ProductReportResponseDTO;
 import main.dto.ReviewsResponseDTO;
 import main.dto.UserIdNameDTO;
 import main.dto.UserRegistrationResponseDTO;
 import main.models.Order;
-import main.models.Product;
 import main.models.Reviews;
 import main.models.User;
 import main.models.UserPayment;
 import main.repo.CategoryRepo;
 import main.repo.OrderRepo;
-import main.repo.ProductRepo;
 import main.repo.ReviewsRepo;
 import main.repo.UserPaymentRepo;
 import main.repo.UserRepo;
 import main.util.PaymentProvider;
 import main.util.PaymentType;
 import main.util.mapper.CategoryMapper;
-import main.util.mapper.ProductMapper;
 import main.util.mapper.ReviewsMapper;
 import main.util.mapper.UserMapper;
 import org.springframework.stereotype.Service;
@@ -42,28 +39,57 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GlobalService {
-    private final ProductRepo productRepo;
     private final OrderRepo orderRepo;
     private final UserPaymentRepo paymentRepo;
     private final ReviewsRepo rrepo;
     private final CategoryRepo crepo;
     private final UserRepo urepo;
-    private final ProductMapper mapper;
     private final UserMapper umapper;
     private final ReviewsMapper rmapper;
     private final CategoryMapper cmapper;
     private final EntityManager em;
     
     //Retrieve all products in a specific category
-    public List<ProductDTO> findProductsByCategoryName(String name){
+    
+    /*public List<ProductDTO> findProductsByCategoryName(String name){
         return productRepo.findByCategoryName(name).stream().map(mapper::toDTO).toList();
     }
+    */
     
+    public List<ProductReportResponseDTO> findProductsByCategoryName(String name){
+        var q = "SELECT p.id, p.product_name "
+                + "FROM product p JOIN category c "
+                + "ON p.category_id = c.id "
+                + "WHERE c.category_name= :x";
+        List<Object[]> result = em.createNativeQuery(q).setParameter("x", name).getResultList();
+        return result
+                .stream()
+                .map(x->new ProductReportResponseDTO((Integer)x[0],(String)x[1]))
+                .toList();
+    }
+    
+   
     
     //List all active discounts and their associated products
-    public List<ProductDTO> findProductsByActiveDiscount(){
+    
+    
+   /* public List<ProductDTO> findProductsByActiveDiscount(){
         return productRepo.findByDiscountActive(Boolean.TRUE).stream().map(mapper::toDTO).toList();
     }
+    */
+    
+    public List<ProductReportResponseDTO> findProductsByActiveDiscount(){
+        var q = "SELECT p.id, p.product_name "
+                + "FROM product p JOIN discount c "
+                + "ON p.discount_id = c.id "
+                + "WHERE c.active= TRUE";
+        List<Object[]> result = em.createNativeQuery(q).getResultList();
+        return result
+                .stream()
+                .map(x->new ProductReportResponseDTO((Integer)x[0],(String)x[1]))
+                .toList();
+    }
+    
     
     //Calculate the total quantity of items in a user's cart
     public Integer findTotalQtyByUser(Integer userId){
@@ -83,13 +109,17 @@ public class GlobalService {
     }
     
     //Find all products with reviews above a certain rating
-    public List<ProductDTO> findProductsByRatingAbove(Integer rating){
-        var query = "SELECT DISTINCT p.* "
+    
+    public List<ProductReportResponseDTO> findProductsByRatingAbove(Integer rating){
+        var query = "SELECT DISTINCT p.id, p.product_name "
                 + "FROM product p JOIN reviews r "
                 + "ON p.id = r.product_id "
                 + "WHERE r.rating>= :x ";
-        var result =(List<Product>) em.createNativeQuery(query,Product.class).setParameter("x", rating).getResultList();
-        return result.stream().map(mapper::toDTO).toList();
+        List<Object[]> result = em.createNativeQuery(query).setParameter("x", rating).getResultList();
+        return result
+                .stream()
+                .map(x->new ProductReportResponseDTO((Integer)x[0],(String)x[1]))
+                .toList();
     }
     
     //Retrieve all users who have made at least one order
@@ -102,6 +132,7 @@ public class GlobalService {
     }
     
     //List all products that are out of stock
+    /*
     public List<ProductDTO> findOutOfStockProducts(){
         return productRepo.findAll()
                 .stream()
@@ -109,6 +140,20 @@ public class GlobalService {
                 .map(mapper::toDTO)
                 .toList();
     }
+    */
+    
+    public List<ProductReportResponseDTO> findOutOfStockProducts(){
+        var q = "SELECT p.id, p.product_name "
+                + "FROM product p JOIN inventory c "
+                + "ON p.inventory_id = c.id "
+                + "WHERE c.quantity= 0";
+        List<Object[]> result = em.createNativeQuery(q).getResultList();
+        return result
+                .stream()
+                .map(x->new ProductReportResponseDTO((Integer)x[0],(String)x[1]))
+                .toList();
+    }
+    
     
     //Find all orders that include products from a specific category
     public List<OrderProductByCategoryDTO> findOrdersWhoseProductsOfCategory(String categoryName){
