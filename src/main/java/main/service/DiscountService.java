@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.DiscountDTO;
 import main.exception.EntityNotFoundException;
+import main.exception.OptimisticLockException;
 import main.repo.DiscountRepo;
 import main.repo.ProductRepo;
 import main.util.mapper.DiscountMapper;
@@ -18,6 +19,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -82,8 +84,12 @@ public class DiscountService {
         if(list!=null){
             d.setProducts(productRepo.findAllById(list));
         }
-        var saved = repo.save(d);
-        return mapper.toDTO(saved);
+        try{
+            var saved  = repo.save(d);
+            return mapper.toDTO(saved);
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This Order has been updated by another user, Please review the changes");
+        }
     }
     
     @Transactional

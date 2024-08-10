@@ -35,6 +35,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
     
+    @ExceptionHandler(OptimisticLockException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ResourceError> handleOptimisticLockException(OptimisticLockException ex) {
+        var errorResponse = new ResourceError(HttpStatus.CONFLICT.value(), ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+    
     @ExceptionHandler(InsufficientInventoryException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResourceError> handleInsufficientInventoryExcpetion(InsufficientInventoryException ex) {

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import main.dto.ProductDTO;
 import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
+import main.exception.OptimisticLockException;
 import main.repo.CategoryRepo;
 import main.repo.DiscountRepo;
 import main.repo.InventoryRepo;
@@ -28,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -115,6 +117,8 @@ public class ProductService {
             return mapper.toDTO(saved);
         }catch(DataIntegrityViolationException e){
             throw new AlreadyExistsException("A product with this name already exists.");
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This product has been updated by another user. Please review the changes.");
         }
     }
     

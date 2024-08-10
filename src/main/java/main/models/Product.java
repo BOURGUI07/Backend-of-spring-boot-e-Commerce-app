@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -90,6 +91,9 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy="product", cascade=CascadeType.ALL,orphanRemoval=true)
     @JsonManagedReference
     private List<Reviews> reviews = new ArrayList<>();
+    
+    @Version
+    private Integer version;
     
     public void addOrderItem(OrderItem orderItem){
         if(orderItem.getQuantity()<=inventory.getQuantity()){

@@ -33,6 +33,6 @@ public class CategoryMapper {
     
     public CategoryDTO toDTO(Category c){
         var list = c.getProducts().stream().map(p -> p.getId()).collect(Collectors.toList());
-        return new CategoryDTO(c.getId(),c.getName(),c.getDesc(),list);
+        return new CategoryDTO(c.getId(),c.getName(),c.getDesc(),list,c.getVersion());
     }
 }

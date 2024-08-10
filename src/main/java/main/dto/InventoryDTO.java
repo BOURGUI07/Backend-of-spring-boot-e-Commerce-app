@@ -13,7 +13,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 public record InventoryDTO(
         Integer id,
         @PositiveOrZero(message="Product quantity should be positive")
-        Integer quantity
+        Integer quantity,
+        Integer version
         ) {
 
 }

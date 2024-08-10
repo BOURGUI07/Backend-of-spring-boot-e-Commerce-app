@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -44,4 +45,8 @@ public class Inventory extends BaseEntity{
     
     @Column(name="quantity")
     private Integer quantity;
+    
+    
+    @Version
+    private Integer version;
 }

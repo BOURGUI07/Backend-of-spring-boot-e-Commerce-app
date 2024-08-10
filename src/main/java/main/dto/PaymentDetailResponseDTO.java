@@ -17,7 +17,8 @@ public record PaymentDetailResponseDTO(
         Integer orderId,
         Double amount,
         PaymentProvider provider,
-        PaymentStatus status
+        PaymentStatus status,
+        Integer version
         ) {
 
 }

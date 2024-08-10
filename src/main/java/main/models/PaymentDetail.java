@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -55,6 +56,9 @@ public class PaymentDetail extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name="payment_status",nullable=false)
     private PaymentStatus paymentStatus;
+    
+    @Version
+    private Integer version;
     
     public void setOrder(Order order){
         if(order!=null){

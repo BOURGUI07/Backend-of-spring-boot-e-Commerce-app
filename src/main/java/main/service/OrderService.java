@@ -15,6 +15,7 @@ import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
 import main.exception.InsufficientInventoryException;
+import main.exception.OptimisticLockException;
 import main.models.OrderItem;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
@@ -26,6 +27,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -125,8 +127,13 @@ public class OrderService {
         }
         paymentRepo.findById(x.paymentDetailId()).ifPresent(o::setPaymentDetail);
         userRepo.findById(x.userId()).ifPresent(o::setUser);
-        var saved  = repo.save(o);
-        return mapper.toDTO(saved);
+        try{
+            var saved  = repo.save(o);
+            return mapper.toDTO(saved);
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This Order has been updated by another user, Please review the changes");
+        }
+        
     }
     
     @Transactional

@@ -31,6 +31,6 @@ public class PaymentDetailMapper {
     public PaymentDetailResponseDTO toDTO(PaymentDetail d){
         var order = d.getOrder();
         return order!=null ? new PaymentDetailResponseDTO(d.getId(),order.getId(),d.getAmount(),
-        d.getPaymentProvider(),d.getPaymentStatus()):null;
+        d.getPaymentProvider(),d.getPaymentStatus(),d.getVersion()):null;
     }
 }

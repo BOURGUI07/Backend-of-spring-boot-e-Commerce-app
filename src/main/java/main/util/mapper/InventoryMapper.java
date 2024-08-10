@@ -23,6 +23,6 @@ public class InventoryMapper {
     }
     
     public InventoryDTO toDTO(Inventory i){
-        return new InventoryDTO(i.getId(),i.getQuantity());
+        return new InventoryDTO(i.getId(),i.getQuantity(),i.getVersion());
     }
 }

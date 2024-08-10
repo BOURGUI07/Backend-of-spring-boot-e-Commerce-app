@@ -16,7 +16,8 @@ public record OrderResponseDTO(
         Integer userId,
         Double total,
         Integer paymentDetailId,
-        List<Integer> orderItemIds
+        List<Integer> orderItemIds,
+        Integer version
         ) 
          {
     

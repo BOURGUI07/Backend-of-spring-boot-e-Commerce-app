@@ -27,7 +27,9 @@ public record UserRegistrationResponseDTO(
 
      Role role,
      
-     List<Integer> orderIds
+     List<Integer> orderIds,
+     
+     Integer version
         ) {
 
 }

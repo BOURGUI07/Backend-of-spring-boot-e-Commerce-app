@@ -35,6 +35,6 @@ public class DiscountMapper {
     
     public DiscountDTO toDTO(Discount d){
         var list = d.getProducts().stream().map(x -> x.getId()).collect(Collectors.toList());
-        return new DiscountDTO(d.getId(),d.getName(),d.getDesc(),d.getPercent(),d.getActive(),list);
+        return new DiscountDTO(d.getId(),d.getName(),d.getDesc(),d.getPercent(),d.getActive(),list,d.getVersion());
     }
 }
