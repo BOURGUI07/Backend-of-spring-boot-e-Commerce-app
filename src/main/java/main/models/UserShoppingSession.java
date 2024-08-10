@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -31,7 +32,9 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author hp
  */
 @Entity
-@Table(name="shopping_session")
+@Table(name="shopping_session", indexes = {
+    @Index(name = "idx_session_id", columnList = "id"),
+    @Index(name = "idx_session_user_id", columnList = "user_id")})
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor

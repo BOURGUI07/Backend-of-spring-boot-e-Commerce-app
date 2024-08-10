@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -33,7 +34,15 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author hp
  */
 @Entity
-@Table(name="product")
+@Table(name="product", indexes = {
+    @Index(name = "idx_product_id", columnList = "id"),
+    @Index(name = "idx_product_name", columnList = "product_name"),
+    @Index(name = "idx_product_price", columnList = "price"),
+    @Index(name = "idx_product_desc", columnList = "description"),
+    @Index(name = "idx_category_id", columnList = "category_id"),
+    @Index(name = "idx_discount_id", columnList = "discount_id"),
+    @Index(name = "idx_inventory_id", columnList = "inventory_id")
+})
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor

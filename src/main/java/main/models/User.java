@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -34,7 +35,8 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author hp
  */
 @Entity
-@Table(name="users")
+@Table(name="users", indexes=
+        @Index(name = "idx_user_id", columnList = "id"))
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
