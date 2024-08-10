@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -27,7 +28,11 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author hp
  */
 @Entity
-@Table(name="category")
+@Table(name="category", indexes = {
+    @Index(name = "idx_category_name", columnList = "category_name"),
+    @Index(name = "idx_category_id", columnList = "id"),
+    @Index(name = "idx_category_desc", columnList = "description")
+})
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor

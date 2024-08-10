@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
@@ -27,7 +28,9 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author hp
  */
 @Entity
-@Table(name="discount")
+@Table(name="discount", indexes = {
+    @Index(name = "idx_discount_id", columnList = "id"),
+    @Index(name = "idx_discount_active", columnList = "active")})
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor

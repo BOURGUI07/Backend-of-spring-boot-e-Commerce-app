@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,10 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author hp
  */
 @Entity
-@Table(name="inventory")
+@Table(name="inventory",indexes={
+    @Index(name = "idx_inventory_id", columnList = "id"),
+    @Index(name = "idx_quantity", columnList = "quantity")
+})
 @Data
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
