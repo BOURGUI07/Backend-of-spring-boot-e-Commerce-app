@@ -7,7 +7,6 @@ package main.util.mapper;
 import lombok.RequiredArgsConstructor;
 import main.dto.CartItemDTO;
 import main.models.CartItem;
-import main.repo.CartItemRepo;
 import main.repo.ProductRepo;
 import main.repo.SessionRepo;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,9 @@ public class CartItemMapper {
     private final ProductRepo productRepo;
     
     public CartItem toEntity(CartItemDTO x){
-        var c = new CartItem();
+        var c = new CartItem().setQuantity(x.quantity());
         sessionRepo.findById(x.sessionId()).ifPresent(c::setSession);
         productRepo.findById(x.productId()).ifPresent(c::setProduct);
-        c.setQuantity(x.quantity());
         return c;
     }
     

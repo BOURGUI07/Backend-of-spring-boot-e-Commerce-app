@@ -27,7 +27,11 @@ public class ProductMapper {
     private final InventoryRepo inventoryRepo;
     
     public Product toEntity(ProductDTO x){
-        var p = new Product();
+        var p = new Product()
+        .setDesc(x.desc())
+        .setName(x.name())
+        .setSku(x.sku())
+        .setPrice(x.price());
         if(x.categoryId()!=null){
             var category = categoryRepo.findById(x.categoryId());
             category.ifPresent(p::setCategory);
@@ -42,10 +46,6 @@ public class ProductMapper {
         if(list!=null){
             p.setOrderItems(detailRepo.findAllById(list));
         }
-        p.setDesc(x.desc());
-        p.setName(x.name());
-        p.setSku(x.sku());
-        p.setPrice(x.price());
         return p;
     }
     

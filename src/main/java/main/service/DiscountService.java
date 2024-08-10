@@ -73,11 +73,11 @@ public class DiscountService {
             throw new ConstraintViolationException(violations);
         }
         var d = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(""
-                + "Discount with id: "  + id + " isn't found"));
-        d.setActive(x.active());
-        d.setDesc(x.desc());
-        d.setName(x.name());
-        d.setPercent(x.percent());
+                + "Discount with id: "  + id + " isn't found"))
+        .setActive(x.active())
+        .setDesc(x.desc())
+        .setName(x.name())
+        .setPercent(x.percent());
         var list = x.productIds();
         if(list!=null){
             d.setProducts(productRepo.findAllById(list));

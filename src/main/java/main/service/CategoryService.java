@@ -81,9 +81,9 @@ public class CategoryService {
             throw new IllegalArgumentException("id must be positive");
         }
         var c = repo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Category with id " + id + " isn't found"));
-        c.setDesc(x.desc());
-        c.setName(x.name());
+                new EntityNotFoundException("Category with id " + id + " isn't found"))
+        .setDesc(x.desc())
+        .setName(x.name());
         var list = x.productIds();
         if(list!=null){
             c.setProducts(prepo.findAllById(list));

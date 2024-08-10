@@ -72,12 +72,12 @@ public class UserAddressService {
             throw new ConstraintViolationException(violations);
         }
         var a = repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Address with id: " + id + " isn't found"));
-        a.setAddressLine1(x.addressLine1());
-        a.setAddressLine2(x.addressLine2());
-        a.setCity(x.city());
-        a.setCountry(x.country());
-        a.setPostalCode(x.postalcode());
+                .orElseThrow(() -> new EntityNotFoundException("Address with id: " + id + " isn't found"))
+        .setAddressLine1(x.addressLine1())
+        .setAddressLine2(x.addressLine2())
+        .setCity(x.city())
+        .setCountry(x.country())
+        .setPostalCode(x.postalcode());
         urepo.findById(x.userId()).ifPresent(a::setUser);
         var saved  = repo.save(a);
         return mapper.toDTO(saved);

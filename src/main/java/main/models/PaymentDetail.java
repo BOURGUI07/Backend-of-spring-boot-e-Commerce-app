@@ -17,8 +17,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import main.util.PaymentProvider;
 import main.util.PaymentStatus;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  *
@@ -30,6 +33,9 @@ import main.util.PaymentStatus;
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
+@DynamicInsert
+@DynamicUpdate
 public class PaymentDetail extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

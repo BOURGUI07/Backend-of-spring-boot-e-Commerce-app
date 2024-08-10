@@ -16,7 +16,6 @@ import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
 import main.exception.InsufficientInventoryException;
 import main.models.OrderItem;
-import main.models.Product;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;

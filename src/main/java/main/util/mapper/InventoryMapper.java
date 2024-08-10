@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 public class InventoryMapper {
     
     public Inventory toEntity(InventoryDTO x){
-        var i = new Inventory();
-        i.setQuantity(x.quantity());
+        var i = new Inventory().setQuantity(x.quantity());
         return i;
     }
     

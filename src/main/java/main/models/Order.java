@@ -25,6 +25,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  *
@@ -36,6 +39,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
+@DynamicInsert
+@DynamicUpdate
 public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

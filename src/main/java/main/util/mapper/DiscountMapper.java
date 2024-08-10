@@ -21,11 +21,11 @@ public class DiscountMapper {
     private final ProductRepo productRepo;
     
     public Discount toEntity(DiscountDTO x){
-        var d = new Discount();
-        d.setActive(x.active());
-        d.setDesc(x.desc());
-        d.setName(x.name());
-        d.setPercent(x.percent());
+        var d = new Discount()
+        .setActive(x.active())
+        .setDesc(x.desc())
+        .setName(x.name())
+        .setPercent(x.percent());
         var list = x.productIds();
         if (list != null) {
             d.setProducts(productRepo.findAllById(list));

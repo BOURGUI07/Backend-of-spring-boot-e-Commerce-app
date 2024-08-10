@@ -47,8 +47,8 @@ public class CartItemService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Cart Item with id: " + id + " isn't found"));
-        o.setQuantity(x.quantity());
+        var o = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Cart Item with id: " + id + " isn't found"))
+        .setQuantity(x.quantity());
         productRepo.findById(x.productId()).ifPresent(o::setProduct);
         sessionRepo.findById(x.sessionId()).ifPresent(o::setSession);
         var saved = repo.save(o);
