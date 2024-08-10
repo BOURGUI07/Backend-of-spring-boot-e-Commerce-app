@@ -92,7 +92,7 @@ public class GlobalService {
     
     
     //Calculate the total quantity of items in a user's cart
-    public Integer findTotalQtyByUser(Integer userId){
+    public Integer findTotalCartQtyByUser(Integer userId){
         var query = "SELECT COALESCE(SUM(c.quantity), 0) "
                 + "FROM cart_item c JOIN shopping_session s "
                 + "ON c.session_id=s.id "
@@ -173,7 +173,7 @@ public class GlobalService {
     }
     
     //Retrieve all reviews written by a user for products in a specific category
-    public List<ReviewsResponseDTO> findReviews(String categoryName){
+    public List<ReviewsResponseDTO> findReviewsForSpecificCategory(String categoryName){
         var query = "SELECT r.* "
                 + "FROM users u JOIN reviews r ON u.id = r.user_id "
                 + "JOIN product p ON p.id = r.product-id "
