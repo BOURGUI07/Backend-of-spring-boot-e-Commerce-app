@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -64,6 +65,10 @@ public class Order extends BaseEntity{
     
     @Transient
     private Double total;
+    
+    
+    @Version
+    private Integer version;
     
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);

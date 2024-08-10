@@ -58,9 +58,9 @@ public class OrderServiceTest {
     private OrderService service;
     
     private Validator validator;
-    private Order  p =new Order(1,null,null, new ArrayList<>(),0.0);
+    private Order  p =new Order().setId(1);
     private OrderDTO x = new OrderDTO(1,1,1,null);
-    private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,1,null);
+    private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,1,null,null);
     
     public OrderServiceTest() {
     }

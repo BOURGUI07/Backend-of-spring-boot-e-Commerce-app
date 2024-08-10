@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -82,6 +83,10 @@ public class User extends BaseEntity implements UserDetails{
     @OneToMany(mappedBy="user", cascade=CascadeType.ALL,orphanRemoval=true)
     @JsonManagedReference
     private List<Reviews> reviews = new ArrayList<>();
+    
+    
+    @Version
+    private Integer version;
     
     public void addReview(Reviews r){
         reviews.add(r);

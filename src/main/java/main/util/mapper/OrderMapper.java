@@ -46,7 +46,7 @@ public class OrderMapper {
         var user = o.getUser();
         var payment = o.getPaymentDetail();
         return (user != null && payment != null) ? 
-                new OrderResponseDTO(o.getId(), user.getId(), o.getTotal(), payment.getId(), list) : null;
+                new OrderResponseDTO(o.getId(), user.getId(), o.getTotal(), payment.getId(), list,o.getVersion()) : null;
     }
 }
 

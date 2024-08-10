@@ -54,8 +54,8 @@ public class CategoryServiceTest {
     @InjectMocks
     private CategoryService service;
     
-    private Category p = new Category(1,"name","desc",new ArrayList<>());
-    private CategoryDTO x = new CategoryDTO(1,"name","desc",null);
+    private Category p = new Category().setDesc("desc").setName("name").setId(1);
+    private CategoryDTO x = new CategoryDTO(1,"name","desc",null,null);
     
     public CategoryServiceTest() {
     }

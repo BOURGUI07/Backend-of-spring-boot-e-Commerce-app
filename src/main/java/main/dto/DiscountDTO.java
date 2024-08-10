@@ -22,7 +22,8 @@ public record DiscountDTO(
         double percent,
         Boolean active,
         @NotEmpty(message="discount product list should contain at least one product")
-        List<Integer> productIds
+        List<Integer> productIds,
+        Integer version
         ) {
 
 }

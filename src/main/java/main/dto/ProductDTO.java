@@ -31,6 +31,7 @@ public record ProductDTO(
         @NotNull(message="inventory id required")
         Integer inventoryId,
         Integer discountId,
-        List<Integer> orderItemsIds
+        List<Integer> orderItemsIds,
+        Integer id
         ) {
 }

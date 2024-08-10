@@ -21,7 +21,8 @@ public record CategoryDTO(
         @Size(max=500,message="Category desc must be"
                 + " at max 500 character length")
         String desc,
-        List<Integer> productIds
+        List<Integer> productIds,
+        Integer version
         ) {
 
 }

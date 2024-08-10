@@ -19,7 +19,6 @@ public record OrderDTO(
         @NotNull(message="payment detail Id is required")
         Integer paymentDetailId,
         @NotEmpty(message="The Order Item List should Contain at least one element")
-        List<Integer> orderItemIds
-        ) {
+        List<Integer> orderItemIds        ) {
 
 }

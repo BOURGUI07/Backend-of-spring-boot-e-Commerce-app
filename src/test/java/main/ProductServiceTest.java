@@ -73,7 +73,7 @@ public class ProductServiceTest {
     public ProductServiceTest() {
         i.setId(1);
         i.setQuantity(10);
-        x = new ProductDTO(1,"name","desc","sku", 10.4,null,1,null, new ArrayList<>());
+        x = new ProductDTO(1,"name","desc","sku", 10.4,null,1,null, new ArrayList<>(),null);
         p.setCategory(null);
         p.setDiscount(null);
         p.setInventory(i);
@@ -174,25 +174,25 @@ public class ProductServiceTest {
     @Test
     void testValidation(){
         //Test InventoryId Nullability
-        var product1 = new ProductDTO(1,"name","desc","sku", 10.4,null,null,null, new ArrayList<>());
+        var product1 = new ProductDTO(1,"name","desc","sku", 10.4,null,null,null, new ArrayList<>(),null);
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product1);
         });
         
         //Test Product Price Positivity
-        var product2 = new ProductDTO(1,"name","desc","sku",0.0,null,1,null, new ArrayList<>());
+        var product2 = new ProductDTO(1,"name","desc","sku",0.0,null,1,null, new ArrayList<>(),null);
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product2);
         });
         
         //Test Product Name Blank state
-        var product3 = new ProductDTO(1,"","desc","sku",5.0,null,1,null, new ArrayList<>());
+        var product3 = new ProductDTO(1,"","desc","sku",5.0,null,1,null, new ArrayList<>(),null);
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product3);
         });
         
         //Test Product SKU Blank state
-        var product4 = new ProductDTO(1,"name","desc","",5.0,null,1,null, new ArrayList<>());
+        var product4 = new ProductDTO(1,"name","desc","",5.0,null,1,null, new ArrayList<>(),null);
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product4);
         });

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
 import main.exception.EntityNotFoundException;
+import main.exception.OptimisticLockException;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
 import main.util.PaymentStatus;
@@ -21,6 +22,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -80,8 +82,12 @@ public class PaymentDetailService {
         orepo.findById(x.orderId()).ifPresent(p::setOrder);
         p.setPaymentProvider(x.provider());
         p.setPaymentStatus(x.status());
-        var saved = repo.save(p);
-        return mapper.toDTO(saved);
+        try{
+            var saved = repo.save(p);
+            return mapper.toDTO(saved);
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This Payment Detail has been updated by another user, Please review the changes");
+        }
     }
     
     @Transactional

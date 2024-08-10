@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -59,6 +60,10 @@ public class Discount extends BaseEntity{
     @OneToMany(mappedBy="discount")
     @JsonManagedReference
     private List<Product> products=new ArrayList<>();
+    
+    
+    @Version
+    private Integer version;
     
     public void removeProduct(Product p){
         products.remove(p);

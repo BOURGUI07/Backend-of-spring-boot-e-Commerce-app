@@ -53,6 +53,6 @@ public class ProductMapper {
         var list = p.getOrderItems().stream().map(o -> o.getId()).collect(Collectors.toList());
         return (p.getCategory()!=null && p.getDiscount()!=null && p.getInventory()!=null)?
                 new ProductDTO(p.getId(),p.getName(),p.getDesc(),p.getSku(),p.getPrice(),p.getCategory().getId(),
-                p.getInventory().getId(),p.getDiscount().getId(),list):null;
+                p.getInventory().getId(),p.getDiscount().getId(),list,p.getVersion()):null;
     }
 }

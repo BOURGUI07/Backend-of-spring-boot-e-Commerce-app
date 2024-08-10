@@ -8,12 +8,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import main.dto.InventoryDTO;
 import main.exception.EntityNotFoundException;
+import main.exception.OptimisticLockException;
 import main.repo.InventoryRepo;
 import main.util.mapper.InventoryMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,8 +39,12 @@ public class InventoryService {
         var o = repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"))
         .setQuantity(x.quantity());
-        var saved = repo.save(o);
-        return mapper.toDTO(saved);
+        try{
+            var saved  = repo.save(o);
+            return mapper.toDTO(saved);
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This inventory has been updated by another user, Please review the changes");
+        }
     }
     @Cacheable(value="inventoryById", key="#id")
     public InventoryDTO findById(Integer id){

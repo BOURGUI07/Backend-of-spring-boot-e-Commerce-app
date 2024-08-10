@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
 import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
+import main.exception.OptimisticLockException;
 import main.repo.CategoryRepo;
 import main.repo.ProductRepo;
 import main.util.mapper.CategoryMapper;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -99,6 +101,8 @@ public class CategoryService {
             return mapper.toDTO(saved);
         }catch(DataIntegrityViolationException e){
             throw new AlreadyExistsException("A category with this name already exists.");
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This category has been updated by another user, Please review the changes");
         }
     }
     
