@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
 import main.dto.OrderProductByCategoryDTO;
 import main.dto.OrdersQtyDTO;
+import main.dto.ProductDiscountDTO;
 import main.dto.ProductReportResponseDTO;
 import main.dto.ReviewsResponseDTO;
 import main.dto.UserIdNameDTO;
@@ -78,15 +79,15 @@ public class GlobalService {
     }
     */
     
-    public List<ProductReportResponseDTO> findProductsByActiveDiscount(){
-        var q = "SELECT p.id, p.product_name "
+    public List<ProductDiscountDTO> findProductsByActiveDiscount(){
+        var q = "SELECT c.id, c.discount_name, c.discount_percent, p.product_name "
                 + "FROM product p JOIN discount c "
                 + "ON p.discount_id = c.id "
                 + "WHERE c.active= TRUE";
         List<Object[]> result = em.createNativeQuery(q).getResultList();
         return result
                 .stream()
-                .map(x->new ProductReportResponseDTO((Integer)x[0],(String)x[1]))
+                .map(x->new ProductDiscountDTO((Integer)x[0],(String)x[1],(Double)x[2],(String)x[3]))
                 .toList();
     }
     

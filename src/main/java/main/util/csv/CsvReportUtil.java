@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.dto.OrderProductByCategoryDTO;
 import main.dto.OrdersQtyDTO;
+import main.dto.ProductDiscountDTO;
 import main.dto.ProductReportResponseDTO;
 import main.dto.ReviewsResponseDTO;
 import main.dto.UserIdNameDTO;
@@ -102,6 +103,23 @@ public class CsvReportUtil {
             }
         } catch (IOException ex) {
             Logger.getLogger(CsvReportUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void writeProductDiscountToCsv(List<ProductDiscountDTO> list,String filepath){
+        try(FileWriter writer = new FileWriter(filepath)){
+            writer.append("DiscountId,DiscountName,Percent,ProductName\n");
+            for(var x:list){
+                writer.append(x.discountId().toString())
+                        .append(',')
+                        .append(x.discountName())
+                        .append(',')
+                        .append(x.percent().toString())
+                        .append(',')
+                        .append(x.productName())
+                        .append('\n');                                             
+            }
+        }catch(IOException e){
         }
     }
 }

@@ -52,7 +52,7 @@ public class Discount extends BaseEntity{
     private String desc;
     
     @Column(name="discount_percent")
-    private double percent;
+    private Double percent;
     
     @Column(name="active")
     private Boolean  active;

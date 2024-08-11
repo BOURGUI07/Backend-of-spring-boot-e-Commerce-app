@@ -26,7 +26,7 @@ public class ReportService {
     
     public void exportProductsByActiveDiscount(String filepath){
         var report = globalService.findProductsByActiveDiscount();
-        csvService.writeProductToCsv(report, filepath);
+        csvService.writeProductDiscountToCsv(report, filepath);
     }
     
     public void exportProductsByRatingAboveReport(Integer rating, String filepath){
