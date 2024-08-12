@@ -110,4 +110,8 @@ public class Product extends BaseEntity{
         Double actualPrice = (price!=null) ? price :0.0;
         return (discount!=null && discount.getActive())? actualPrice*(1-discount.getPercent()):actualPrice;
     }
+    
+    public Inventory getInventory(){
+        return inventory==null? new Inventory().setQuantity(0):inventory;
+    }
 }
