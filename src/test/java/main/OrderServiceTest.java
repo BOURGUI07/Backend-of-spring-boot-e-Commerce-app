@@ -59,7 +59,7 @@ public class OrderServiceTest {
     
     private Validator validator;
     private Order  p =new Order().setId(1);
-    private OrderDTO x = new OrderDTO(1,1,1,null);
+    private OrderDTO x = new OrderDTO(1,1,1,List.of(1));
     private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,1,null,null);
     
     public OrderServiceTest() {

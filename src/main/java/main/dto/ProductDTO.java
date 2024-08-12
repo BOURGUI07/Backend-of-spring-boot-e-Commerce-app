@@ -32,6 +32,6 @@ public record ProductDTO(
         Integer inventoryId,
         Integer discountId,
         List<Integer> orderItemsIds,
-        Integer id
+        Integer version
         ) {
 }
