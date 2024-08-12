@@ -27,3 +27,4 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **Detailed Swagger Documentation**: Automatically generated API documentation for easy exploration and testing of endpoints.
 - **Unit Testing**: Extensive use of JUnit and Mockito for reliable and maintainable tests.
 - **CSV Exporting**: Ability to export reports into CSV files based on SQL querying retrieval, enabling easy data analysis and sharing.
+- **CSV Import and Persistence**: Supports uploading CSV files and automatically persists the data into the database, streamlining data management and integration.
