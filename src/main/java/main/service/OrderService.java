@@ -44,6 +44,7 @@ public class OrderService {
     private final PaymentDetailRepo paymentRepo;
     private final OrderMapper mapper;
     private final ProductRepo productRepo;
+    private final SalesTaxService taxService;
     private Validator validator;
     
     
@@ -122,6 +123,7 @@ public class OrderService {
         if(list!=null){
             var itemList = detailRepo.findAllById(list);
             itemList.forEach(o::addOrderItem);
+            taxService.calculateTotalOrderPrice(o);
             repo.save(o);
             detailRepo.saveAll(itemList);
         }

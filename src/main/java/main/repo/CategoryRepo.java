@@ -19,4 +19,5 @@ import org.springframework.stereotype.Repository;
 public interface CategoryRepo extends JpaRepository<Category,Integer>, JpaSpecificationExecutor<Category> {
     @Override
     Page<Category> findAll(Pageable pageable);
+    boolean existsByName(String categoryName);
 }

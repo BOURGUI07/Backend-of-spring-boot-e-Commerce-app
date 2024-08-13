@@ -12,7 +12,9 @@ import main.models.Order;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
+import main.repo.TaxRepo;
 import main.repo.UserRepo;
+import main.service.SalesTaxService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,6 +28,7 @@ public class OrderMapper {
     private final UserRepo userRepo;
     private final OrderItemRepo detailRepo;
     private final PaymentDetailRepo paymentRepo;
+    private final SalesTaxService taxService;
     
     public Order toEntity(OrderDTO x){
         var o = new Order();
@@ -35,6 +38,7 @@ public class OrderMapper {
         if(list != null){
             var orderItems = detailRepo.findAllById(list);
             orderItems.forEach(o::addOrderItem);
+            taxService.calculateTotalOrderPrice(o);
             repo.save(o);
             detailRepo.saveAll(orderItems);
         }
