@@ -67,13 +67,13 @@ public class CategoryService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var c = mapper.toEntity(x);
-        try{
-            var saved = repo.save(c);
-            return mapper.toDTO(saved);
-        }catch(DataIntegrityViolationException e){
+        if(repo.existsByName(x.name())){
             throw new AlreadyExistsException("A category with this name already exists.");
         }
+        var c = mapper.toEntity(x);
+        var saved = repo.save(c);
+        return mapper.toDTO(saved);
+        
     }
     
     @Transactional

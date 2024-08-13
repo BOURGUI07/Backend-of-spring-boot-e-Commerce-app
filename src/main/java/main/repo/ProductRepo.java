@@ -21,6 +21,8 @@ public interface ProductRepo extends JpaRepository<Product,Integer> , JpaSpecifi
     List<Product> findByCategoryId(Integer id);
     List<Product> findByCategoryName(String name);
     List<Product> findByDiscountActive(Boolean active);
+    boolean existsByName(String productName);
+    boolean existsBySku(String sku);
     @Override
     Page<Product> findAll(Pageable pageable);
 }

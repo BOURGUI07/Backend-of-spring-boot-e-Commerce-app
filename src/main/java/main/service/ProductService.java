@@ -74,13 +74,14 @@ public class ProductService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
+        if(repo.existsByName(x.name()) || repo.existsBySku(x.sku())){
+            throw new AlreadyExistsException("product with either input name or input sku already exists");
+        }
         var product = mapper.toEntity(x);
-        try{
+        
             var saved = repo.save(product);
             return mapper.toDTO(saved);
-        }catch(DataIntegrityViolationException e){
-            throw new AlreadyExistsException("A product with this name already exists.");
-        }
+        
     }
     
     @Transactional
