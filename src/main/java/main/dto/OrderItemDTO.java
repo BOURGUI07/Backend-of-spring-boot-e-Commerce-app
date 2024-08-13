@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.Positive;
  *
  * @author hp
  */
+@Schema(title = "OrderItemDTO", description = "Parameters required to create/update an order")
 public record OrderItemDTO(
         Integer id,
         @NotNull(message="order Id is required")

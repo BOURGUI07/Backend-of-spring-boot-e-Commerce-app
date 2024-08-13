@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.ProductDTO;
@@ -42,6 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
+@Tag(name="Reviews", description=" Reviews Controller")
+
 public class ReviewsController {
     private final ReviewsService service;
     
@@ -96,7 +99,7 @@ public class ReviewsController {
         @ApiResponse(responseCode="404", description="Review isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Review was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = ReviewsResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
@@ -114,14 +117,13 @@ public class ReviewsController {
     @Operation(summary="Create a new  Review")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Review is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = ReviewsResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ReviewsResponseDTO> create(@Valid @RequestBody ReviewsRequestDTO x){
         var createdReview = service.create(x);
         
@@ -135,14 +137,13 @@ public class ReviewsController {
         @ApiResponse(responseCode="404", description="Review isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Review was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = ReviewsResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ReviewsResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody ReviewsUpdateRequestDTO x){
         var updatedProduct = service.update(id, x);
         

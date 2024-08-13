@@ -10,6 +10,7 @@ import jakarta.validation.Validator;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import main.dto.DiscountDTO;
+import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
 import main.repo.DiscountRepo;
@@ -17,6 +18,7 @@ import main.repo.ProductRepo;
 import main.util.mapper.DiscountMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -57,6 +59,9 @@ public class DiscountService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
+        if(repo.existsByName(x.name())){
+            throw new AlreadyExistsException("discount with this name already exists");
+        }
         var d = mapper.toEntity(x);
         var saved = repo.save(d);
         return mapper.toDTO(saved);
@@ -87,8 +92,10 @@ public class DiscountService {
         try{
             var saved  = repo.save(d);
             return mapper.toDTO(saved);
+        }catch(DataIntegrityViolationException e){
+            throw new AlreadyExistsException("A discount with this name already exists.");
         }catch(ObjectOptimisticLockingFailureException e){
-            throw new OptimisticLockException("This Order has been updated by another user, Please review the changes");
+            throw new OptimisticLockException("This discount has been updated by another user, Please review the changes");
         }
     }
     

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.SalesTaxRequest;
@@ -40,6 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
+@Tag(name="Sales Tax", description=" Sales Tax Controller")
 public class SalesTaxController {
     private final SalesTaxService service;
     
@@ -77,7 +80,6 @@ public class SalesTaxController {
                      content = @Content)
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<SalesTaxResponse> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -95,7 +97,6 @@ public class SalesTaxController {
                      content = @Content)
     })
     @PostMapping
-    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<SalesTaxResponse> create(@Valid @RequestBody SalesTaxRequest x){
         var createdProduct = service.create(x);
         
@@ -116,7 +117,6 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<SalesTaxResponse> update(@PathVariable Integer id, @Valid @RequestBody SalesTaxRequest x){
         var updatedProduct = service.update(id, x);
         
@@ -136,7 +136,6 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         
             service.delete(id);
