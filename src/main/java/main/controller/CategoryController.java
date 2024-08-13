@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.CategoryDTO;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
+@Tag(name="Category", description=" Category Controller")
 public class CategoryController {
     private final CategoryService service;
     

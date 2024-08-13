@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author hp
  */
+@Schema(title = "SalesTaxRequest", description = "Parameters required to create/update a sales tax")
 public record SalesTaxRequest(
         @NotBlank(message="country is required")
         String country,

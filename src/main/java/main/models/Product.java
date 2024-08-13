@@ -5,6 +5,7 @@
 package main.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,6 +52,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
+@JsonIgnoreProperties(value = { "orderItems" })
 public class Product extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author hp
  */
+@Schema(title = "UserAddressDTO", description = "Parameters required to create/update a user address")
 public record UserAddressDTO(
         Integer id,
         @NotNull

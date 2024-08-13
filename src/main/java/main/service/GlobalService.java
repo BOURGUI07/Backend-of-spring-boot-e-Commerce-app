@@ -5,6 +5,7 @@
 package main.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +49,8 @@ public class GlobalService {
     private final UserMapper umapper;
     private final ReviewsMapper rmapper;
     private final CategoryMapper cmapper;
-    private final EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
     
     //Retrieve all products in a specific category
     

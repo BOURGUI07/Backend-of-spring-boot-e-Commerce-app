@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  *
  * @author hp
  */
+@Schema(title = "CategoryDTO", description = "Parameters required to create/update a category")
 public record CategoryDTO(
         Integer id,
         @NotBlank

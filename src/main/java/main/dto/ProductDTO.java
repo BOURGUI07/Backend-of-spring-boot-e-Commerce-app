@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -15,6 +16,7 @@ import java.util.List;
  *
  * @author hp
  */
+@Schema(title = "ProductDTO", description = "Parameters required to create/update a product")
 public record ProductDTO(
         Integer Id,
         @NotBlank

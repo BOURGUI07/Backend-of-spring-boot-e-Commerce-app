@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import main.util.PaymentType;
  *
  * @author hp
  */
+@Schema(title = "UserPaymentDTO", description = "Parameters required to create a user payment")
 public record UserPaymentDTO(
         Integer id,
         @NotNull(message="user id is required")

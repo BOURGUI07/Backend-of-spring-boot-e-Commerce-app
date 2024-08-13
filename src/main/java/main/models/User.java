@@ -4,6 +4,7 @@
  */
 package main.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,6 +46,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
+@JsonIgnoreProperties(value = { "orders", "reviews" })
 public class User extends BaseEntity implements UserDetails{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

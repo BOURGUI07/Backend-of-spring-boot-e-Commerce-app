@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  *
  * @author hp
  */
+@Schema(title = "OrderDTO", description = "Parameters required to create/update an order")
 public record OrderDTO(
         Integer id,
         @NotNull(message="user Id is required")

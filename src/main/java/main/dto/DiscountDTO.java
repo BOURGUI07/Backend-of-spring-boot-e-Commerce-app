@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author hp
  */
+@Schema(title = "CartItemDTO", description = "Parameters required to create/update a discount")
 public record DiscountDTO(
         Integer id,
         @NotBlank(message="discount name is required")

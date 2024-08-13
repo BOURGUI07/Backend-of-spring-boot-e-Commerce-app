@@ -18,4 +18,5 @@ import org.springframework.stereotype.Repository;
 public interface DiscountRepo extends JpaRepository<Discount,Integer>{
     @Override
     Page<Discount> findAll(Pageable pageable);
+    boolean existsByName(String name);
 }

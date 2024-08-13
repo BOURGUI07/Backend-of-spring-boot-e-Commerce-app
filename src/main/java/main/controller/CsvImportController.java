@@ -4,6 +4,7 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import main.service.CsvUploadService;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/upload_csv_file")
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
+@Tag(name="CSV file upload", description=" uploading csv files of product and category data")
 public class CsvImportController {
     private final CsvUploadService service;
     
