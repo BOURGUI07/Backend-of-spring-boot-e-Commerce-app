@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -96,6 +97,20 @@ public class Product extends BaseEntity{
     
     @Version
     private Integer version;
+    
+    @ManyToMany(mappedBy="products")
+    @JsonBackReference
+    private List<WishList> wishLists = new ArrayList<>();
+    
+    public void addWishList(WishList w){
+        wishLists.add(w);
+        w.addProduct(this);
+    }
+    
+    public void removeWishList(WishList w){
+        wishLists.remove(w);
+        w.removeProduct(this);
+    }
     
     public void addOrderItem(OrderItem orderItem){
         if(orderItem.getQuantity()<=inventory.getQuantity()){

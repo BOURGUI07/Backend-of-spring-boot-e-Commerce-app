@@ -87,6 +87,21 @@ public class User extends BaseEntity implements UserDetails{
     private List<Reviews> reviews = new ArrayList<>();
     
     
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL,orphanRemoval=true)
+    @JsonManagedReference
+    private List<WishList> wishlists = new ArrayList<>();
+    
+    public void addWishList(WishList w){
+        wishlists.add(w);
+        w.setUser(this);
+    }
+    
+    public void removeWishList(WishList w){
+        wishlists.remove(w);
+        w.setUser(null);
+    }
+    
+    
     @Version
     private Integer version;
     
