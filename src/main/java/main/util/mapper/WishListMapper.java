@@ -6,10 +6,13 @@ package main.util.mapper;
 
 import lombok.RequiredArgsConstructor;
 import main.dto.WishListCreationRequest;
+import main.dto.WishListMergeRequest;
 import main.dto.WishListResponse;
+import main.exception.EntityNotFoundException;
 import main.models.Product;
 import main.models.WishList;
 import main.repo.UserRepo;
+import main.repo.WishListRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WishListMapper {
     private final UserRepo repo;
+    private final WishListRepo wrepo;
     
     public WishList toEntity(WishListCreationRequest x){
         var w = new WishList()
@@ -29,6 +33,19 @@ public class WishListMapper {
             w.setDesc(x.desc());
         }
         repo.findById(x.userId()).ifPresent(w::setUser);
+        return w;
+    }
+    
+    public WishList toEntityMerge(WishListMergeRequest x){
+        var w = wrepo.findById(x.targetWishId())
+                .orElseThrow(() -> new EntityNotFoundException("wish list with id: " + x.targetWishId() + " isn't found"));
+        var sourceList = wrepo.findAllById(x.wishListIds());
+        if(wrepo.findByUserId(w.getUser().getId()).containsAll(sourceList)){
+            sourceList
+                .stream()
+                .map(WishList::getProducts)
+                .forEach(p-> w.getProducts().addAll(p));
+        }
         return w;
     }
     
