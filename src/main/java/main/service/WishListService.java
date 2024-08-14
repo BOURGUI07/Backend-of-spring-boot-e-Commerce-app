@@ -48,6 +48,10 @@ public class WishListService {
     
     @Transactional
     public WishListResponse merge(WishListMergeRequest x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var mergedWishList = mapper.toEntityMerge(x);
         var savedMergedWishList = repo.save(mergedWishList);
         return mapper.toDTO(savedMergedWishList);
