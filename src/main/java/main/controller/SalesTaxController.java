@@ -18,6 +18,7 @@ import main.page_dtos.SalesTaxDTOPage;
 import main.service.SalesTaxService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -55,7 +56,7 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<SalesTaxResponse>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -79,7 +80,7 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SalesTaxResponse> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -96,7 +97,7 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SalesTaxResponse> create(@Valid @RequestBody SalesTaxRequest x){
         var createdProduct = service.create(x);
         
@@ -104,7 +105,7 @@ public class SalesTaxController {
       
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update sales tax")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="sales tax isn't found", 

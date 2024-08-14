@@ -18,6 +18,7 @@ import main.page_dtos.SessionResponseDTOPage;
 import main.service.SessionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +57,7 @@ public class SessionController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<SessionResponseDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -80,7 +81,7 @@ public class SessionController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SessionResponseDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -88,7 +89,7 @@ public class SessionController {
      
     }
     
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  User Shopping Session")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="User Shopping Session is successfully created",
@@ -106,7 +107,7 @@ public class SessionController {
        
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update shopping session")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="shopping session isn't found", 

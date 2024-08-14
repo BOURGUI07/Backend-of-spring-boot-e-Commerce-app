@@ -17,6 +17,7 @@ import main.page_dtos.UserAddressDTOPage;
 import main.service.UserAddressService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -55,7 +56,7 @@ public class UserAddressController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<UserAddressDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -77,7 +78,7 @@ public class UserAddressController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserAddressDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -85,7 +86,7 @@ public class UserAddressController {
  
     }
     
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  User Address")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="User Address is successfully created",

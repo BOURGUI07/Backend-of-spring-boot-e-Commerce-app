@@ -18,6 +18,7 @@ import main.page_dtos.OrderItemDTOPage;
 import main.service.OrderItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +57,7 @@ public class OrderItemController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<OrderItemDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -79,7 +80,7 @@ public class OrderItemController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderItemDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -87,7 +88,7 @@ public class OrderItemController {
        
     }
     
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  OrderItem")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="OrderItem is successfully created",content = { @Content(mediaType = "application/json", 
@@ -105,7 +106,7 @@ public class OrderItemController {
         
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update order item")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="order item isn't found", 

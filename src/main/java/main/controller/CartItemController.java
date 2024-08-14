@@ -17,6 +17,7 @@ import main.page_dtos.CartItemDTOPage;
 import main.service.CartItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +55,7 @@ public class CartItemController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CartItemDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -76,7 +77,7 @@ public class CartItemController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CartItemDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -84,7 +85,7 @@ public class CartItemController {
       
     }
     
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  CartItem")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="CartItem is successfully created",content = { @Content(mediaType = "application/json", 
@@ -101,7 +102,7 @@ public class CartItemController {
       
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE,consumes=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update cart item")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="cart item isn't found", 

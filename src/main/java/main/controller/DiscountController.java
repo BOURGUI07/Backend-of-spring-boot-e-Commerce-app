@@ -17,6 +17,7 @@ import main.page_dtos.DiscountDTOPage;
 import main.service.DiscountService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +55,7 @@ public class DiscountController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DiscountDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -77,7 +78,7 @@ public class DiscountController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DiscountDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -85,7 +86,7 @@ public class DiscountController {
        
     }
     
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  Discount")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Discount is successfully created",content = { @Content(mediaType = "application/json", 
@@ -102,7 +103,7 @@ public class DiscountController {
         
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update discount")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="discount isn't found", 

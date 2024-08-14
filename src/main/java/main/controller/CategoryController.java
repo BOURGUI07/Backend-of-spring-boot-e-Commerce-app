@@ -17,6 +17,7 @@ import main.page_dtos.CategoryDTOPage;
 import main.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -53,7 +54,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CategoryDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -77,7 +78,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -86,7 +87,7 @@ public class CategoryController {
        
     }
     
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes= MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  Category")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Category is successfully created",content = { @Content(mediaType = "application/json", 
@@ -104,7 +105,7 @@ public class CategoryController {
        
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE,consumes= MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update category")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="category isn't found", 
@@ -145,7 +146,7 @@ public class CategoryController {
         
     }
     
-    @GetMapping("/search")
+    @GetMapping(value="/search",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CategoryDTO>> search(
             @RequestParam(required=false) String name,
             @RequestParam(required=false) String desc,
