@@ -4,6 +4,7 @@
  */
 package main.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class CsvImportController {
     
     @PostMapping(value="/categories",consumes={"multipart/form-data"})
     public ResponseEntity<Integer> uploadCategories(
+            @Parameter(description = "csv file to upload category data from", required = true)
             @RequestPart("file") MultipartFile file
     ) throws IOException{
         return ResponseEntity.ok(service.uploadCategories(file));
@@ -38,6 +40,7 @@ public class CsvImportController {
     
     @PostMapping(value="/products",consumes={"multipart/form-data"})
     public ResponseEntity<Integer> uploadProducts(
+            @Parameter(description = "csv file to upload product data from", required = true)
             @RequestPart("file") MultipartFile file
     ) throws IOException{
         return ResponseEntity.ok(service.uploadProducts(file));

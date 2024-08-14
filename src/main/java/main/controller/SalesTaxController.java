@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -58,8 +59,11 @@ public class SalesTaxController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<SalesTaxResponse>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -81,10 +85,12 @@ public class SalesTaxController {
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SalesTaxResponse> findById(@PathVariable Integer id){
-        var product = service.findById(id);
+    public ResponseEntity<SalesTaxResponse> findById(
+            @Parameter(description = "Id of the salesTax to retrieve", required = true)
+            @PathVariable Integer id){
+        var salesTax = service.findById(id);
         
-            return ResponseEntity.status(HttpStatus.OK).body(product);
+            return ResponseEntity.status(HttpStatus.OK).body(salesTax);
        
     }
     
@@ -98,10 +104,12 @@ public class SalesTaxController {
                      content = @Content)
     })
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SalesTaxResponse> create(@Valid @RequestBody SalesTaxRequest x){
-        var createdProduct = service.create(x);
+    public ResponseEntity<SalesTaxResponse> create(
+            @Parameter(description = "salesTax to create", required = true)
+            @Valid @RequestBody SalesTaxRequest x){
+        var salesTax = service.create(x);
         
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(salesTax);
       
     }
     
@@ -118,10 +126,14 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<SalesTaxResponse> update(@PathVariable Integer id, @Valid @RequestBody SalesTaxRequest x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<SalesTaxResponse> update(
+            @Parameter(description = "Id of the salesTax to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedSalesTax details", required = true)
+            @Valid @RequestBody SalesTaxRequest x){
+        var updatedSalesTax = service.update(id, x);
         
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedSalesTax);
       
     }
     
@@ -137,7 +149,9 @@ public class SalesTaxController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the salesTax to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();
