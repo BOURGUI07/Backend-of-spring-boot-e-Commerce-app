@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,8 +60,11 @@ public class OrderController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<OrderResponseDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -82,10 +86,12 @@ public class OrderController {
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderResponseDTO> findById(@PathVariable Integer id){
-        var product = service.findById(id);
+    public ResponseEntity<OrderResponseDTO> findById(
+            @Parameter(description = "Id of the order to retrieve", required = true)
+            @PathVariable Integer id){
+        var order = service.findById(id);
         
-            return ResponseEntity.status(HttpStatus.OK).body(product);
+            return ResponseEntity.status(HttpStatus.OK).body(order);
         
     }
     
@@ -97,10 +103,12 @@ public class OrderController {
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content)
     })
-    public ResponseEntity<OrderResponseDTO> create(@Valid @RequestBody  OrderDTO x){
-        var createdProduct = service.create(x);
+    public ResponseEntity<OrderResponseDTO> create(
+            @Parameter(description = "order to create", required = true)
+            @Valid @RequestBody  OrderDTO x){
+        var order = service.create(x);
         
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(order);
         
     }
     
@@ -117,10 +125,14 @@ public class OrderController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<OrderResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody  OrderDTO x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<OrderResponseDTO> update(
+            @Parameter(description = "Id of the order to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedOrder details", required = true)
+            @Valid @RequestBody  OrderDTO x){
+        var updatedOrder = service.update(id, x);
         
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedOrder);
         
     }
     
@@ -136,7 +148,9 @@ public class OrderController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the order to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();

@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,6 +61,7 @@ public class UserAuthenticationController {
     
     @PostMapping(value="/login",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserLoginResponseDTO> loginUser(
+            @Parameter(description = "User request to login", required = true)
             @RequestBody @Valid UserLoginRequestDTO x
     ){
         try{
@@ -81,6 +83,7 @@ public class UserAuthenticationController {
     @PostMapping(value="/admin/register",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('SUPERADMIN')")
     public ResponseEntity<UserRegistrationResponseDTO> registerAdmin(
+            @Parameter(description = "admin details to register", required = true)
             @Valid @RequestBody UserRegistrationRequestDTO x){
         
         try{

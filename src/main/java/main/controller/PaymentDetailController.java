@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,8 +60,11 @@ public class PaymentDetailController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<PaymentDetailResponseDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -81,10 +85,12 @@ public class PaymentDetailController {
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaymentDetailResponseDTO> findById(@PathVariable Integer id){
-        var product = service.findById(id);
+    public ResponseEntity<PaymentDetailResponseDTO> findById(
+            @Parameter(description = "Id of the paymentDetail to retrieve", required = true)
+            @PathVariable Integer id){
+        var paymentDetail = service.findById(id);
         
-            return ResponseEntity.status(HttpStatus.OK).body(product);
+            return ResponseEntity.status(HttpStatus.OK).body(paymentDetail);
         
     }
     
@@ -98,10 +104,12 @@ public class PaymentDetailController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<PaymentDetailResponseDTO> create(@Valid @RequestBody  PaymentDetailDTO x){
-        var createdProduct = service.create(x);
+    public ResponseEntity<PaymentDetailResponseDTO> create(
+            @Parameter(description = "paymentDetail to create", required = true)
+            @Valid @RequestBody  PaymentDetailDTO x){
+        var paymentDetail = service.create(x);
         
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(paymentDetail);
        
     }
     
@@ -118,10 +126,14 @@ public class PaymentDetailController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<PaymentDetailResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody  PaymentDetailDTO x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<PaymentDetailResponseDTO> update(
+            @Parameter(description = "Id of the paymentDetail to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedPaymentDetail details", required = true)
+            @Valid @RequestBody  PaymentDetailDTO x){
+        var updatedPaymentDetail = service.update(id, x);
         
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedPaymentDetail);
         
     }
     
@@ -137,7 +149,9 @@ public class PaymentDetailController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the paymentDetail to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();

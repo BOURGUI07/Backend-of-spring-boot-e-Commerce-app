@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -57,8 +58,11 @@ public class ProductController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ProductDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -81,7 +85,9 @@ public class ProductController {
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
+    public ResponseEntity<ProductDTO> findById(
+            @Parameter(description = "Id of the product to retrieve", required = true)
+            @PathVariable Integer id){
         var product = service.findById(id);
         
             return ResponseEntity.status(HttpStatus.OK).body(product);
@@ -99,7 +105,9 @@ public class ProductController {
     })
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
+    public ResponseEntity<ProductDTO> create(
+            @Parameter(description = "product to create", required = true)
+            @Valid @RequestBody ProductDTO x){
         var createdProduct = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -120,7 +128,11 @@ public class ProductController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductDTO x){
+    public ResponseEntity<ProductDTO> update(
+            @Parameter(description = "Id of the product to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedProduct details", required = true)
+            @Valid @RequestBody ProductDTO x){
         var updatedProduct = service.update(id, x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
@@ -140,7 +152,9 @@ public class ProductController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the product to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();
@@ -149,14 +163,29 @@ public class ProductController {
     
     @GetMapping(value="/search",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ProductDTO>> search(
+            @Parameter(description = "product name to search for", required = false)
             @RequestParam(required=false) String name,
+            
+            @Parameter(description = "product desc to search for", required = false)
             @RequestParam(required=false) String desc,
+            
+            @Parameter(description = "product discount status to search for", required = false)
             @RequestParam(required=false) Boolean discountStatus,
+            
+            @Parameter(description = "category name to search for", required = false)
             @RequestParam(required=false) String categoryName,
+            
+            @Parameter(description = "product min price to search for", required = false)
             @RequestParam(required=false) Double minPrice,
+            
+            @Parameter(description = "product max price to search for", required = false)
             @RequestParam(required=false) Double maxPrice,
-            @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size
+            
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size
     ){
         var result = service.search(name, desc, discountStatus, categoryName, minPrice, maxPrice, page, size);
         if(result.isEmpty()){
@@ -167,7 +196,9 @@ public class ProductController {
     
     @GetMapping(value="/category/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(@PathVariable Integer id){
+    public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(
+            @Parameter(description = "Id of the category to retrieve products for", required = true)
+            @PathVariable Integer id){
         var list = service.findProductsWithCategoryId(id);
         
             if(list.isEmpty()){

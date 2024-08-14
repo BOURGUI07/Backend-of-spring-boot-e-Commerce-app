@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import main.service.ReportService;
@@ -30,7 +31,9 @@ public class ReportController {
     
     @Operation(summary="Retrieve all products in a specific category")
     @GetMapping("/product_by_category_name/{category_name}")
-    public ResponseEntity<String> exportReport1(@PathVariable String category_name){
+    public ResponseEntity<String> exportReport1(
+            @Parameter(description = "name of the category to retrieve products for", required = true)
+            @PathVariable String category_name){
         var filepath = "C:\\Users\\hp\\Documents\\NetBeansProjects\\eComMaster\\product_by_category_name.csv";
         service.exportProductsByCategoryNameReport(filepath, category_name);
         return ResponseEntity.ok("Report Generated and Saved to: " + filepath);
@@ -47,7 +50,9 @@ public class ReportController {
     
     @Operation(summary="Find all products with reviews above a certain rating")
     @GetMapping("/products_by_rating_above/{rating}")
-    public ResponseEntity<String> exportReport3(@PathVariable Integer rating){
+    public ResponseEntity<String> exportReport3(
+            @Parameter(description = "rating to retrieve products with rating more than", required = true)
+            @PathVariable Integer rating){
         var filepath = "C:\\Users\\hp\\Documents\\NetBeansProjects\\eComMaster\\products_by_rating_above.csv";
         service.exportProductsByRatingAboveReport(rating, filepath);
         return ResponseEntity.ok("Report Generated and Saved to: " + filepath);
@@ -63,7 +68,9 @@ public class ReportController {
     
     @Operation(summary="Find all orders that include products from a specific category")
     @GetMapping("/orders_with_category_name/{category_name}")
-    public ResponseEntity<String> exportReport5(@PathVariable String category_name){
+    public ResponseEntity<String> exportReport5(
+            @Parameter(description = "name of the category to retrieve orders for", required = true)
+            @PathVariable String category_name){
         var filepath = "C:\\Users\\hp\\Documents\\NetBeansProjects\\eComMaster\\orders_with_category_name.csv";
         service.exportOrdersWhoseProductsOfCategoryReport(filepath, category_name);
         return ResponseEntity.ok("Report Generated and Saved to: " + filepath);

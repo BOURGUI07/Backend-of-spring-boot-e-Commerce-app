@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -56,8 +57,11 @@ public class CategoryController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CategoryDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -80,10 +84,12 @@ public class CategoryController {
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id){
-        var product = service.findById(id);
+    public ResponseEntity<CategoryDTO> findById(
+            @Parameter(description = "Id of the category to retrieve", required = true)
+            @PathVariable Integer id){
+        var category = service.findById(id);
         
-            return ResponseEntity.status(HttpStatus.OK).body(product);
+            return ResponseEntity.status(HttpStatus.OK).body(category);
        
     }
     
@@ -98,10 +104,12 @@ public class CategoryController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    public ResponseEntity<CategoryDTO> create(@Valid @RequestBody  CategoryDTO x){
-        var createdProduct = service.create(x);
+    public ResponseEntity<CategoryDTO> create(
+            @Parameter(description = "category to create", required = true)
+            @Valid @RequestBody  CategoryDTO x){
+        var category = service.create(x);
         
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(category);
        
     }
     
@@ -119,10 +127,14 @@ public class CategoryController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Integer id, @Valid @RequestBody  CategoryDTO x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<CategoryDTO> update(
+            @Parameter(description = "Id of the category to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedCategory details", required = true)
+            @Valid @RequestBody  CategoryDTO x){
+        var updatedCategory = service.update(id, x);
         
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedCategory);
         
     }
     
@@ -139,7 +151,9 @@ public class CategoryController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the category to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();
@@ -148,11 +162,21 @@ public class CategoryController {
     
     @GetMapping(value="/search",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CategoryDTO>> search(
+            @Parameter(description = "category name to search for", required = false)
             @RequestParam(required=false) String name,
+            
+            @Parameter(description = "category description to search for", required = false)
             @RequestParam(required=false) String desc,
+            
+            @Parameter(description = "product name to search for", required = false)
             @RequestParam(required=false) String productName,
-            @RequestParam(defaultValue="0") int page,
-            @RequestParam(defaultValue="10") int size
+            
+            
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size
     ){
         var result = service.search(name, desc, productName, page, size);
         if(result.isEmpty()){

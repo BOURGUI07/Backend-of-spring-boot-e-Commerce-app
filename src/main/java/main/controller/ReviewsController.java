@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -61,8 +62,13 @@ public class ReviewsController {
     @GetMapping(value="/product_id/{productId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Page<ReviewsResponseDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size,
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            
+            @Parameter(description="Id of product to retrieve reviews for", required=true)
             @PathVariable Integer productId){
         var result = service.findAll(page, size,productId);
         if(result.isEmpty()){
@@ -83,8 +89,13 @@ public class ReviewsController {
     })
     @GetMapping(value="/product_name/{productName}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ReviewsResponseDTO>> findAllByName(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size,
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            
+            @Parameter(description="name of product to retrieve reviews for", required=true)
             @PathVariable String productName){
         var result = service.findAll(page, size,productName);
         if(result.isEmpty()){
@@ -108,7 +119,9 @@ public class ReviewsController {
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ReviewsResponseDTO> findById(@PathVariable Integer id){
+    public ResponseEntity<ReviewsResponseDTO> findById(
+            @Parameter(description = "Id of the review to retrieve", required = true)
+            @PathVariable Integer id){
         var review = service.findById(id);
         
             return ResponseEntity.status(HttpStatus.OK).body(review);
@@ -125,10 +138,12 @@ public class ReviewsController {
                      content = @Content)
     })
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReviewsResponseDTO> create(@Valid @RequestBody ReviewsRequestDTO x){
-        var createdReview = service.create(x);
+    public ResponseEntity<ReviewsResponseDTO> create(
+            @Parameter(description = "review to create", required = true)
+            @Valid @RequestBody ReviewsRequestDTO x){
+        var review = service.create(x);
         
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
+            return ResponseEntity.status(HttpStatus.CREATED).body(review);
       
     }
     
@@ -145,10 +160,14 @@ public class ReviewsController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<ReviewsResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody ReviewsUpdateRequestDTO x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<ReviewsResponseDTO> update(
+            @Parameter(description = "Id of the review to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedReview details", required = true)
+            @Valid @RequestBody ReviewsUpdateRequestDTO x){
+        var updatedReview = service.update(id, x);
         
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedReview);
       
     }
     
@@ -165,7 +184,9 @@ public class ReviewsController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN','USER')")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the Review to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();

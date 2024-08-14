@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -57,8 +58,11 @@ public class DiscountController {
     })
     @GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<DiscountDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -79,10 +83,12 @@ public class DiscountController {
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DiscountDTO> findById(@PathVariable Integer id){
-        var product = service.findById(id);
+    public ResponseEntity<DiscountDTO> findById(
+            @Parameter(description = "Id of the discount to retrieve", required = true)
+            @PathVariable Integer id){
+        var discount = service.findById(id);
         
-            return ResponseEntity.status(HttpStatus.OK).body(product);
+            return ResponseEntity.status(HttpStatus.OK).body(discount);
        
     }
     
@@ -96,10 +102,12 @@ public class DiscountController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<DiscountDTO> create(@Valid @RequestBody  DiscountDTO x){
-        var createdProduct = service.create(x);
+    public ResponseEntity<DiscountDTO> create(
+            @Parameter(description = "discount to create", required = true)
+            @Valid @RequestBody  DiscountDTO x){
+        var discount = service.create(x);
         
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(discount);
         
     }
     
@@ -116,10 +124,14 @@ public class DiscountController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<DiscountDTO> update(@PathVariable Integer id, @Valid @RequestBody  DiscountDTO x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<DiscountDTO> update(
+            @Parameter(description = "Id of the discount to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedDiscount details", required = true)
+            @Valid @RequestBody  DiscountDTO x){
+        var updatedDiscount = service.update(id, x);
         
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedDiscount);
         
     }
     
@@ -135,7 +147,9 @@ public class DiscountController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the discount to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();

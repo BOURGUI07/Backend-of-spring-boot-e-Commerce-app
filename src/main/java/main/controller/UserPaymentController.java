@@ -5,6 +5,7 @@
 package main.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,8 +61,11 @@ public class UserPaymentController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<UserPaymentDTO>> findAll(
-            @RequestParam(defaultValue="0")int page,
-            @RequestParam (defaultValue="10")int size){
+            @Parameter(description = "The page number to retrieve", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+        
+            @Parameter(description = "The number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size){
         var result = service.findAll(page, size);
         if(result.isEmpty()){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -83,9 +87,11 @@ public class UserPaymentController {
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserPaymentDTO> findById(@PathVariable Integer id){
-        var product = service.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(product);
+    public ResponseEntity<UserPaymentDTO> findById(
+            @Parameter(description = "Id of the userPayment to retrieve", required = true)
+            @PathVariable Integer id){
+        var userPayment = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userPayment);
     }
     
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
@@ -99,10 +105,12 @@ public class UserPaymentController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<UserPaymentDTO> create(@Valid @RequestBody  UserPaymentDTO x){
-        var createdProduct = service.create(x);
+    public ResponseEntity<UserPaymentDTO> create(
+            @Parameter(description = "userPayment to create", required = true)
+            @Valid @RequestBody  UserPaymentDTO x){
+        var userPayment = service.create(x);
         
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userPayment);
        
     }
     
@@ -118,10 +126,14 @@ public class UserPaymentController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<UserPaymentDTO> update(@PathVariable Integer id, @Valid @RequestBody UserPaymentDTO x){
-        var updatedProduct = service.update(id, x);
+    public ResponseEntity<UserPaymentDTO> update(
+            @Parameter(description = "Id of the userPayment to update", required = true)
+            @PathVariable Integer id,
+            @Parameter(description = "updatedUserPayment details", required = true)
+            @Valid @RequestBody UserPaymentDTO x){
+        var updatedUserPayment = service.update(id, x);
         
-        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUserPayment);
  
     }
     
@@ -134,7 +146,9 @@ public class UserPaymentController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Id of the userPayment to delete", required = true)
+            @PathVariable Integer id){
         
             service.delete(id);
             return ResponseEntity.noContent().build();
