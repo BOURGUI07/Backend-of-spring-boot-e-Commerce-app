@@ -20,6 +20,7 @@ import main.page_dtos.ReviewsDTOPage;
 import main.service.ReviewsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +58,7 @@ public class ReviewsController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/product_id/{productId}")
+    @GetMapping(value="/product_id/{productId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<Page<ReviewsResponseDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
@@ -80,7 +81,7 @@ public class ReviewsController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/product_name/{productName}")
+    @GetMapping(value="/product_name/{productName}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ReviewsResponseDTO>> findAllByName(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size,
@@ -105,7 +106,7 @@ public class ReviewsController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ReviewsResponseDTO> findById(@PathVariable Integer id){
         var review = service.findById(id);
@@ -123,7 +124,7 @@ public class ReviewsController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewsResponseDTO> create(@Valid @RequestBody ReviewsRequestDTO x){
         var createdReview = service.create(x);
         
@@ -131,7 +132,7 @@ public class ReviewsController {
       
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update Review")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="Review isn't found", 

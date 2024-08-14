@@ -17,6 +17,7 @@ import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
 import main.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -46,7 +47,7 @@ public class UserAuthenticationController {
         @ApiResponse(responseCode="201", description="User is successfully Registered"),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
-    @PostMapping("/signup")
+    @PostMapping(value="/signup",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserRegistrationResponseDTO> registerUser(
             @Valid @RequestBody UserRegistrationRequestDTO x){
         
@@ -57,7 +58,7 @@ public class UserAuthenticationController {
         }
     }
     
-    @PostMapping("/login")
+    @PostMapping(value="/login",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserLoginResponseDTO> loginUser(
             @RequestBody @Valid UserLoginRequestDTO x
     ){
@@ -77,7 +78,7 @@ public class UserAuthenticationController {
         @ApiResponse(responseCode="201", description="Admin is successfully Registered"),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body")
     })
-    @PostMapping("/admin/register")
+    @PostMapping(value="/admin/register",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('SUPERADMIN')")
     public ResponseEntity<UserRegistrationResponseDTO> registerAdmin(
             @Valid @RequestBody UserRegistrationRequestDTO x){

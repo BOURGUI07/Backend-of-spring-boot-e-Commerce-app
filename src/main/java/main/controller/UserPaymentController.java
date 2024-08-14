@@ -20,6 +20,7 @@ import main.util.PaymentProvider;
 import main.util.PaymentType;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +58,7 @@ public class UserPaymentController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<UserPaymentDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -81,13 +82,13 @@ public class UserPaymentController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserPaymentDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
     
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  User Payment")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="User Payment is successfully created",
@@ -105,7 +106,7 @@ public class UserPaymentController {
        
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update User Payment")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="User Payment isn't found",content=@Content),

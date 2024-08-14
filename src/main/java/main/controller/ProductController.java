@@ -18,6 +18,7 @@ import main.page_dtos.ProductDTOPage;
 import main.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -54,7 +55,7 @@ public class ProductController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ProductDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -78,7 +79,7 @@ public class ProductController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
@@ -96,7 +97,7 @@ public class ProductController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
     public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductDTO x){
         var createdProduct = service.create(x);
@@ -105,7 +106,7 @@ public class ProductController {
       
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update Product")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="Product isn't found", 
@@ -146,7 +147,7 @@ public class ProductController {
       
     }
     
-    @GetMapping("/search")
+    @GetMapping(value="/search",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ProductDTO>> search(
             @RequestParam(required=false) String name,
             @RequestParam(required=false) String desc,
@@ -164,7 +165,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     
-    @GetMapping("/category/{id}")
+    @GetMapping(value="/category/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(@PathVariable Integer id){
         var list = service.findProductsWithCategoryId(id);

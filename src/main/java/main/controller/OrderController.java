@@ -19,6 +19,7 @@ import main.page_dtos.OrderResponseDTOPage;
 import main.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +57,7 @@ public class OrderController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<OrderResponseDTO>> findAll(
             @RequestParam(defaultValue="0")int page,
             @RequestParam (defaultValue="10")int size){
@@ -80,7 +81,7 @@ public class OrderController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderResponseDTO> findById(@PathVariable Integer id){
         var product = service.findById(id);
         
@@ -88,7 +89,7 @@ public class OrderController {
         
     }
     
-    @PostMapping
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  Order")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Order is successfully created",content = { @Content(mediaType = "application/json", 
@@ -103,7 +104,7 @@ public class OrderController {
         
     }
     
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Update order")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="order isn't found", 
