@@ -4,7 +4,8 @@
  */
 package main.repo;
 
-import main.models.Discount;
+import java.util.Optional;
+import main.models.WishList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Repository;
  * @author hp
  */
 @Repository
-public interface DiscountRepo extends JpaRepository<Discount,Integer>{
-    @Override
-    Page<Discount> findAll(Pageable pageable);
-    boolean existsByNameIgnoreCase(String name);
+public interface WishListRepo extends JpaRepository<WishList,Integer>{
+    Optional<WishList> findByNameIgnoreCase(String wishListName);
+    boolean existsByNameIgnoreCase(String wishListName);
+    Page<WishList> findByUserId(Pageable pageable, Integer userId);
 }

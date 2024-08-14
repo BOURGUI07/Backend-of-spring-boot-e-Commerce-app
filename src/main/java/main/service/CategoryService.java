@@ -67,7 +67,7 @@ public class CategoryService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        if(repo.existsByName(x.name())){
+        if(repo.existsByNameIgnoreCase(x.name())){
             throw new AlreadyExistsException("A category with this name already exists.");
         }
         var c = mapper.toEntity(x);

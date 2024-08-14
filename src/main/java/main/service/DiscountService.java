@@ -59,7 +59,7 @@ public class DiscountService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        if(repo.existsByName(x.name())){
+        if(repo.existsByNameIgnoreCase(x.name())){
             throw new AlreadyExistsException("discount with this name already exists");
         }
         var d = mapper.toEntity(x);
