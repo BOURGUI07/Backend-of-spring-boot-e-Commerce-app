@@ -38,8 +38,6 @@ public class OrderMapper {
             var orderItems = detailRepo.findAllById(list);
             orderItems.forEach(o::addOrderItem);
             taxService.calculateTotalOrderPrice(o);
-            repo.save(o);
-            detailRepo.saveAll(orderItems);
         }
         return o;
     }
