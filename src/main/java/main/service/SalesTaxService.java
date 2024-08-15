@@ -38,8 +38,18 @@ public class SalesTaxService {
     private final SalesTaxMapper mapper;
     
     public void calculateTotalOrderPrice(Order o){
+        /*
+            to accuratley calculate the total order price
+            we have to first check if the user retrieved by the request userId is existent
+            we have to find the country of the order
+            and since for every country has its own taxtRate, we gonna extract the taxrate based on the country
+            then we have to change the taxRate from like 56.2% to like 0.562
+            then we gonna multiply the result by the order total non-taxedPrice
+            after that we gonna add the result to the order non-taxed total
+            the result is the taxed total order price
+        */
         if(o.getUser()!=null){
-            o.setTotal(o.getTotal() + changeTax(repo.getTaxRateForCountry(findOrderCountry(o))));
+            o.setTotal(o.getTotal() + o.getTotal()*changeTax(repo.getTaxRateForCountry(findOrderCountry(o))));
         }
     }
     

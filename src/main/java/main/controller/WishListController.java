@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import main.dto.ProductDTO;
-import main.dto.SalesTaxRequest;
 import main.dto.SalesTaxResponse;
 import main.dto.WishListCreationRequest;
 import main.dto.WishListMergeRequest;
@@ -24,10 +23,10 @@ import main.service.WishListService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -139,7 +138,7 @@ public class WishListController {
     
     
     
-    @PutMapping("/add/product_id/{pid}/wishlist_id/{wid}")
+    @PatchMapping("/add/product_id/{pid}/wishlist_id/{wid}")
     @Operation(summary="add product to wish list", description="add retrieved product by id to a wish list retireved by id")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="wishlist isn't found", 
@@ -164,7 +163,7 @@ public class WishListController {
     
     
     
-    @PutMapping("/remove/product_id/{pid}/wishlist_id/{wid}")
+    @PatchMapping("/remove/product_id/{pid}/wishlist_id/{wid}")
     @Operation(summary="remove product from a wish list", description="remove retrieved product by id from a wish list retireved by id")
     @ApiResponses(value={
         @ApiResponse(responseCode="404", description="wishlist isn't found", 
