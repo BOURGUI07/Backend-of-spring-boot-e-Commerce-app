@@ -91,28 +91,22 @@ public class OrderServiceTest {
     }
 @Test
 void testCreate() {
-    // Mock user
     when(userRepo.findById(1)).thenReturn(Optional.of(user));
 
-    // Mock order items
     List<OrderItem> orderItems = List.of(orderItem);
     when(detailRepo.findAllById(x.orderItemIds())).thenReturn(orderItems);
 
-    // Mock products
     List<Product> products = List.of(product);
     when(productRepo.findAllById(anyList())).thenReturn(products);
 
-    // Mock saving
     when(productRepo.saveAll(anyList())).thenReturn(products);
     when(detailRepo.saveAll(anyList())).thenReturn(orderItems);
     when(userRepo.save(any(User.class))).thenReturn(user);
     when(repo.save(any(Order.class))).thenReturn(p);
 
-    // Mock mapping
     when(mapper.toEntity(x)).thenReturn(p);
     when(mapper.toDTO(p)).thenReturn(y);
 
-    // Execute and verify
     assertEquals(y, service.create(x));
 
     verify(userRepo, times(1)).findById(1);
