@@ -25,9 +25,10 @@ import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -38,8 +39,8 @@ import org.hibernate.annotations.DynamicUpdate;
  */
 @Entity
 @Table(name="orders",indexes=@Index(name = "idx_user_id", columnList = "user_id"))
-@Data
-@EqualsAndHashCode(callSuper=true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
