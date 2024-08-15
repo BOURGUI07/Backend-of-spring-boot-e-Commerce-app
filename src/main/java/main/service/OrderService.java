@@ -144,7 +144,6 @@ public class OrderService {
             var itemList = detailRepo.findAllById(list);
             itemList.forEach(o::addOrderItem);
             taxService.calculateTotalOrderPrice(o);
-            repo.save(o);
             detailRepo.saveAll(itemList);
         }
         paymentRepo.findById(x.paymentDetailId()).ifPresent(o::setPaymentDetail);
