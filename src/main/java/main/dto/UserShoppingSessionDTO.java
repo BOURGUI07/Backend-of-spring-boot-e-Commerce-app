@@ -6,7 +6,7 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
+import java.util.Set;
 import main.models.User;
 import main.validation.EntityIdExists;
 
@@ -19,7 +19,7 @@ public record UserShoppingSessionDTO(
         @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
         Integer userId,
         @NotEmpty
-        List<Integer> cartItemIds
+        Set<Integer> cartItemIds
         ) {
 
 }

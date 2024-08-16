@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
 import main.models.User;
-import main.repo.OrderRepo;
 import main.repo.RoleRepo;
 import main.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;

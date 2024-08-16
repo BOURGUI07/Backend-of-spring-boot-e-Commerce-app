@@ -5,15 +5,17 @@
 package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Positive;
 import main.models.Order;
 import main.models.Product;
 import main.validation.EntityIdExists;
+import main.validation.ValidQuantity;
 
 /**
  *
  * @author hp
  */
+@ValidQuantity(productIdField = "productid", quantityField = "quantity",
+    message = "Quantity is required, Quantity must be positive, Requested quantity exceeds available inventory")
 @Schema(title = "OrderItemDTO", description = "Parameters required to create/update an order")
 public record OrderItemDTO(
         Integer id,
@@ -21,7 +23,6 @@ public record OrderItemDTO(
         Integer orderId,
         @EntityIdExists(entityClass =Product.class,message="Id must be not null, must by positive, and must exists")
         Integer productid,
-        @Positive(message="ordered quantity should be positive")
         Integer quantity
         ) {
 

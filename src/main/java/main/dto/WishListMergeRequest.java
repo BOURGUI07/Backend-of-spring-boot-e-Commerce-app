@@ -6,7 +6,7 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
+import java.util.Set;
 import main.models.WishList;
 import main.validation.EntityIdExists;
 
@@ -19,7 +19,7 @@ public record WishListMergeRequest(
         @EntityIdExists(entityClass =WishList.class,message="Id must be not null, must by positive, and must exists")
         Integer targetWishId,
         @NotEmpty(message="wish list Id list should contain at least one element")
-        List<Integer> wishListIds
+        Set<Integer> wishListIds
         ) {
 
 }

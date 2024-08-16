@@ -14,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
-import main.exception.InsufficientInventoryException;
 import main.exception.OptimisticLockException;
-import main.models.OrderItem;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
@@ -75,55 +73,36 @@ public class OrderService {
             throw new ConstraintViolationException(violations);
         }
         //check first if the user retrieved by the userId does exist
-        var user = userRepo.findById(x.userId())
-                .orElseThrow(() -> new EntityNotFoundException("User with id: " + x.userId() + " isn't found"));
-        
+        //Now we don't have to check if it does exists, that would be handled by @EntityIdExists
         //check if the orderItem list is neither null nor empty
-        if(x.orderItemIds()!=null && !x.orderItemIds().isEmpty()){
+        //We don't have to that either, it would be handled by @NotEmpty
+
             //retrieve the orderItem enetities by their respective Ids
-            var orderItems = detailRepo.findAllById(x.orderItemIds());
             // retrieve the Ids from the order item entities
-            var desiredProductIds = orderItems.stream().map(e -> e.getProduct().getId()).toList();
             //retrieve the products from the database by the product Ids retrieved from the entered orderItem list
-            var availableProducts = productRepo.findAllById(desiredProductIds);
             //check if they have the same size, if so we proceed into other procedures, otherwise, at least one product wasn't found
-            if(desiredProductIds.size()==availableProducts.size()){
+            //we don't have to handle that either, because if id dones't exists it will fail the validation wall
                 //Next we gonna check the requested quantity from each product whether it's less than or equal the available inventory quantity
                 // for that, we have to know the requested quantity for each product by using a hashmap
-                var map = orderItems.stream().collect(Collectors.toMap(OrderItem::getProduct, OrderItem::getQuantity));
                /*Now we have to check that fro every product element in avialable product list,
                 has an inventory quantity greater than or equal the request quantity for the same product
                 if so, we can proceed, otherwise, at least one requested product quantity exceeds available quantity
+                Now we don't have to that either, because that would be handled by @ValidQuantity
                */
-                var isOrderedQuantityAvailable = availableProducts.stream().allMatch(p -> p.getInventory().getQuantity()>=map.get(p));
-                if(isOrderedQuantityAvailable){
                     /*
                         if the requested quantity is raisonalbe, we have then to set the product inventory quantity
                     */
-                    availableProducts.forEach(p -> p.getInventory().setQuantity(p.getInventory().getQuantity()-map.get(p)));
                     /*
                         next, we have to save the product and orderItem
                         add the order to the user order list
                         save both the user and the order
                     */
-                    productRepo.saveAll(availableProducts);
-                    detailRepo.saveAll(orderItems);
                     var o = mapper.toEntity(x);
-                    user.addOrder(o);
-                    userRepo.save(user);
                     var saved = repo.save(o);
                     return mapper.toDTO(saved);
-                }else{
-                    throw new InsufficientInventoryException("At Least One Product Ordered Quantity Exceeds Inventory");
-                }
-            }else{
-                throw new EntityNotFoundException("At least One Product Wasn't Found");
-            }
-        }else{
-            throw new IllegalArgumentException("Either the order item list is null or empty");
+                
+            
         }
-        
-    }
     
     @Transactional
     @CacheEvict(value={

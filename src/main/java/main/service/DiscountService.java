@@ -109,13 +109,15 @@ public class DiscountService {
         }
         var products = productRepo.findAllById(x.productIds());
         try{
-            repo.findById(x.discountId()).ifPresent(discount -> {
-            products.forEach(p->discount.addProduct(p));
+            var discount = repo.findById(x.discountId())
+                    .orElseThrow(() -> new EntityNotFoundException(""
+                + "Discount with id: "  + x.discountId() + " isn't found"));
+            products.forEach(discount::addProduct);
             productRepo.saveAll(products);
             return mapper.toDTO(repo.save(discount));
-        });
+        
         }catch(ObjectOptimisticLockingFailureException e){
-            throw new OptimisticLockException("This category has been updated by another user, Please review the changes");
+            throw new OptimisticLockException("This discount has been updated by another user, Please review the changes");
         }
     }
     

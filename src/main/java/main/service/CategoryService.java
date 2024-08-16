@@ -116,11 +116,12 @@ public class CategoryService {
         }
         var products = prepo.findAllById(x.productIds());
         try{
-            repo.findById(x.categoryId()).ifPresent(category -> {
-            products.forEach(p->category.addProduct(p));
+            var category = repo.findById(x.categoryId())
+                    .orElseThrow(() -> new EntityNotFoundException(""
+                + "Category with id: "  + x.categoryId()+ " isn't found"));
+            products.forEach(category::addProduct);
             prepo.saveAll(products);
             return mapper.toDTO(repo.save(category));
-        });
         }catch(ObjectOptimisticLockingFailureException e){
             throw new OptimisticLockException("This category has been updated by another user, Please review the changes");
         }
