@@ -9,7 +9,8 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import main.dto.DiscountDTO;
+import main.dto.DiscountRequestDTO;
+import main.dto.DiscountResponseDTO;
 import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
@@ -38,11 +39,11 @@ public class DiscountService {
     private Validator validator;
     
     @Cacheable(value="allDiscounts", key = "'findAll_' + #page + '_' + #size")
-    public Page<DiscountDTO> findAll(int page, int size){
+    public Page<DiscountResponseDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     @Cacheable(value="discountById", key="#id")
-    public DiscountDTO findById(Integer id){
+    public DiscountResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -54,7 +55,7 @@ public class DiscountService {
     @CacheEvict(value={
         "allDiscounts", "discountById"
     }, allEntries=true)
-    public DiscountDTO create(DiscountDTO x){
+    public DiscountResponseDTO create(DiscountRequestDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -71,7 +72,7 @@ public class DiscountService {
     @CacheEvict(value={
         "allDiscounts", "discountById"
     }, allEntries=true)
-    public DiscountDTO update(Integer id, DiscountDTO x){
+    public DiscountResponseDTO update(Integer id, DiscountRequestDTO x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -81,14 +82,10 @@ public class DiscountService {
         }
         var d = repo.findById(id).orElseThrow(() -> new EntityNotFoundException(""
                 + "Discount with id: "  + id + " isn't found"))
-        .setActive(x.active())
-        .setDesc(x.desc())
         .setName(x.name())
         .setPercent(x.percent());
-        var list = x.productIds();
-        if(list!=null){
-            d.setProducts(productRepo.findAllById(list));
-        }
+        x.active().ifPresent(d::setActive);
+        x.desc().ifPresent(d::setDesc);
         try{
             var saved  = repo.save(d);
             return mapper.toDTO(saved);

@@ -13,7 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.DiscountDTO;
+import main.dto.DiscountRequestDTO;
+import main.dto.DiscountResponseDTO;
 import main.page_dtos.DiscountDTOPage;
 import main.service.DiscountService;
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class DiscountController {
                      content = @Content)
     })
     @GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<DiscountDTO>> findAll(
+    public ResponseEntity<Page<DiscountResponseDTO>> findAll(
             @Parameter(description = "The page number to retrieve", example = "0")
             @RequestParam(defaultValue = "0") int page,
         
@@ -76,14 +77,14 @@ public class DiscountController {
         @ApiResponse(responseCode="404", description="Discount isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Discount was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = DiscountDTO.class)) }),
+                     schema = @Schema(implementation = DiscountResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DiscountDTO> findById(
+    public ResponseEntity<DiscountResponseDTO> findById(
             @Parameter(description = "Id of the discount to retrieve", required = true)
             @PathVariable Integer id){
         var discount = service.findById(id);
@@ -96,15 +97,15 @@ public class DiscountController {
     @Operation(summary="Create a new  Discount")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Discount is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = DiscountDTO.class)) }),
+                     schema = @Schema(implementation = DiscountResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<DiscountDTO> create(
+    public ResponseEntity<DiscountResponseDTO> create(
             @Parameter(description = "discount to create", required = true)
-            @Valid @RequestBody  DiscountDTO x){
+            @Valid @RequestBody  DiscountRequestDTO x){
         var discount = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(discount);
@@ -117,18 +118,18 @@ public class DiscountController {
         @ApiResponse(responseCode="404", description="discount isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="discount was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = DiscountDTO.class)) }),
+                     schema = @Schema(implementation = DiscountResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<DiscountDTO> update(
+    public ResponseEntity<DiscountResponseDTO> update(
             @Parameter(description = "Id of the discount to update", required = true)
             @PathVariable Integer id,
             @Parameter(description = "updatedDiscount details", required = true)
-            @Valid @RequestBody  DiscountDTO x){
+            @Valid @RequestBody  DiscountRequestDTO x){
         var updatedDiscount = service.update(id, x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedDiscount);

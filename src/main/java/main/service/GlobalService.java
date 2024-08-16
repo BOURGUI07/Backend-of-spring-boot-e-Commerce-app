@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import main.dto.CategoryDTO;
+import main.dto.CategoryResponseDTO;
 import main.dto.OrderProductByCategoryDTO;
 import main.dto.OrdersQtyDTO;
 import main.dto.ProductDiscountDTO;
@@ -196,7 +196,7 @@ public class GlobalService {
     }
     
     //List all categories with more than a specified number of products
-    public List<CategoryDTO> findCategoriesWithProductCountMore(Integer count){
+    public List<CategoryResponseDTO> findCategoriesWithProductCountMore(Integer count){
         return crepo.findAll()
                 .stream()
                 .filter(c->c.getProducts().size()>=count)

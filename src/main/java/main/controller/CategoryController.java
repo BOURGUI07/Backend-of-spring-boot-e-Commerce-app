@@ -13,7 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.CategoryDTO;
+import main.dto.CategoryRequestDTO;
+import main.dto.CategoryResponseDTO;
 import main.page_dtos.CategoryDTOPage;
 import main.service.CategoryService;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class CategoryController {
                      content = @Content)
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CategoryDTO>> findAll(
+    public ResponseEntity<Page<CategoryResponseDTO>> findAll(
             @Parameter(description = "The page number to retrieve", example = "0")
             @RequestParam(defaultValue = "0") int page,
         
@@ -76,7 +77,7 @@ public class CategoryController {
         @ApiResponse(responseCode="404", description="Category isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Category was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = CategoryDTO.class)) }),
+                     schema = @Schema(implementation = CategoryResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
@@ -84,7 +85,7 @@ public class CategoryController {
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    public ResponseEntity<CategoryDTO> findById(
+    public ResponseEntity<CategoryResponseDTO> findById(
             @Parameter(description = "Id of the category to retrieve", required = true)
             @PathVariable Integer id){
         var category = service.findById(id);
@@ -97,16 +98,16 @@ public class CategoryController {
     @Operation(summary="Create a new  Category")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Category is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = CategoryDTO.class)) }),
+                     schema = @Schema(implementation = CategoryResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    public ResponseEntity<CategoryDTO> create(
+    public ResponseEntity<CategoryResponseDTO> create(
             @Parameter(description = "category to create", required = true)
-            @Valid @RequestBody  CategoryDTO x){
+            @Valid @RequestBody  CategoryRequestDTO x){
         var category = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(category);
@@ -119,7 +120,7 @@ public class CategoryController {
         @ApiResponse(responseCode="404", description="category isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="category was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = CategoryDTO.class)) }),
+                     schema = @Schema(implementation = CategoryResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body", 
                      content = @Content),
@@ -127,11 +128,11 @@ public class CategoryController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    public ResponseEntity<CategoryDTO> update(
+    public ResponseEntity<CategoryResponseDTO> update(
             @Parameter(description = "Id of the category to update", required = true)
             @PathVariable Integer id,
             @Parameter(description = "updatedCategory details", required = true)
-            @Valid @RequestBody  CategoryDTO x){
+            @Valid @RequestBody  CategoryRequestDTO x){
         var updatedCategory = service.update(id, x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedCategory);
@@ -161,7 +162,7 @@ public class CategoryController {
     }
     
     @GetMapping(value="/search",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CategoryDTO>> search(
+    public ResponseEntity<Page<CategoryResponseDTO>> search(
             @Parameter(description = "category name to search for", required = false)
             @RequestParam(required=false) String name,
             

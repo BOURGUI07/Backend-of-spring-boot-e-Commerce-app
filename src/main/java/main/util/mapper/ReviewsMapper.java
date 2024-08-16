@@ -24,21 +24,17 @@ public class ReviewsMapper {
     
     public Reviews toEntity(ReviewsRequestDTO x){
         var r = new Reviews()
-        .setContent(x.content())
-        .setRating(x.rating())
-        .setTitle(x.title());
-        var opUser = userRepo.findById(x.userId());
-        if(opUser.isPresent()){
-            var user = opUser.get();
-            r.setUser(user);
-            userRepo.save(user);
-        }
-        var opProduct = productRepo.findById(x.productId());
-        if(opProduct.isPresent()){
-            var product = opProduct.get();
-            r.setProduct(product);
-            productRepo.save(product);
-        }
+        .setRating(x.rating());
+        x.content().ifPresent(r::setContent);
+        x.title().ifPresent(r::setTitle);
+         userRepo.findById(x.userId()).ifPresent(u->{
+            r.setUser(u);
+            userRepo.save(u);
+        });
+        productRepo.findById(x.productId()).ifPresent(p->{
+            r.setProduct(p);
+            productRepo.save(p);
+        });
         return r;
     }
     

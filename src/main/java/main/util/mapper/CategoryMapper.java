@@ -6,9 +6,9 @@ package main.util.mapper;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import main.dto.CategoryDTO;
+import main.dto.CategoryRequestDTO;
+import main.dto.CategoryResponseDTO;
 import main.models.Category;
-import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,21 +18,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryMapper {
-    private final ProductRepo productRepo;
     
-    public Category toEntity(CategoryDTO x){
+    public Category toEntity(CategoryRequestDTO x){
         var c = new Category()
-        .setDesc(x.desc())
         .setName(x.name());
-        var list = x.productIds();
-        if(list!=null){
-            c.setProducts(productRepo.findAllById(list));
-        }
+        x.desc().ifPresent(c::setDesc);
         return c;
     }
     
-    public CategoryDTO toDTO(Category c){
+    public CategoryResponseDTO toDTO(Category c){
         var list = c.getProducts().stream().map(p -> p.getId()).collect(Collectors.toList());
-        return new CategoryDTO(c.getId(),c.getName(),c.getDesc(),list,c.getVersion());
+        return new CategoryResponseDTO(c.getId(),c.getName(),c.getDesc(),list,c.getVersion());
     }
 }

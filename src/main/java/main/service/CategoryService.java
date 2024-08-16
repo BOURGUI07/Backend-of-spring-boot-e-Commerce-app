@@ -10,7 +10,8 @@ import jakarta.validation.Validator;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import main.dto.CategoryDTO;
+import main.dto.CategoryRequestDTO;
+import main.dto.CategoryResponseDTO;
 import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
@@ -43,13 +44,13 @@ public class CategoryService {
     private Validator validator;
     
     @Cacheable(value="allCategories", key = "'findAll_' + #page + '_' + #size")
-    public Page<CategoryDTO> findAll(int page, int size){
+    public Page<CategoryResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page,size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
     
     @Cacheable(value="categoryById", key="#id")
-    public CategoryDTO findById(Integer id){
+    public CategoryResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -62,7 +63,7 @@ public class CategoryService {
     @CacheEvict(value={
         "allCategories", "categoryById"
     }, allEntries=true)
-    public CategoryDTO create(CategoryDTO x){
+    public CategoryResponseDTO create(CategoryRequestDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -80,7 +81,7 @@ public class CategoryService {
     @CacheEvict(value={
         "allCategories", "categoryById"
     }, allEntries=true)
-    public CategoryDTO update(Integer id, CategoryDTO x){
+    public CategoryResponseDTO update(Integer id, CategoryRequestDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -90,12 +91,8 @@ public class CategoryService {
         }
         var c = repo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Category with id " + id + " isn't found"))
-        .setDesc(x.desc())
         .setName(x.name());
-        var list = x.productIds();
-        if(list!=null){
-            c.setProducts(prepo.findAllById(list));
-        }
+        x.desc().ifPresent(c::setDesc);
         try{
             var saved = repo.save(c);
             return mapper.toDTO(saved);
@@ -124,7 +121,7 @@ public class CategoryService {
         }
     }
     
-    public Page<CategoryDTO> search(String name, String desc, String productName, int page, int size){
+    public Page<CategoryResponseDTO> search(String name, String desc, String productName, int page, int size){
         var pageable = PageRequest.of(page, size);
         var spec = Specification.where(specification.hasName(name))
                 .and(specification.hasDesc(desc))

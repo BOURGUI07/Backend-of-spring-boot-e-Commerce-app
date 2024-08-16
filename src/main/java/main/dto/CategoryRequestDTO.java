@@ -7,24 +7,21 @@ package main.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.util.List;
+import java.util.Optional;
 
 /**
  *
  * @author hp
  */
-@Schema(title = "CategoryDTO", description = "Parameters required to create/update a category")
-public record CategoryDTO(
-        Integer id,
+@Schema(title = "CategoryRequestDTO", description = "Parameters required to create/update a category")
+public record CategoryRequestDTO(
         @NotBlank
         @Size(min=3,max=100,message="Category name must be"
                 + "between 3 and 100 characters")
         String name,
         @Size(max=500,message="Category desc must be"
                 + " at max 500 character length")
-        String desc,
-        List<Integer> productIds,
-        Integer version
+        Optional<String> desc
         ) {
 
 }
