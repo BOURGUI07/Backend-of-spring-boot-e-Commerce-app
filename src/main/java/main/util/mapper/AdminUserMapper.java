@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
 import main.models.User;
-import main.repo.OrderRepo;
 import main.repo.RoleRepo;
 import main.util.RoleEnum;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AdminUserMapper {
-     private final OrderRepo orderRepo;
     private final PasswordEncoder encoder;
     private final RoleRepo repo;
     
@@ -36,10 +34,6 @@ public class AdminUserMapper {
         .setUsername(x.username())
         .setPhone(x.phone());
         role.ifPresent(u::setRole);
-        var orderList = x.orderIds();
-        if(orderList!=null){
-            u.setOrders(orderRepo.findAllById(orderList));
-        }
         return u;
     }
     

@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
+import main.models.User;
 import main.util.PaymentProvider;
 import main.util.PaymentType;
+import main.validation.EntityIdExists;
 
 /**
  *
@@ -18,7 +20,7 @@ import main.util.PaymentType;
 @Schema(title = "UserPaymentDTO", description = "Parameters required to create a user payment")
 public record UserPaymentDTO(
         Integer id,
-        @NotNull(message="user id is required")
+        @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
         Integer userId,
         @NotNull(message="payment type is required")
         PaymentType type,

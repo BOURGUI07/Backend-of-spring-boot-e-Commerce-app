@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import main.dto.CartItemDTO;
 import main.models.CartItem;
 import main.repo.ProductRepo;
-import main.repo.SessionRepo;
 import org.springframework.stereotype.Service;
+import main.repo.UserShoppingSessionRepo;
 
 /**
  *
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CartItemMapper {
-    private final SessionRepo sessionRepo;
+    private final UserShoppingSessionRepo sessionRepo;
     private final ProductRepo productRepo;
     
     public CartItem toEntity(CartItemDTO x){

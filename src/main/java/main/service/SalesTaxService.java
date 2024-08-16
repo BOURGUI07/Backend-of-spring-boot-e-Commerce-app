@@ -15,7 +15,6 @@ import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
 import main.models.Order;
 import main.repo.AddressRepo;
-import main.repo.TaxRepo;
 import main.util.mapper.SalesTaxMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import main.repo.SalesTaxRepo;
 
 /**
  *
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SalesTaxService {
-    private final TaxRepo repo;
+    private final SalesTaxRepo repo;
     private final AddressRepo addressRepo;
     private Validator validator;
     private final SalesTaxMapper mapper;

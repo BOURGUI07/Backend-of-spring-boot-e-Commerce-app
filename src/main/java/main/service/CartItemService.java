@@ -13,13 +13,13 @@ import main.dto.CartItemDTO;
 import main.exception.EntityNotFoundException;
 import main.repo.CartItemRepo;
 import main.repo.ProductRepo;
-import main.repo.SessionRepo;
 import main.util.mapper.CartItemMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import main.repo.UserShoppingSessionRepo;
 
 /**
  *
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 public class CartItemService {
     private final CartItemMapper mapper;
     private final CartItemRepo repo;
-    private final SessionRepo sessionRepo;
+    private final UserShoppingSessionRepo sessionRepo;
     private final ProductRepo productRepo;
     private Validator validator;
     

@@ -39,9 +39,8 @@ public record UserRegistrationRequestDTO (
     @NotNull
      String email,
     
-     String phone,
+     String phone
     
-     List<Integer> orderIds
         ){
 
 }

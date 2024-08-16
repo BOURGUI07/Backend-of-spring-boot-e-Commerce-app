@@ -6,8 +6,10 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import main.models.Order;
 import main.util.PaymentProvider;
 import main.util.PaymentStatus;
+import main.validation.EntityIdExists;
 
 /**
  *
@@ -15,7 +17,7 @@ import main.util.PaymentStatus;
  */
 @Schema(title = "PaymentDetailDTO", description = "Parameters required to create/update a payment detail")
 public record PaymentDetailDTO(
-        @NotNull(message="order Id is required")
+        @EntityIdExists(entityClass =Order.class,message="Id must be not null, must by positive, and must exists")
         Integer orderId,
         @NotNull(message="payment provider is required")
         PaymentProvider provider,

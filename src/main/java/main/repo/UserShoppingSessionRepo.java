@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @author hp
  */
 @Repository
-public interface SessionRepo extends JpaRepository<UserShoppingSession,Integer>{
+public interface UserShoppingSessionRepo extends JpaRepository<UserShoppingSession,Integer>{
     Optional<UserShoppingSession> findByUserId(Integer id);
     @Override
     Page<UserShoppingSession> findAll(Pageable pageable);

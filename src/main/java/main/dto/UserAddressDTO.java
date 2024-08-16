@@ -6,7 +6,8 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import main.models.User;
+import main.validation.EntityIdExists;
 
 /**
  *
@@ -15,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 @Schema(title = "UserAddressDTO", description = "Parameters required to create/update a user address")
 public record UserAddressDTO(
         Integer id,
-        @NotNull
+        @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
         Integer userId,
         @NotBlank(message="addressLine1 shouldn't be blank")
         String addressLine1,

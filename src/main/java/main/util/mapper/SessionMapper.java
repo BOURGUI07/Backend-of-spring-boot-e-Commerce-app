@@ -10,9 +10,9 @@ import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.models.UserShoppingSession;
 import main.repo.CartItemRepo;
-import main.repo.SessionRepo;
 import main.repo.UserRepo;
 import org.springframework.stereotype.Service;
+import main.repo.UserShoppingSessionRepo;
 
 /**
  *
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class SessionMapper {
-    private final SessionRepo repo;
+    private final UserShoppingSessionRepo repo;
     private final UserRepo urepo;
     private final CartItemRepo crepo;
     
