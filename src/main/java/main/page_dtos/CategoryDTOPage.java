@@ -5,7 +5,7 @@
 package main.page_dtos;
 
 import java.util.List;
-import main.dto.CategoryDTO;
+import main.dto.CategoryResponseDTO;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -13,12 +13,12 @@ import org.springframework.data.domain.PageRequest;
  *
  * @author hp
  */
-public class CategoryDTOPage extends PageImpl<CategoryDTO>{
-    public CategoryDTOPage(List<CategoryDTO> content, int page, int size, long total) {
+public class CategoryDTOPage extends PageImpl<CategoryResponseDTO>{
+    public CategoryDTOPage(List<CategoryResponseDTO> content, int page, int size, long total) {
         super(content, PageRequest.of(page, size), total);
     }
 
-    public CategoryDTOPage(List<CategoryDTO> content) {
+    public CategoryDTOPage(List<CategoryResponseDTO> content) {
         super(content);
     }
 }

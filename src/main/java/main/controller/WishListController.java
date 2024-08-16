@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.ProductDTO;
 import main.dto.SalesTaxResponse;
 import main.dto.WishListCreationRequest;
 import main.dto.WishListMergeRequest;
@@ -94,7 +93,7 @@ public class WishListController {
         @ApiResponse(responseCode="404", description="wishlist isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="wishlist was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = WishListResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body", 
                      content = @Content),

@@ -5,7 +5,7 @@
 package main.page_dtos;
 
 import java.util.List;
-import main.dto.DiscountDTO;
+import main.dto.DiscountResponseDTO;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -13,12 +13,12 @@ import org.springframework.data.domain.PageRequest;
  *
  * @author hp
  */
-public class DiscountDTOPage extends PageImpl<DiscountDTO>{
-    public DiscountDTOPage(List<DiscountDTO> content, int page, int size, long total) {
+public class DiscountDTOPage extends PageImpl<DiscountResponseDTO>{
+    public DiscountDTOPage(List<DiscountResponseDTO> content, int page, int size, long total) {
         super(content, PageRequest.of(page, size), total);
     }
 
-    public DiscountDTOPage(List<DiscountDTO> content) {
+    public DiscountDTOPage(List<DiscountResponseDTO> content) {
         super(content);
     }
 }

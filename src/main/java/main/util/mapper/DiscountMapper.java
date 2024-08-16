@@ -6,9 +6,9 @@ package main.util.mapper;
 
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import main.dto.DiscountDTO;
+import main.dto.DiscountResponseDTO;
+import main.dto.DiscountRequestDTO;
 import main.models.Discount;
-import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,23 +18,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class DiscountMapper {
-    private final ProductRepo productRepo;
     
-    public Discount toEntity(DiscountDTO x){
+    public Discount toEntity(DiscountRequestDTO x){
         var d = new Discount()
-        .setActive(x.active())
-        .setDesc(x.desc())
         .setName(x.name())
         .setPercent(x.percent());
-        var list = x.productIds();
-        if (list != null) {
-            d.setProducts(productRepo.findAllById(list));
-        }
+        x.active().ifPresent(d::setActive);
+        x.desc().ifPresent(d::setDesc);
         return d;
     }
     
-    public DiscountDTO toDTO(Discount d){
+    public DiscountResponseDTO toDTO(Discount d){
         var list = d.getProducts().stream().map(x -> x.getId()).collect(Collectors.toList());
-        return new DiscountDTO(d.getId(),d.getName(),d.getDesc(),d.getPercent(),d.getActive(),list,d.getVersion());
+        return new DiscountResponseDTO(d.getId(),d.getName(),d.getDesc(),d.getPercent(),d.getActive(),list,d.getVersion());
     }
 }

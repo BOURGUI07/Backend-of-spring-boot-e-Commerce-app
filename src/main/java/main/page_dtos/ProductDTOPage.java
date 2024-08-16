@@ -5,7 +5,7 @@
 package main.page_dtos;
 
 import java.util.List;
-import main.dto.ProductDTO;
+import main.dto.ProductRequestDTO;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -13,12 +13,12 @@ import org.springframework.data.domain.PageRequest;
  *
  * @author hp
  */
-public class ProductDTOPage extends PageImpl<ProductDTO>{
-    public ProductDTOPage(List<ProductDTO> content, int page, int size, long total) {
+public class ProductDTOPage extends PageImpl<ProductRequestDTO>{
+    public ProductDTOPage(List<ProductRequestDTO> content, int page, int size, long total) {
         super(content, PageRequest.of(page, size), total);
     }
 
-    public ProductDTOPage(List<ProductDTO> content) {
+    public ProductDTOPage(List<ProductRequestDTO> content) {
         super(content);
     }
 }

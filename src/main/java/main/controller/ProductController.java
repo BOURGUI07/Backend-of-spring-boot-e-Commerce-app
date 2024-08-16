@@ -14,7 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import main.dto.ProductDTO;
+import main.dto.ProductRequestDTO;
+import main.dto.ProductResponseDTO;
 import main.page_dtos.ProductDTOPage;
 import main.service.ProductService;
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class ProductController {
                      content = @Content)
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<ProductDTO>> findAll(
+    public ResponseEntity<Page<ProductResponseDTO>> findAll(
             @Parameter(description = "The page number to retrieve", example = "0")
             @RequestParam(defaultValue = "0") int page,
         
@@ -77,7 +78,7 @@ public class ProductController {
         @ApiResponse(responseCode="404", description="Product isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Product was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = ProductResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
@@ -85,7 +86,7 @@ public class ProductController {
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ProductDTO> findById(
+    public ResponseEntity<ProductResponseDTO> findById(
             @Parameter(description = "Id of the product to retrieve", required = true)
             @PathVariable Integer id){
         var product = service.findById(id);
@@ -97,7 +98,7 @@ public class ProductController {
     @Operation(summary="Create a new  Product")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Product is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = ProductResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
@@ -105,9 +106,9 @@ public class ProductController {
     })
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ProductDTO> create(
+    public ResponseEntity<ProductResponseDTO> create(
             @Parameter(description = "product to create", required = true)
-            @Valid @RequestBody ProductDTO x){
+            @Valid @RequestBody ProductRequestDTO x){
         var createdProduct = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -120,7 +121,7 @@ public class ProductController {
         @ApiResponse(responseCode="404", description="Product isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Product was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = ProductDTO.class)) }),
+                     schema = @Schema(implementation = ProductResponseDTO.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body", 
                      content = @Content),
@@ -128,11 +129,11 @@ public class ProductController {
                      content = @Content)
     })
     @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
-    public ResponseEntity<ProductDTO> update(
+    public ResponseEntity<ProductResponseDTO> update(
             @Parameter(description = "Id of the product to update", required = true)
             @PathVariable Integer id,
             @Parameter(description = "updatedProduct details", required = true)
-            @Valid @RequestBody ProductDTO x){
+            @Valid @RequestBody ProductRequestDTO x){
         var updatedProduct = service.update(id, x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
@@ -162,7 +163,7 @@ public class ProductController {
     }
     
     @GetMapping(value="/search",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<ProductDTO>> search(
+    public ResponseEntity<Page<ProductResponseDTO>> search(
             @Parameter(description = "product name to search for", required = false)
             @RequestParam(required=false) String name,
             
@@ -196,7 +197,7 @@ public class ProductController {
     
     @GetMapping(value="/category/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ProductDTO>> findProductsWithCategoryId(
+    public ResponseEntity<List<ProductResponseDTO>> findProductsWithCategoryId(
             @Parameter(description = "Id of the category to retrieve products for", required = true)
             @PathVariable Integer id){
         var list = service.findProductsWithCategoryId(id);

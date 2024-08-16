@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import main.dto.ProductDTO;
+import main.dto.ProductRequestDTO;
+import main.dto.ProductResponseDTO;
 import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
@@ -50,13 +51,13 @@ public class ProductService {
     private Validator validator;
     
     @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size")
-    public Page<ProductDTO> findAll(int page, int size){
+    public Page<ProductResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page,size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
     
     @Cacheable(value="productById", key="#id")
-    public ProductDTO findById(Integer id){
+    public ProductResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -69,7 +70,7 @@ public class ProductService {
     @CacheEvict(value={
         "allProducts", "productById"
     }, allEntries=true)
-    public ProductDTO create(ProductDTO x){
+    public ProductResponseDTO create(ProductRequestDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -88,7 +89,7 @@ public class ProductService {
     @CacheEvict(value={
         "allProducts", "productById"
     }, allEntries=true)
-    public ProductDTO update(Integer id, ProductDTO x){
+    public ProductResponseDTO update(Integer id, ProductRequestDTO x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -98,21 +99,18 @@ public class ProductService {
         }
         var product = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Product with id " + id + " isn't found"))
-                .setDesc(x.desc())
                 .setName(x.name())
                 .setSku(x.sku())
                 .setPrice(x.price());
-        if(x.categoryId()!=null){
-            categoryRepo.findById(x.categoryId()).ifPresent(product::setCategory);
-        }
-        if(x.discountId()!=null){
-            discountRepo.findById(x.discountId()).ifPresent(product::setDiscount);
-        }
+                x.desc().ifPresent(product::setDesc);
         invRepo.findById(x.inventoryId()).ifPresent(product::setInventory);
-        var list = x.orderItemsIds();
-        if(list!=null){
-            product.setOrderItems(orepo.findAllById(list));
-        }
+        x.categoryId().ifPresent(categoryId->{
+            categoryRepo.findById(categoryId).ifPresent(product::setCategory);
+        });
+        x.discountId().ifPresent(discountId->{
+            discountRepo.findById(discountId).ifPresent(product::setDiscount);
+        });
+        
         try{
             var saved = repo.save(product);
             return mapper.toDTO(saved);
@@ -134,14 +132,14 @@ public class ProductService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
-    public List<ProductDTO> findProductsWithCategoryId(Integer id){
+    public List<ProductResponseDTO> findProductsWithCategoryId(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
         return repo.findByCategoryId(id).stream().map(mapper::toDTO).collect(Collectors.toList());
     }
     
-    public Page<ProductDTO> search(String name, String desc, Boolean discountStatus, String categoryName, Double minPrice, Double maxPrice, int page, int size){
+    public Page<ProductResponseDTO> search(String name, String desc, Boolean discountStatus, String categoryName, Double minPrice, Double maxPrice, int page, int size){
         var pageable = PageRequest.of(page, size);
         var spec = Specification.where(specification.hasName(name)
                 .and(specification.hasDesc(desc))

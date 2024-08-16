@@ -4,14 +4,17 @@
  */
 package main.util.mapper;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import main.dto.ProductDTO;
+import main.dto.ProductRequestDTO;
+import main.dto.ProductResponseDTO;
+import main.models.Category;
+import main.models.Discount;
 import main.models.Product;
 import main.repo.CategoryRepo;
 import main.repo.DiscountRepo;
 import main.repo.InventoryRepo;
-import main.repo.OrderItemRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,37 +25,39 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductMapper {
     private final CategoryRepo categoryRepo;
-    private final OrderItemRepo detailRepo;
     private final DiscountRepo discountRepo;
     private final InventoryRepo inventoryRepo;
     
-    public Product toEntity(ProductDTO x){
+    public Product toEntity(ProductRequestDTO x){
         var p = new Product()
-        .setDesc(x.desc())
         .setName(x.name())
         .setSku(x.sku())
         .setPrice(x.price());
-        if(x.categoryId()!=null){
-            var category = categoryRepo.findById(x.categoryId());
-            category.ifPresent(p::setCategory);
-        }
-        if(x.discountId()!=null){
-            var discount = discountRepo.findById(x.discountId());
-            discount.ifPresent(p::setDiscount);
-        }
-        var inventory = inventoryRepo.findById(x.inventoryId());
-        inventory.ifPresent(p::setInventory);
-        var list = x.orderItemsIds();
-        if(list!=null){
-            p.setOrderItems(detailRepo.findAllById(list));
-        }
+        x.desc().ifPresent(p::setDesc);
+        x.categoryId().ifPresent(id -> {
+            categoryRepo.findById(id).ifPresent(p::setCategory);
+        });
+        x.discountId().ifPresent(id -> {
+            discountRepo.findById(id).ifPresent(p::setDiscount);
+        });
+        inventoryRepo.findById(x.inventoryId()).ifPresent(p::setInventory);
         return p;
     }
     
-    public ProductDTO toDTO(Product p){
+    public ProductResponseDTO toDTO(Product p){
         var list = p.getOrderItems().stream().map(o -> o.getId()).collect(Collectors.toList());
-        return (p.getCategory()!=null && p.getDiscount()!=null && p.getInventory()!=null)?
-                new ProductDTO(p.getId(),p.getName(),p.getDesc(),p.getSku(),p.getPrice(),p.getCategory().getId(),
-                p.getInventory().getId(),p.getDiscount().getId(),list,p.getVersion()):null;
+        var categoryOp = Optional.ofNullable(p.getCategory());
+        var discountOp = Optional.ofNullable(p.getDiscount());
+        return new ProductResponseDTO(p.getId(),
+                p.getName(),
+                p.getDesc(),
+                p.getSku(),
+                p.getPrice(),
+                categoryOp.map(Category::getName),
+                p.getInventory().getQuantity(),
+                discountOp.map(Discount::getName),
+                list,
+                p.getVersion()
+                );
     }
 }
