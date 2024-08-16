@@ -10,7 +10,6 @@ import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.models.Order;
 import main.repo.OrderItemRepo;
-import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
 import main.repo.UserRepo;
 import main.service.SalesTaxService;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class OrderMapper {
-    private final OrderRepo repo;
     private final UserRepo userRepo;
     private final OrderItemRepo detailRepo;
     private final PaymentDetailRepo paymentRepo;
@@ -31,13 +29,19 @@ public class OrderMapper {
     
     public Order toEntity(OrderDTO x){
         var o = new Order();
-        userRepo.findById(x.userId()).ifPresent(o::setUser);
-        paymentRepo.findById(x.paymentDetailId()).ifPresent(o::setPaymentDetail);
+        var user = userRepo.findById(x.userId()).get();
+        var payment = paymentRepo.findById(x.paymentDetailId()).get();
+        payment.setOrder(o);
+        o.setPaymentDetail(payment);
         var list = x.orderItemIds();
         if(list != null){
             var orderItems = detailRepo.findAllById(list);
             orderItems.forEach(o::addOrderItem);
             taxService.calculateTotalOrderPrice(o);
+            user.addOrder(o);
+            detailRepo.saveAll(orderItems);
+            userRepo.save(user);
+            paymentRepo.save(payment);
         }
         return o;
     }
