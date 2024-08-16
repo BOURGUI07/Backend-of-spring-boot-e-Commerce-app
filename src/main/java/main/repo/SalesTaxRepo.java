@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
  * @author hp
  */
 @Repository
-public interface TaxRepo extends JpaRepository<SalesTax,Integer>{
+public interface SalesTaxRepo extends JpaRepository<SalesTax,Integer>{
     @Query(value="SELECT COALESCE(tax_rate,0.0) "
             + "FROM sales_tax "
             + "WHERE country= :country"

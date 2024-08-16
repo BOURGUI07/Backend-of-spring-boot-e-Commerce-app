@@ -23,12 +23,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserMapper {
     @Autowired
-    public UserMapper(OrderRepo orderRepo,@Lazy PasswordEncoder encoder, RoleRepo repo) {
-        this.orderRepo = orderRepo;
+    public UserMapper(@Lazy PasswordEncoder encoder, RoleRepo repo) {
         this.encoder = encoder;
         this.repo = repo;
     }
-    private final OrderRepo orderRepo;
     private final PasswordEncoder encoder;
     private final RoleRepo repo;
     
@@ -42,10 +40,6 @@ public class UserMapper {
         .setUsername(x.username())
         .setPhone(x.phone());
         role.ifPresent(u::setRole);
-        var orderList = x.orderIds();
-        if(orderList!=null){
-            u.setOrders(orderRepo.findAllById(orderList));
-        }
         return u;
     }
     

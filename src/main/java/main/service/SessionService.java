@@ -13,7 +13,6 @@ import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.exception.EntityNotFoundException;
 import main.repo.CartItemRepo;
-import main.repo.SessionRepo;
 import main.repo.UserRepo;
 import main.util.mapper.SessionMapper;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import main.repo.UserShoppingSessionRepo;
 
 /**
  *
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 public class SessionService {
     private final UserRepo urepo;
     private final CartItemRepo crepo;
-    private final SessionRepo repo;
+    private final UserShoppingSessionRepo repo;
     private final SessionMapper mapper;
     private Validator validator;
     

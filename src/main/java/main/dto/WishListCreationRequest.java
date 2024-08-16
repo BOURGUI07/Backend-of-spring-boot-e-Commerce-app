@@ -7,9 +7,10 @@ package main.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import main.models.User;
 import main.util.WishListVisibility;
+import main.validation.EntityIdExists;
 
 /**
  *
@@ -24,8 +25,7 @@ public record WishListCreationRequest(
         String desc,
         @NotNull(message="wishlist visibility is required")
         WishListVisibility visibility,
-        @NotNull(message="userid is required")
-        @Positive(message="user id can't be less than 1")
+        @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
         Integer userId
         ) {
 }

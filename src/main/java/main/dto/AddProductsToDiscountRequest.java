@@ -6,8 +6,9 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import main.models.Discount;
+import main.validation.EntityIdExists;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @Schema(title = "AddProductsToDiscountRequest", description = "Parameters of adding products to discount request")
 public record AddProductsToDiscountRequest(
-        @NotNull(message="discout id is required")
+        @EntityIdExists(entityClass =Discount.class,message="Id must be not null, must by positive, and must exists")
         Integer discountId,
         @NotEmpty(message="list of product Ids must contains at least one element")
         List<Integer> productIds

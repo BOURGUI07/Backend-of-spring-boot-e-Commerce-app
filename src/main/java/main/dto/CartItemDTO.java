@@ -7,6 +7,9 @@ package main.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import main.models.Product;
+import main.models.UserShoppingSession;
+import main.validation.EntityIdExists;
 
 /**
  *
@@ -15,9 +18,9 @@ import jakarta.validation.constraints.Positive;
 @Schema(title = "CartItemDTO", description = "Parameters required to create/update a cart item")
 public record CartItemDTO(
         Integer id,
-        @NotNull(message="session Id is required")
+        @EntityIdExists(entityClass =UserShoppingSession.class,message="Id must be not null, must by positive, and must exists")
         Integer sessionId,
-        @NotNull(message="Product Id is required")
+        @EntityIdExists(entityClass =Product.class,message="Id must be not null, must by positive, and must exists")
         Integer productId,
         @NotNull(message="Product Quantity is required")
         @Positive(message="Product Quantity Must be positive")
