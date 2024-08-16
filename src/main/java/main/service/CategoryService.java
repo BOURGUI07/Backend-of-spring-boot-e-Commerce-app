@@ -10,6 +10,7 @@ import jakarta.validation.Validator;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import main.dto.AddProductsToCategoryRequest;
 import main.dto.CategoryRequestDTO;
 import main.dto.CategoryResponseDTO;
 import main.exception.AlreadyExistsException;
@@ -98,6 +99,28 @@ public class CategoryService {
             return mapper.toDTO(saved);
         }catch(DataIntegrityViolationException e){
             throw new AlreadyExistsException("A category with this name already exists.");
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This category has been updated by another user, Please review the changes");
+        }
+    }
+    
+    
+    @Transactional
+    @CacheEvict(value={
+        "allCategories", "categoryById"
+    }, allEntries=true)
+    public CategoryResponseDTO addProducts(AddProductsToCategoryRequest x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
+        var products = prepo.findAllById(x.productIds());
+        try{
+            repo.findById(x.categoryId()).ifPresent(category -> {
+            products.forEach(p->category.addProduct(p));
+            prepo.saveAll(products);
+            return mapper.toDTO(repo.save(category));
+        });
         }catch(ObjectOptimisticLockingFailureException e){
             throw new OptimisticLockException("This category has been updated by another user, Please review the changes");
         }

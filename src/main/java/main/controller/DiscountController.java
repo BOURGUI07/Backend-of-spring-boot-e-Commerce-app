@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import main.dto.AddProductsToDiscountRequest;
 import main.dto.DiscountRequestDTO;
 import main.dto.DiscountResponseDTO;
 import main.page_dtos.DiscountDTOPage;
@@ -26,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -155,5 +157,30 @@ public class DiscountController {
             service.delete(id);
             return ResponseEntity.noContent().build();
         
+    }
+    
+    
+    
+    
+    
+    @Operation(summary="add products to discount")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="discount isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="products were successfully added",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = DiscountResponseDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
+    })
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PatchMapping("/add_products")
+    public ResponseEntity<DiscountResponseDTO> addProducts(
+            @Valid @RequestBody 
+            @Parameter(description = "add products to discount request details", required = true)
+            AddProductsToDiscountRequest x){
+        return ResponseEntity.ok(service.addProducts(x));
     }
 }

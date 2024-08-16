@@ -67,4 +67,9 @@ public class Category extends BaseEntity{
         products.remove(p);
         p.setCategory(null);
     }
+    
+    public void addProduct(Product p){
+        products.add(p);
+        p.setCategory(this);
+    }
 }
