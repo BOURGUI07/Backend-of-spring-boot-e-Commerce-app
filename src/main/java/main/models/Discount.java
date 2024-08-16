@@ -72,6 +72,11 @@ public class Discount extends BaseEntity{
         p.setDiscount(null);
     }
     
+     public void addProduct(Product p){
+        products.add(p);
+        p.setDiscount(this);
+    }
+    
     public Boolean getActive(){
         return (active==null)? false:active;
     }

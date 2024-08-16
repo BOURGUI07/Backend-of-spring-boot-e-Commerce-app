@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import main.dto.AddProductsToDiscountRequest;
 import main.dto.DiscountRequestDTO;
 import main.dto.DiscountResponseDTO;
 import main.exception.AlreadyExistsException;
@@ -95,6 +96,29 @@ public class DiscountService {
             throw new OptimisticLockException("This discount has been updated by another user, Please review the changes");
         }
     }
+    
+    
+    @Transactional
+    @CacheEvict(value={
+        "allDiscounts", "discountById"
+    }, allEntries=true)
+    public DiscountResponseDTO addProducts(AddProductsToDiscountRequest x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
+        var products = productRepo.findAllById(x.productIds());
+        try{
+            repo.findById(x.discountId()).ifPresent(discount -> {
+            products.forEach(p->discount.addProduct(p));
+            productRepo.saveAll(products);
+            return mapper.toDTO(repo.save(discount));
+        });
+        }catch(ObjectOptimisticLockingFailureException e){
+            throw new OptimisticLockException("This category has been updated by another user, Please review the changes");
+        }
+    }
+    
     
     @Transactional
     @CacheEvict(value={

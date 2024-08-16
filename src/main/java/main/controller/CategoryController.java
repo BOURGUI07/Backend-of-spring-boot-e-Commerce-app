@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import main.dto.AddProductsToCategoryRequest;
 import main.dto.CategoryRequestDTO;
 import main.dto.CategoryResponseDTO;
 import main.page_dtos.CategoryDTOPage;
@@ -26,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -184,5 +186,29 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+    
+    
+    
+    
+    @Operation(summary="add products to category")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="category isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="products were successfully added",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = CategoryResponseDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
+                + "a Non Valid Entity Body", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
+    })
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    @PatchMapping("/add_products")
+    public ResponseEntity<CategoryResponseDTO> addProducts(
+            @Valid @RequestBody 
+            @Parameter(description = "add products to category request details", required = true)
+            AddProductsToCategoryRequest x){
+        return ResponseEntity.ok(service.addProducts(x));
     }
 }
