@@ -6,11 +6,8 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
 import java.util.Set;
-import main.models.PaymentDetail;
-import main.models.User;
-import main.validation.EntityIdExists;
+import main.validation.ValidId;
 
 /**
  *
@@ -19,9 +16,9 @@ import main.validation.EntityIdExists;
 @Schema(title = "OrderDTO", description = "Parameters required to create/update an order")
 public record OrderDTO(
         Integer id,
-        @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer userId,
-        @EntityIdExists(entityClass =PaymentDetail.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer paymentDetailId,
         @NotEmpty(message="The Order Item List should Contain at least one element")
         Set<Integer> orderItemIds        ) {

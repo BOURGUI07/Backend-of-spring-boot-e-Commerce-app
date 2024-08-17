@@ -4,10 +4,10 @@
  */
 package main;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import main.dto.ProductDTO;
+import main.dto.ProductRequestDTO;
+import main.dto.ProductResponseDTO;
 import main.models.Category;
 import main.models.Discount;
 import main.models.Inventory;
@@ -18,14 +18,9 @@ import main.repo.DiscountRepo;
 import main.repo.InventoryRepo;
 import main.repo.OrderItemRepo;
 import main.util.mapper.ProductMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.anyList;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
@@ -57,58 +52,48 @@ public class ProductMapperTest {
         .setSku("sku")
         .setName("name")
         .setId(1);
-    private ProductDTO x = new ProductDTO(1,"name","desc","sku", 10.4,null,1,null, new ArrayList<>(),null);
-    private final Category category = new Category().setId(1);
-    private final Discount discount = new Discount().setId(1);
+    private ProductRequestDTO x = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.ofNullable(null),1,Optional.ofNullable(null));
+    private ProductResponseDTO y = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.empty(),50,Optional.empty(),List.of(),product.getVersion());
+    private final Category category = new Category().setId(1).setName("categoryName");
+    private final Discount discount = new Discount().setId(1).setName("discoutName");
     private final OrderItem orderItem = new OrderItem().setId(1);
     
     
     public ProductMapperTest() {
-    }
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
     }
 
     @Test
     void test0(){
         when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
         assertEquals(product,mapper.toEntity(x).setId(1));
-        assertNull(mapper.toDTO(product));
+        assertEquals(y,mapper.toDTO(product));
     }
     
     @Test
     void test1(){
         product.setCategory(category);
-        ProductDTO y = new ProductDTO(1,"name","desc","sku", 10.4,1,1,null, new ArrayList<>(),null);
+        ProductRequestDTO a = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.of(1),1,Optional.ofNullable(null));
+        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),50,Optional.empty(),List.of(),product.getVersion());
         when(categoryRepo.findById(1)).thenReturn(Optional.of(category));
         when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
-        assertEquals(product,mapper.toEntity(y).setId(1));
-        assertNull(mapper.toDTO(product));
+        assertEquals(product,mapper.toEntity(a).setId(1));
+        assertEquals(b,mapper.toDTO(product));
+        
+
     }
     
     @Test
     void test2(){
         product.setCategory(category);
         product.setDiscount(discount);
-        ProductDTO y = new ProductDTO(1,"name","desc","sku", 10.4,1,1,1, new ArrayList<>(),null);
+        ProductRequestDTO a = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.of(1),1,Optional.of(1));
+        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),50,Optional.of("discoutName"),List.of(),product.getVersion());
         when(categoryRepo.findById(1)).thenReturn(Optional.of(category));
         when(discountRepo.findById(1)).thenReturn(Optional.of(discount));
         when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
-        assertEquals(product,mapper.toEntity(y).setId(1));
-        assertNotNull(mapper.toDTO(product));
+        assertEquals(product,mapper.toEntity(a).setId(1));
+        assertEquals(b,mapper.toDTO(product));
+
     }
     
     @Test
@@ -116,14 +101,13 @@ public class ProductMapperTest {
         product.setCategory(category);
         product.setDiscount(discount);
         product.setOrderItems(List.of(orderItem));
-        ProductDTO y = new ProductDTO(1,"name","desc","sku", 10.4,1,1,1, List.of(1),null);
+        ProductRequestDTO a = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.of(1),1,Optional.of(1));
+        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),50,Optional.of("discoutName"),List.of(1),product.getVersion());
         when(categoryRepo.findById(1)).thenReturn(Optional.of(category));
         when(discountRepo.findById(1)).thenReturn(Optional.of(discount));
         when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
-        when(detailRepo.findAllById(anyList())).thenReturn(List.of(orderItem));
-        assertEquals(product,mapper.toEntity(y).setId(1));
-        assertNotNull(mapper.toDTO(product));
-        assertEquals(y,mapper.toDTO(product));
+        assertEquals(product,mapper.toEntity(a).setId(1).setOrderItems(List.of(orderItem)));
+        assertEquals(b,mapper.toDTO(product));
     }
     
     

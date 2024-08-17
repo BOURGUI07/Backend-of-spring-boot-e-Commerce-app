@@ -7,8 +7,7 @@ package main.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
-import main.models.Category;
-import main.validation.EntityIdExists;
+import main.validation.ValidId;
 
 /**
  *
@@ -16,7 +15,7 @@ import main.validation.EntityIdExists;
  */
 @Schema(title = "AddProductsToCategoryRequest", description = "Parameters of adding products to category request")
 public record AddProductsToCategoryRequest(
-        @EntityIdExists(entityClass =Category.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer categoryId,
         @NotEmpty(message="list of product Ids must contains at least one element")
         Set<Integer> productIds

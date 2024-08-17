@@ -7,10 +7,10 @@ package main;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import main.dto.ProductDTO;
+import main.dto.ProductRequestDTO;
+import main.dto.ProductResponseDTO;
 import main.exception.EntityNotFoundException;
 import main.models.Inventory;
 import main.models.Product;
@@ -21,7 +21,6 @@ import main.repo.OrderItemRepo;
 import main.repo.ProductRepo;
 import main.service.ProductService;
 import main.util.mapper.ProductMapper;
-import main.util.specification.ProductSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,24 +60,26 @@ public class ProductServiceTest {
     @InjectMocks
     private ProductService service;
     
+    
     private Validator validator;
     
-    private ProductDTO x;
-    private Product p = new Product();
-    private Inventory i = new Inventory();
+    private ProductRequestDTO x;
+    private Inventory i = new Inventory().setId(1).setQuantity(50);
+    private Product p = new Product()
+            .setCategory(null)
+            .setDiscount(null)
+            .setInventory(i)
+            .setDesc("desc")
+            .setPrice(10.4)
+            .setSku("sku")
+            .setName("name")
+            .setId(1);
     
+    private ProductResponseDTO y = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.empty(),50,Optional.empty(),List.of(),p.getVersion());
     public ProductServiceTest() {
         i.setId(1);
         i.setQuantity(10);
-        x = new ProductDTO(1,"name","desc","sku", 10.4,null,1,null, new ArrayList<>(),null);
-        p.setCategory(null);
-        p.setDiscount(null);
-        p.setInventory(i);
-        p.setDesc("desc");
-        p.setPrice(10.4);
-        p.setSku("sku");
-        p.setName("name");
-        p.setId(1);
+        x = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.ofNullable(null),1,Optional.ofNullable(null));
     }
     
     @BeforeAll
@@ -94,6 +95,7 @@ public class ProductServiceTest {
     public void setUp() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         service.setValidator(validator);
+        
     }
     
     @AfterEach
@@ -104,9 +106,9 @@ public class ProductServiceTest {
     void testCreate(){
         when(mapper.toEntity(x)).thenReturn(p);
         when(repo.save(p)).thenReturn(p);
-        when(mapper.toDTO(p)).thenReturn(x);
+        when(mapper.toDTO(p)).thenReturn(y);
         
-        assertEquals(x, service.create(x));
+        assertEquals(y, service.create(x));
         
         verify(repo,times(1)).save(p);
     }
@@ -115,9 +117,9 @@ public class ProductServiceTest {
     void testUpdate(){
         when(repo.findById(1)).thenReturn(Optional.of(p));
         when(repo.save(p)).thenReturn(p);
-        when(mapper.toDTO(p)).thenReturn(x);
+        when(mapper.toDTO(p)).thenReturn(y);
         
-        assertEquals(x,service.update(1, x));
+        assertEquals(y,service.update(1, x));
         
         verify(repo,times(1)).save(p);
     }
@@ -125,9 +127,9 @@ public class ProductServiceTest {
     @Test
     void testFindById(){
         when(repo.findById(1)).thenReturn(Optional.of(p));
-        when(mapper.toDTO(p)).thenReturn(x);
+        when(mapper.toDTO(p)).thenReturn(y);
         
-        assertEquals(x,service.findById(1));
+        assertEquals(y,service.findById(1));
     }
     
     @Test 
@@ -149,8 +151,8 @@ public class ProductServiceTest {
         Page<Product> productPage = new PageImpl<>(List.of(p));
         
         when(repo.findAll(pageable)).thenReturn(productPage);
-        when(mapper.toDTO(p)).thenReturn(x);
-        assertEquals(x, service.findAll(0, 10).getContent().get(0));
+        when(mapper.toDTO(p)).thenReturn(y);
+        assertEquals(y, service.findAll(0, 10).getContent().get(0));
     }
     
     @Test
@@ -171,25 +173,25 @@ public class ProductServiceTest {
     @Test
     void testValidation(){
         //Test InventoryId Nullability
-        var product1 = new ProductDTO(1,"name","desc","sku", 10.4,null,null,null, new ArrayList<>(),null);
+        var product1 = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.ofNullable(null),null,Optional.ofNullable(null));
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product1);
         });
         
         //Test Product Price Positivity
-        var product2 = new ProductDTO(1,"name","desc","sku",0.0,null,1,null, new ArrayList<>(),null);
+        var product2 = new ProductRequestDTO("name",Optional.of("desc"),"sku", 0.0,Optional.ofNullable(null),1,Optional.ofNullable(null));
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product2);
         });
         
         //Test Product Name Blank state
-        var product3 = new ProductDTO(1,"","desc","sku",5.0,null,1,null, new ArrayList<>(),null);
+        var product3 = new ProductRequestDTO("",Optional.of("desc"),"sku", 10.4,Optional.ofNullable(null),1,Optional.ofNullable(null));
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product3);
         });
         
         //Test Product SKU Blank state
-        var product4 = new ProductDTO(1,"name","desc","",5.0,null,1,null, new ArrayList<>(),null);
+        var product4 = new ProductRequestDTO("name",Optional.of("desc"),"", 10.4,Optional.ofNullable(null),1,Optional.ofNullable(null));
         assertThrows(ConstraintViolationException.class, () -> {
             service.create(product4);
         });
@@ -198,8 +200,8 @@ public class ProductServiceTest {
     @Test
     void testProductsWithCategoryId(){
         when(repo.findByCategoryId(1)).thenReturn(List.of(p));
-        when(mapper.toDTO(p)).thenReturn(x);
-        assertEquals(x, service.findProductsWithCategoryId(1).get(0));
+        when(mapper.toDTO(p)).thenReturn(y);
+        assertEquals(y, service.findProductsWithCategoryId(1).get(0));
     }
     
    

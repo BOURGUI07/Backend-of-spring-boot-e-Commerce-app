@@ -9,9 +9,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
-import main.models.Product;
-import main.models.User;
-import main.validation.EntityIdExists;
+import main.validation.ValidId;
 
 /**
  *
@@ -19,9 +17,9 @@ import main.validation.EntityIdExists;
  */
 @Schema(title = "ReviewsResponseDTO", description = "Parameters required to create a review")
 public record ReviewsRequestDTO(
-            @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
+            @ValidId(message="Id must be not null, must by positive")
             Integer userId,
-            @EntityIdExists(entityClass =Product.class,message="Id must be not null, must by positive, and must exists")
+            @ValidId(message="Id must be not null, must by positive")
             Integer productId,
             @NotNull(message="rating is required")
             @Min(value=1, message="Rating must be at least 1")
