@@ -6,6 +6,7 @@ package main;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.models.Inventory;
@@ -23,7 +24,9 @@ import main.util.mapper.OrderMapper;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anySet;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +57,7 @@ public class OrderMapperTest {
     private Inventory inv = new Inventory().setQuantity(50);
     private Product product = new Product().setInventory(inv).setId(1).setPrice(10.0);
     private OrderItem orderItem = new OrderItem(1,order,product,1);
-    private OrderDTO x = new OrderDTO(1,1,1,List.of(1));
+    private OrderDTO x = new OrderDTO(1,1,1,Set.of(1));
     private OrderResponseDTO y = new OrderResponseDTO(1,1,10.0,1,List.of(1),1);
     
     
@@ -62,7 +65,10 @@ public class OrderMapperTest {
     void test0(){
         when(userRepo.findById(1)).thenReturn(Optional.of(user));
         when(paymentRepo.findById(1)).thenReturn(Optional.of(paymentDetail));
-        when(detailRepo.findAllById(anyList())).thenReturn(List.of(orderItem));
+        when(detailRepo.findAllById(anySet())).thenReturn(List.of(orderItem));
+        when(detailRepo.saveAll(anyList())).thenReturn(List.of(orderItem));
+        when(userRepo.save(any(User.class))).thenReturn(user);
+        when(paymentRepo.save(any(PaymentDetail.class))).thenReturn(paymentDetail);
         var order1 = mapper.toEntity(x).setId(1);
         assertEquals(order,order1);
         assertEquals(y,mapper.toDTO(order1.setVersion(1)));

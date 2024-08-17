@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import main.models.Order;
 import main.util.PaymentProvider;
 import main.util.PaymentStatus;
-import main.validation.EntityIdExists;
+import main.validation.ValidId;
 
 /**
  *
@@ -17,7 +17,7 @@ import main.validation.EntityIdExists;
  */
 @Schema(title = "PaymentDetailDTO", description = "Parameters required to create/update a payment detail")
 public record PaymentDetailDTO(
-        @EntityIdExists(entityClass =Order.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer orderId,
         @NotNull(message="payment provider is required")
         PaymentProvider provider,

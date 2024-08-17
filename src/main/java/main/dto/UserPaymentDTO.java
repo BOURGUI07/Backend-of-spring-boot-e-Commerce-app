@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import main.models.User;
 import main.util.PaymentProvider;
 import main.util.PaymentType;
-import main.validation.EntityIdExists;
+import main.validation.ValidId;
 
 /**
  *
@@ -20,7 +20,7 @@ import main.validation.EntityIdExists;
 @Schema(title = "UserPaymentDTO", description = "Parameters required to create a user payment")
 public record UserPaymentDTO(
         Integer id,
-        @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer userId,
         @NotNull(message="payment type is required")
         PaymentType type,

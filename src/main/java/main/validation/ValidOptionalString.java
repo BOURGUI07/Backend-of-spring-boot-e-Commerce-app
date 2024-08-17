@@ -15,12 +15,12 @@ import java.lang.annotation.Target;
  *
  * @author hp
  */
-@Constraint(validatedBy = EntityIdExistsValidator.class)
+@Constraint(validatedBy = OptionalStringValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EntityIdExists {
-    String message() default "Entity ID does not exist";
+public @interface ValidOptionalString {
+    String message() default "Invalid string";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-    Class<?> entityClass();
+    int max() default Integer.MAX_VALUE;
 }

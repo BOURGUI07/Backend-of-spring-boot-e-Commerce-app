@@ -6,18 +6,16 @@ package main;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import main.dto.CategoryDTO;
+import main.dto.CategoryRequestDTO;
+import main.dto.CategoryResponseDTO;
 import main.exception.EntityNotFoundException;
 import main.models.Category;
-import main.models.Product;
 import main.repo.CategoryRepo;
 import main.repo.ProductRepo;
 import main.service.CategoryService;
 import main.util.mapper.CategoryMapper;
-import main.util.specification.CategorySpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,8 +52,9 @@ public class CategoryServiceTest {
     @InjectMocks
     private CategoryService service;
     
-    private Category p = new Category().setDesc("desc").setName("name").setId(1);
-    private CategoryDTO x = new CategoryDTO(1,"name","desc",null,null);
+    private final Category p = new Category().setDesc("desc").setName("name").setId(1);
+    private final CategoryRequestDTO x = new CategoryRequestDTO("name",Optional.of("desc"));
+    private final CategoryResponseDTO y = new CategoryResponseDTO(1,"name","desc",List.of(),p.getVersion());
     
     public CategoryServiceTest() {
     }
@@ -82,9 +81,9 @@ public class CategoryServiceTest {
     void testCreate(){
         when(mapper.toEntity(x)).thenReturn(p);
         when(repo.save(p)).thenReturn(p);
-        when(mapper.toDTO(p)).thenReturn(x);
+        when(mapper.toDTO(p)).thenReturn(y);
         
-        assertEquals(x, service.create(x));
+        assertEquals(y, service.create(x));
         
         verify(repo,times(1)).save(p);
     }
@@ -93,9 +92,9 @@ public class CategoryServiceTest {
     void testUpdate(){
         when(repo.findById(1)).thenReturn(Optional.of(p));
         when(repo.save(p)).thenReturn(p);
-        when(mapper.toDTO(p)).thenReturn(x);
+        when(mapper.toDTO(p)).thenReturn(y);
         
-        assertEquals(x,service.update(1, x));
+        assertEquals(y,service.update(1, x));
         
         verify(repo,times(1)).save(p);
     }
@@ -103,9 +102,9 @@ public class CategoryServiceTest {
     @Test
     void testFindById(){
         when(repo.findById(1)).thenReturn(Optional.of(p));
-        when(mapper.toDTO(p)).thenReturn(x);
+        when(mapper.toDTO(p)).thenReturn(y);
         
-        assertEquals(x,service.findById(1));
+        assertEquals(y,service.findById(1));
     }
     
     @Test 
@@ -127,8 +126,8 @@ public class CategoryServiceTest {
         Page<Category> productPage = new PageImpl<>(List.of(p));
         
         when(repo.findAll(pageable)).thenReturn(productPage);
-        when(mapper.toDTO(p)).thenReturn(x);
-        assertEquals(x, service.findAll(0, 10).getContent().get(0));
+        when(mapper.toDTO(p)).thenReturn(y);
+        assertEquals(y, service.findAll(0, 10).getContent().get(0));
     }
     
     @Test

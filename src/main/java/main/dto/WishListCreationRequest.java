@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import main.models.User;
 import main.util.WishListVisibility;
-import main.validation.EntityIdExists;
+import main.validation.ValidId;
 
 /**
  *
@@ -25,7 +25,7 @@ public record WishListCreationRequest(
         String desc,
         @NotNull(message="wishlist visibility is required")
         WishListVisibility visibility,
-        @EntityIdExists(entityClass =User.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer userId
         ) {
 }

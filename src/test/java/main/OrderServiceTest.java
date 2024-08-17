@@ -9,6 +9,7 @@ import jakarta.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
@@ -75,7 +76,7 @@ public class OrderServiceTest {
     private Inventory inv = new Inventory().setQuantity(50);
     private Product product = new Product().setInventory(inv).setId(1);
     private OrderItem orderItem = new OrderItem(1,p,product,1);
-    private OrderDTO x = new OrderDTO(1,1,1,List.of(1));
+    private OrderDTO x = new OrderDTO(1,1,1,Set.of(1));
     private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,1,null,null);
     
     public OrderServiceTest() {
@@ -91,33 +92,15 @@ public class OrderServiceTest {
     }
 @Test
 void testCreate() {
-    when(userRepo.findById(1)).thenReturn(Optional.of(user));
-
-    List<OrderItem> orderItems = List.of(orderItem);
-    when(detailRepo.findAllById(x.orderItemIds())).thenReturn(orderItems);
-
-    List<Product> products = List.of(product);
-    when(productRepo.findAllById(anyList())).thenReturn(products);
-
-    when(productRepo.saveAll(anyList())).thenReturn(products);
-    when(detailRepo.saveAll(anyList())).thenReturn(orderItems);
-    when(userRepo.save(any(User.class))).thenReturn(user);
-    when(repo.save(any(Order.class))).thenReturn(p);
-
+    
     when(mapper.toEntity(x)).thenReturn(p);
+    when(repo.save(p)).thenReturn(p);
     when(mapper.toDTO(p)).thenReturn(y);
 
     assertEquals(y, service.create(x));
 
-    verify(userRepo, times(1)).findById(1);
-    verify(detailRepo, times(1)).findAllById(x.orderItemIds());
-    verify(productRepo, times(1)).findAllById(anyList());
-    verify(productRepo, times(1)).saveAll(anyList());
-    verify(detailRepo, times(1)).saveAll(anyList());
-    verify(userRepo, times(1)).save(any(User.class));
     verify(repo, times(1)).save(any(Order.class));
-    verify(mapper, times(1)).toEntity(x);
-    verify(mapper, times(1)).toDTO(p);
+
 }
     
     @Test

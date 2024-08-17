@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.Optional;
+import main.validation.ValidOptionalString;
 
 /**
  *
@@ -19,8 +20,7 @@ public record CategoryRequestDTO(
         @Size(min=3,max=100,message="Category name must be"
                 + "between 3 and 100 characters")
         String name,
-        @Size(max=500,message="Category desc must be"
-                + " at max 500 character length")
+        @ValidOptionalString(max=500, message="Product desc must be at max 500 characters")
         Optional<String> desc
         ) {
 

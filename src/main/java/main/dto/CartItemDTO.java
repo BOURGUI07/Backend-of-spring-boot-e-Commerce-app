@@ -7,8 +7,8 @@ package main.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import main.models.Product;
 import main.models.UserShoppingSession;
-import main.validation.EntityIdExists;
 import main.validation.ValidQuantity;
+import main.validation.ValidId;
 
 /**
  *
@@ -19,9 +19,9 @@ import main.validation.ValidQuantity;
     message = "Quantity is required, Quantity must be positive, Requested quantity exceeds available inventory")
 public record CartItemDTO(
         Integer id,
-        @EntityIdExists(entityClass =UserShoppingSession.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer sessionId,
-        @EntityIdExists(entityClass =Product.class,message="Id must be not null, must by positive, and must exists")
+        @ValidId(message="Id must be not null, must by positive")
         Integer productId,
         Integer quantity
         ) {
