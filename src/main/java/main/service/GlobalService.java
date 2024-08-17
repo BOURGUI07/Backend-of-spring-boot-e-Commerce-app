@@ -60,10 +60,13 @@ public class GlobalService {
     */
     
     public List<ProductReportResponseDTO> findProductsByCategoryName(String name){
-        var q = "SELECT p.id, p.product_name "
-                + "FROM product p JOIN category c "
-                + "ON p.category_id = c.id "
-                + "WHERE c.category_name= :x";
+        var q = """
+                 SELECT p.id, p.product_name 
+                         FROM product p 
+                         JOIN category c 
+                         ON p.category_id = c.id 
+                         WHERE c.category_name = :x
+                 """;
         List<Object[]> result = em.createNativeQuery(q).setParameter("x", name).getResultList();
         return result
                 .stream()
@@ -82,10 +85,14 @@ public class GlobalService {
     */
     
     public List<ProductDiscountDTO> findProductsByActiveDiscount(){
-        var q = "SELECT c.id, c.discount_name, c.discount_percent, p.product_name "
-                + "FROM product p JOIN discount c "
-                + "ON p.discount_id = c.id "
-                + "WHERE c.active= TRUE";
+        var q = """
+                    SELECT c.id, c.discount_name, c.discount_percent, p.product_name
+                    FROM product p
+                    JOIN discount c
+                    ON p.discount_id = c.id
+                    WHERE c.active = TRUE
+        """;
+
         List<Object[]> result = em.createNativeQuery(q).getResultList();
         return result
                 .stream()
@@ -96,11 +103,15 @@ public class GlobalService {
     
     //Calculate the total quantity of items in a user's cart
     public Integer findTotalCartQtyByUser(Integer userId){
-        var query = "SELECT COALESCE(SUM(c.quantity), 0) "
-                + "FROM cart_item c JOIN shopping_session s "
-                + "ON c.session_id=s.id "
-                + "WHERE s.user_id= :x "
-                + "GROUP BY s.user_id";
+        var query = """
+                        SELECT COALESCE(SUM(c.quantity), 0)
+                        FROM cart_item c
+                        JOIN shopping_session s
+                        ON c.session_id = s.id
+                        WHERE s.user_id = :x
+                        GROUP BY s.user_id
+        """;
+
         return (Integer) em.createNativeQuery(query).setParameter("x", userId).getSingleResult();
     }
     
@@ -114,10 +125,14 @@ public class GlobalService {
     //Find all products with reviews above a certain rating
     
     public List<ProductReportResponseDTO> findProductsByRatingAbove(Integer rating){
-        var query = "SELECT DISTINCT p.id, p.product_name "
-                + "FROM product p JOIN reviews r "
-                + "ON p.id = r.product_id "
-                + "WHERE r.rating>= :x ";
+        var query = """
+        SELECT DISTINCT p.id, p.product_name
+        FROM product p
+        JOIN reviews r
+        ON p.id = r.product_id
+        WHERE r.rating >= :x
+        """;
+
         List<Object[]> result = em.createNativeQuery(query).setParameter("x", rating).getResultList();
         return result
                 .stream()
@@ -127,9 +142,13 @@ public class GlobalService {
     
     //Retrieve all users who have made at least one order
     public List<UserRegistrationResponseDTO> findUsersWhoMadeAtLeastOneOne(){
-        var query = "SELECT DISTINCT u.* "
-                + "FROM users u JOIN orders o "
-                + "ON u.id = o.user_id";
+        var query = """
+        SELECT DISTINCT u.*
+        FROM users u
+        JOIN orders o
+        ON u.id = o.user_id
+        """;
+
         var result = (List<User>) em.createNativeQuery(query, User.class).getResultList();
         return result.stream().map(umapper::toDTO).toList();
     }
@@ -146,10 +165,14 @@ public class GlobalService {
     */
     
     public List<ProductReportResponseDTO> findOutOfStockProducts(){
-        var q = "SELECT p.id, p.product_name "
-                + "FROM product p JOIN inventory c "
-                + "ON p.inventory_id = c.id "
-                + "WHERE c.quantity= 0";
+        var q = """
+        SELECT p.id, p.product_name
+        FROM product p
+        JOIN inventory c
+        ON p.inventory_id = c.id
+        WHERE c.quantity = 0
+        """;
+
         List<Object[]> result = em.createNativeQuery(q).getResultList();
         return result
                 .stream()
@@ -160,11 +183,16 @@ public class GlobalService {
     
     //Find all orders that include products from a specific category
     public List<OrderProductByCategoryDTO> findOrdersWhoseProductsOfCategory(String categoryName){
-        var query = "SELECT o.order_id, p.id, p.product_name "
-                + "FROM order_item o JOIN product p "
-                + "ON o.product_id = p.id "
-                + "JOIN category c ON c.id = p.category_id "
-                + "WHERE c.category_name= :x";
+        var query = """
+        SELECT o.order_id, p.id, p.product_name
+        FROM order_item o
+        JOIN product p
+        ON o.product_id = p.id
+        JOIN category c
+        ON c.id = p.category_id
+        WHERE c.category_name = :x
+        """;
+
         List<Object[]> result = em.createNativeQuery(query).setParameter("x", categoryName).getResultList();
         return result.stream().map(x -> new OrderProductByCategoryDTO((Integer)x[0],(Integer) x[1],(String) x[2])).toList();
     }
@@ -177,11 +205,15 @@ public class GlobalService {
     
     //Retrieve all reviews written by a user for products in a specific category
     public List<ReviewsResponseDTO> findReviewsForSpecificCategory(String categoryName){
-        var query = "SELECT r.* "
-                + "FROM users u JOIN reviews r ON u.id = r.user_id "
-                + "JOIN product p ON p.id = r.product-id "
-                + "JOIN category c ON p.category_id = c.id "
-                + "WHERE c.category_name= :x";
+        var query = """
+        SELECT r.*
+        FROM users u
+        JOIN reviews r ON u.id = r.user_id
+        JOIN product p ON p.id = r.product_id
+        JOIN category c ON p.category_id = c.id
+        WHERE c.category_name = :x
+        """;
+
         var result =(List<Reviews>) em.createNativeQuery(query, Reviews.class).getResultList();
         return result.stream().map(rmapper::toDTO).toList();
     }

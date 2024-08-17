@@ -13,9 +13,15 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **Redis**: An in-memory data structure store, used for caching and session management.
 - **Swagger**: A tool for generating API documentation and exploring API endpoints.
 - **Spring Security**: A comprehensive security framework for authentication, authorization, and more.
+- **Lombok**: A Java library that helps reduce boilerplate code by automatically generating getters, setters, constructors, and other   common methods through annotations.
 
 ## Features
-
+- **Modern Java Features**:
+                        *var*: Utilizes type inference to make the code more concise and readable.
+                        *Streams API*: Leverages streams for efficient and expressive data processing, enabling operations like filtering, mapping, and reducing.
+                        *Lambda Expressions*: Implements lambda expressions for more concise and functional-style code, particularly in collections and streams.
+                        *Optionals*: Uses Optional to handle potentially null values in a safe and expressive manner, reducing the risk of NullPointerException.
+                        *Text Blocks*: Employs text blocks for easier handling and readability of multi-line strings, especially in SQL queries.
 - **Role-Based Access Control (RBAC)**: Implemented at the method level to ensure fine-grained security for different user roles.
 - **Session Management**: Efficient handling of user sessions to maintain security and performance.
 - **Entrypoint Customization**: Customization of security entry points to provide a flexible and secure authentication mechanism.
