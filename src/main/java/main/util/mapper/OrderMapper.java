@@ -34,7 +34,6 @@ public class OrderMapper {
         payment.setOrder(o);
         o.setPaymentDetail(payment);
         var list = x.orderItemIds();
-        if(list != null){
             var orderItems = detailRepo.findAllById(list);
             orderItems.forEach(o::addOrderItem);
             taxService.calculateTotalOrderPrice(o);
@@ -42,7 +41,7 @@ public class OrderMapper {
             detailRepo.saveAll(orderItems);
             userRepo.save(user);
             paymentRepo.save(payment);
-        }
+        
         return o;
     }
     

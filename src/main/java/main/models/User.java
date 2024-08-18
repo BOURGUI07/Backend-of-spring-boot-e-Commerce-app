@@ -46,7 +46,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
-@JsonIgnoreProperties(value = { "orders", "reviews" })
+@JsonIgnoreProperties(value = { "orders", "reviews","wishlists" })
 public class User extends BaseEntity implements UserDetails{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
