@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import java.util.Optional;
+import main.validation.ValidOptionalString;
 
 /**
  *
@@ -17,6 +18,7 @@ import java.util.Optional;
 public record DiscountRequestDTO(
         @NotBlank(message="discount name is required")
         String name,
+        @ValidOptionalString(max=500, message="Product desc must be at max 500 characters")
         Optional<String> desc,
         @Positive
         Double percent,
