@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.util.mapper;
+package com.example.sales_tax_service.mapper;
 
-import main.dto.SalesTaxRequest;
-import main.dto.SalesTaxResponse;
-import main.models.SalesTax;
+import com.example.sales_tax_service.dto.SalesTaxRequest;
+import com.example.sales_tax_service.dto.SalesTaxResponse;
+import com.example.sales_tax_service.model.SalesTax;
 import org.springframework.stereotype.Service;
 
 /**

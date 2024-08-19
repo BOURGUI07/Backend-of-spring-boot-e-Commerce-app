@@ -42,7 +42,7 @@ public class OrderService {
     private final PaymentDetailRepo paymentRepo;
     private final OrderMapper mapper;
     private final ProductRepo productRepo;
-    private final SalesTaxService taxService;
+    private final SalesTaxCalculationService taxService;
     private Validator validator;
     
     

@@ -2,8 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.controller;
+package com.example.sales_tax_service.controller;
 
+import com.example.sales_tax_service.dto.SalesTaxRequest;
+import com.example.sales_tax_service.dto.SalesTaxResponse;
+import com.example.sales_tax_service.page_dtos.SalesTaxDTOPage;
+import com.example.sales_tax_service.service.SalesTaxService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,15 +17,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.SalesTaxRequest;
-import main.dto.SalesTaxResponse;
-import main.page_dtos.SalesTaxDTOPage;
-import main.service.SalesTaxService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,9 +40,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/sales_taxes")
 @Validated
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:9090")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="Sales Tax", description=" Sales Tax Controller")
 public class SalesTaxController {
     private final SalesTaxService service;
@@ -156,5 +154,26 @@ public class SalesTaxController {
             service.delete(id);
             return ResponseEntity.noContent().build();
       
+    }
+    
+    
+    
+    
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="sales tax isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="sales taxRate was successfully Retrieved",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = Double.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered blank country", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
+    })
+    @Operation(summary="Get Tax Rate for a specific country")
+    @GetMapping("/country/{country}")
+    public ResponseEntity<Double> getTaxRateForCountry(
+            @Parameter(description = "country of the salesTaxRate to retrieve", required = true)
+            @PathVariable String country){
+        return ResponseEntity.ok(service.getTaxRateForCountry(country));
     }
 }
