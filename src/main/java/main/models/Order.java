@@ -57,10 +57,6 @@ public class Order extends BaseEntity{
     @JoinColumn(name="user_id",nullable=false)
     private User user;
     
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="paymentDetail_id")
-    private PaymentDetail paymentDetail;
-    
     @OneToMany(mappedBy="order",cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();

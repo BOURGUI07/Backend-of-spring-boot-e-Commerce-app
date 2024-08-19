@@ -25,6 +25,7 @@ import main.repo.ProductRepo;
 import main.repo.UserRepo;
 import main.service.OrderService;
 import main.service.SalesTaxCalculationService;
+import main.util.PaymentProvider;
 import main.util.mapper.OrderMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,8 +76,8 @@ public class OrderServiceTest {
     private Inventory inv = new Inventory().setQuantity(50);
     private Product product = new Product().setInventory(inv).setId(1);
     private OrderItem orderItem = new OrderItem(1,p,product,1);
-    private OrderDTO x = new OrderDTO(1,1,1,Set.of(1));
-    private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,1,null,null);
+    private OrderDTO x = new OrderDTO(1,1,PaymentProvider.OTHER,Set.of(1));
+    private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,null,null);
     
     public OrderServiceTest() {
     }

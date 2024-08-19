@@ -1,0 +1,35 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package main.client;
+
+import main.dto.InventoryDTO;
+import main.dto.PaymentDetailDTO;
+import main.dto.PaymentDetailResponseDTO;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+/**
+ *
+ * @author hp
+ */
+@Service
+public class InventoryApiClient {
+    private static final String BASE_URL = "http://localhost:8080/api/inventories";
+    private final RestClient client;
+
+    public InventoryApiClient(RestClient client) {
+        this.client = RestClient.create(BASE_URL);
+    }
+    
+    public InventoryDTO updateInventory( Integer inventoryId, InventoryDTO request){
+        return client
+                .put()
+                .uri("/{id}",inventoryId)
+                .body(request)
+                .retrieve()
+                .toEntity(InventoryDTO.class)
+                .getBody();
+    }
+}
