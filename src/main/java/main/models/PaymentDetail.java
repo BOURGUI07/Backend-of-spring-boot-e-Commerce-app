@@ -4,6 +4,7 @@
  */
 package main.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -43,7 +45,8 @@ public class PaymentDetail extends BaseEntity{
     @Column(name="id")
     private Integer id;
     
-    @OneToOne(mappedBy="paymentDetail")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="order_id")
     private Order order;
     
     @Column(name="amount",nullable=false)

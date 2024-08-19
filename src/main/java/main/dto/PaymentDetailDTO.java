@@ -6,7 +6,6 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import main.models.Order;
 import main.util.PaymentProvider;
 import main.util.PaymentStatus;
 import main.validation.ValidId;
