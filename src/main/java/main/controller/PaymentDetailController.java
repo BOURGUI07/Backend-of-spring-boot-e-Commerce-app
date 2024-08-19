@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
 import main.page_dtos.PaymentDetailResponseDTOPage;
@@ -45,9 +47,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="Payment Detail", description=" Payment Detail Controller")
-
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class PaymentDetailController {
-    private final PaymentDetailService service;
+      PaymentDetailService service;
     
     @Operation(summary="Retrieve All payment details", description="Paginated Retrieval for all payment details")
     @ApiResponses(value={

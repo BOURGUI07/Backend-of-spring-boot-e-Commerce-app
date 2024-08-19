@@ -8,8 +8,11 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.AddProductsToCategoryRequest;
 import main.dto.CategoryRequestDTO;
 import main.dto.CategoryResponseDTO;
@@ -37,12 +40,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CategoryService {
-    private final CategoryRepo repo;
-    private final ProductRepo prepo;
-    private final CategoryMapper mapper;
-    private final CategorySpecification specification;
-    private Validator validator;
+      CategoryRepo repo;
+      ProductRepo prepo;
+      CategoryMapper mapper;
+      CategorySpecification specification;
+    @NonFinal Validator validator;
     
     @Cacheable(value="allCategories", key = "'findAll_' + #page + '_' + #size")
     public Page<CategoryResponseDTO> findAll(int page, int size){

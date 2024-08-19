@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.WishListCreationRequest;
 import main.dto.WishListMergeRequest;
 import main.dto.WishListResponse;
@@ -42,8 +44,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="WishList", description=" WishList Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class WishListController {
-    private final WishListService service;
+      WishListService service;
     
     
     @Operation(summary="Create a new  wish list")

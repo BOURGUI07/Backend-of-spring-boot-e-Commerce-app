@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.UserAddressDTO;
 import main.page_dtos.UserAddressDTOPage;
 import main.service.UserAddressService;
@@ -44,8 +46,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="User Address", description=" User Address Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class UserAddressController {
-    private final UserAddressService service;
+      UserAddressService service;
     
     @Operation(summary="Retrieve All user addresses", description="Paginated Retrieval for all user addresses")
     @ApiResponses(value={

@@ -7,8 +7,11 @@ package main.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.ReviewsRequestDTO;
 import main.dto.ReviewsResponseDTO;
 import main.dto.ReviewsUpdateRequestDTO;
@@ -28,10 +31,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Setter
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ReviewsService {
-    private final ReviewsRepo repo;
-    private final ReviewsMapper mapper;
-    private Validator validator;
+      ReviewsRepo repo;
+      ReviewsMapper mapper;
+    @NonFinal Validator validator;
     
     
     @Cacheable(value="allReviewsOf_a_Product", key = "'findAll_' + #page + '_' + #size + '_' + #productId")

@@ -7,8 +7,11 @@ package main.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.UserAddressDTO;
 import main.exception.EntityNotFoundException;
 import main.repo.AddressRepo;
@@ -27,11 +30,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class UserAddressService {
-    private final AddressMapper mapper;
-    private final AddressRepo repo;
-    private final UserRepo urepo;
-    private Validator validator;
+      AddressMapper mapper;
+      AddressRepo repo;
+      UserRepo urepo;
+    @NonFinal Validator validator;
     @Cacheable(value="userAddressById", key="#id")
     public UserAddressDTO findById(Integer id){
         if(id<=0){

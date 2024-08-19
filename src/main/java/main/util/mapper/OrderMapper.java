@@ -5,7 +5,9 @@
 package main.util.mapper;
 
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.models.Order;
@@ -21,11 +23,12 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class OrderMapper {
-    private final UserRepo userRepo;
-    private final OrderItemRepo detailRepo;
-    private final PaymentDetailRepo paymentRepo;
-    private final SalesTaxCalculationService taxService;
+      UserRepo userRepo;
+      OrderItemRepo detailRepo;
+      PaymentDetailRepo paymentRepo;
+     SalesTaxCalculationService taxService;
     
     public Order toEntity(OrderDTO x){
         var o = new Order();

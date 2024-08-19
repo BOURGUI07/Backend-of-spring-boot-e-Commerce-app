@@ -5,7 +5,9 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.InventoryDTO;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
@@ -24,9 +26,10 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class InventoryService {
-    private final InventoryMapper mapper;
-    private final InventoryRepo repo;
+      InventoryMapper mapper;
+      InventoryRepo repo;
     
     @Transactional
     @CacheEvict(value={

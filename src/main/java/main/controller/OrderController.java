@@ -13,7 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.page_dtos.OrderResponseDTOPage;
@@ -46,8 +48,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="Order", description=" Order Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class OrderController {
-    private final OrderService service;
+      OrderService service;
     
     @Operation(summary="Retrieve All orders", description="Paginated Retrieval for all orders")
     @ApiResponses(value={

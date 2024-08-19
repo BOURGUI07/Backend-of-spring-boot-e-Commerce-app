@@ -4,7 +4,9 @@
  */
 package main.util.mapper;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.OrderItemDTO;
 import main.models.OrderItem;
 import main.repo.OrderRepo;
@@ -17,9 +19,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class OrderItemMapper {
-    private final ProductRepo prepo;
-    private final OrderRepo orepo;
+      ProductRepo prepo;
+      OrderRepo orepo;
     
     public OrderItem toEntity(OrderItemDTO x){
         var o = new OrderItem().setQuantity(x.quantity());

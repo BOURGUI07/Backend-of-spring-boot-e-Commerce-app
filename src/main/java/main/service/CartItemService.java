@@ -7,8 +7,11 @@ package main.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.CartItemDTO;
 import main.exception.EntityNotFoundException;
 import main.repo.CartItemRepo;
@@ -28,12 +31,13 @@ import main.repo.UserShoppingSessionRepo;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CartItemService {
-    private final CartItemMapper mapper;
-    private final CartItemRepo repo;
-    private final UserShoppingSessionRepo sessionRepo;
-    private final ProductRepo productRepo;
-    private Validator validator;
+      CartItemMapper mapper;
+      CartItemRepo repo;
+      UserShoppingSessionRepo sessionRepo;
+      ProductRepo productRepo;
+    @NonFinal Validator validator;
     
     @Transactional
     @CacheEvict(value={

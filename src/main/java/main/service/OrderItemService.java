@@ -9,8 +9,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.OrderItemDTO;
 import main.exception.EntityNotFoundException;
 import main.exception.InsufficientInventoryException;
@@ -31,12 +34,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class OrderItemService {
-    private final OrderItemMapper mapper;
-    private final OrderItemRepo repo;
-    private final ProductRepo prepo;
-    private final OrderRepo orepo;
-    private Validator validator;
+      OrderItemMapper mapper;
+      OrderItemRepo repo;
+      ProductRepo prepo;
+      OrderRepo orepo;
+    @NonFinal Validator validator;
     
     @Transactional
     @CacheEvict(value={

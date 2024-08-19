@@ -7,8 +7,11 @@ package main.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.AddProductsToDiscountRequest;
 import main.dto.DiscountRequestDTO;
 import main.dto.DiscountResponseDTO;
@@ -33,11 +36,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class DiscountService {
-    private final DiscountRepo repo;
-    private final DiscountMapper mapper;
-    private final ProductRepo productRepo;
-    private Validator validator;
+      DiscountRepo repo;
+      DiscountMapper mapper;
+      ProductRepo productRepo;
+    @NonFinal Validator validator;
     
     @Cacheable(value="allDiscounts", key = "'findAll_' + #page + '_' + #size")
     public Page<DiscountResponseDTO> findAll(int page, int size){

@@ -14,7 +14,10 @@ import com.example.sales_tax_service.repo.SalesTaxRepo;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,11 +32,12 @@ import org.springframework.stereotype.Service;
  * @author hp
  */
 @Service
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 public class SalesTaxService {
-    private final SalesTaxRepo repo;
-    private Validator validator;
-    private final SalesTaxMapper mapper;
+      SalesTaxRepo repo;
+    @NonFinal Validator validator;
+      SalesTaxMapper mapper;
     
     @Transactional
     @CacheEvict(value={

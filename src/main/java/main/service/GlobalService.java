@@ -9,7 +9,9 @@ import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.CategoryResponseDTO;
 import main.dto.OrderProductByCategoryDTO;
 import main.dto.OrdersQtyDTO;
@@ -40,15 +42,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class GlobalService {
-    private final OrderRepo orderRepo;
-    private final UserPaymentRepo paymentRepo;
-    private final ReviewsRepo rrepo;
-    private final CategoryRepo crepo;
-    private final UserRepo urepo;
-    private final UserMapper umapper;
-    private final ReviewsMapper rmapper;
-    private final CategoryMapper cmapper;
+      OrderRepo orderRepo;
+      UserPaymentRepo paymentRepo;
+      ReviewsRepo rrepo;
+      CategoryRepo crepo;
+      UserRepo urepo;
+      UserMapper umapper;
+      ReviewsMapper rmapper;
+      CategoryMapper cmapper;
     @PersistenceContext
     private EntityManager em;
     

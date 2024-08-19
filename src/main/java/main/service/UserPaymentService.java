@@ -9,8 +9,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.UserPaymentDTO;
 import main.exception.EntityNotFoundException;
 import main.repo.UserPaymentRepo;
@@ -31,11 +34,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class UserPaymentService {
-    private final UserRepo userRepo;
-    private final UserPaymentRepo repo;
-    private final UserPaymentMapper mapper;
-    private Validator validator;
+      UserRepo userRepo;
+      UserPaymentRepo repo;
+      UserPaymentMapper mapper;
+    @NonFinal Validator validator;
     @Cacheable(value="allUserPayments", key = "'findAll_' + #page + '_' + #size")
     public Page<UserPaymentDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);

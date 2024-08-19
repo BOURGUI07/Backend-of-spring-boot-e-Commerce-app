@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.CartItemDTO;
 import main.page_dtos.CartItemDTOPage;
 import main.service.CartItemService;
@@ -44,8 +46,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="Cart Item", description=" Cart Item Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CartItemController {
-    private final CartItemService service;
+      CartItemService service;
     
     @Operation(summary="Retrieve All CartItems", description="Paginated Retrieval for all cart items")
     @ApiResponses(value={

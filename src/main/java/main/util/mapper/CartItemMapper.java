@@ -4,7 +4,9 @@
  */
 package main.util.mapper;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.CartItemDTO;
 import main.models.CartItem;
 import main.repo.ProductRepo;
@@ -17,9 +19,10 @@ import main.repo.UserShoppingSessionRepo;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CartItemMapper {
-    private final UserShoppingSessionRepo sessionRepo;
-    private final ProductRepo productRepo;
+      UserShoppingSessionRepo sessionRepo;
+      ProductRepo productRepo;
     
     public CartItem toEntity(CartItemDTO x){
         var c = new CartItem().setQuantity(x.quantity());

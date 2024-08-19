@@ -4,7 +4,9 @@
  */
 package main.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.util.PaymentProvider;
 import main.util.csv.CsvReportUtil;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,10 @@ import org.springframework.stereotype.Service;
  */
 @RequiredArgsConstructor
 @Service
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ReportService {
-    private final GlobalService globalService;
-    private final CsvReportUtil csvService;
+      GlobalService globalService;
+      CsvReportUtil csvService;
     
     public void exportProductsByCategoryNameReport(String filepath, String categoryName){
         var report = globalService.findProductsByCategoryName(categoryName);

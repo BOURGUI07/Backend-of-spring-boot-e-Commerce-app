@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.AddProductsToCategoryRequest;
 import main.dto.CategoryRequestDTO;
 import main.dto.CategoryResponseDTO;
@@ -46,8 +48,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="Category", description=" Category Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CategoryController {
-    private final CategoryService service;
+      CategoryService service;
     
     @Operation(summary="Retrieve All categories", description="Paginated Retrieval for all categories")
     @ApiResponses(value={

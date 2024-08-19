@@ -6,7 +6,9 @@ package main.util.mapper;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.ProductRequestDTO;
 import main.dto.ProductResponseDTO;
 import main.models.Category;
@@ -23,10 +25,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ProductMapper {
-    private final CategoryRepo categoryRepo;
-    private final DiscountRepo discountRepo;
-    private final InventoryRepo inventoryRepo;
+      CategoryRepo categoryRepo;
+      DiscountRepo discountRepo;
+      InventoryRepo inventoryRepo;
     
     public Product toEntity(ProductRequestDTO x){
         var p = new Product()

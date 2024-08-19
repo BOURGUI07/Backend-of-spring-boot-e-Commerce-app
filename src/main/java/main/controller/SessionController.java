@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.page_dtos.SessionResponseDTOPage;
@@ -45,8 +47,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="User Shopping Session", description=" Session Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class SessionController {
-    private final SessionService service;
+      SessionService service;
     
     @Operation(summary="Retrieve All user shopping sessions", description="Paginated Retrieval for all user shopping sessions")
     @ApiResponses(value={

@@ -4,7 +4,9 @@
  */
 package main.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.UserLoginRequestDTO;
 import main.dto.UserLoginResponseDTO;
 import main.dto.UserRegistrationRequestDTO;
@@ -27,12 +29,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class UserService {
-    private final UserRepo repo;
-    private final UserMapper mapper;
-    private final AdminUserMapper adminMapper;
-    private final AuthenticationManager manager;
-    private final JwtService jwtService;
+      UserRepo repo;
+      UserMapper mapper;
+      AdminUserMapper adminMapper;
+      AuthenticationManager manager;
+      JwtService jwtService;
     
     public UserRegistrationResponseDTO registerUser(UserRegistrationRequestDTO x){
         var user = mapper.toEntity(x);

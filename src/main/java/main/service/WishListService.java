@@ -7,7 +7,10 @@ package main.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.WishListCreationRequest;
 import main.dto.WishListMergeRequest;
 import main.dto.WishListResponse;
@@ -26,11 +29,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class WishListService {
-    private final ProductRepo prepo;
-    private final WishListRepo repo;
-    private final WishListMapper mapper;
-    private Validator validator;
+      ProductRepo prepo;
+      WishListRepo repo;
+      WishListMapper mapper;
+    @NonFinal Validator validator;
     
     @Transactional
     public WishListResponse create(WishListCreationRequest x){

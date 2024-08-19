@@ -4,7 +4,9 @@
  */
 package main.util.mapper;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.UserAddressDTO;
 import main.models.UserAddress;
 import main.repo.UserRepo;
@@ -16,8 +18,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class AddressMapper {
-    private final UserRepo userRepo;
+      UserRepo userRepo;
     
     public UserAddress toEntity(UserAddressDTO x){
         var a = new UserAddress()

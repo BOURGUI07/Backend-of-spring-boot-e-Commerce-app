@@ -7,8 +7,11 @@ package main.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.exception.EntityNotFoundException;
@@ -29,12 +32,13 @@ import main.repo.UserShoppingSessionRepo;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class SessionService {
-    private final UserRepo urepo;
-    private final CartItemRepo crepo;
-    private final UserShoppingSessionRepo repo;
-    private final SessionMapper mapper;
-    private Validator validator;
+      UserRepo urepo;
+      CartItemRepo crepo;
+      UserShoppingSessionRepo repo;
+      SessionMapper mapper;
+    @NonFinal Validator validator;
     
     
     @Cacheable(value="allSessions", key = "'findAll_' + #page + '_' + #size")

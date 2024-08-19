@@ -5,7 +5,9 @@
 package main.util.mapper;
 
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.SessionResponseDTO;
 import main.dto.UserShoppingSessionDTO;
 import main.models.UserShoppingSession;
@@ -20,10 +22,11 @@ import main.repo.UserShoppingSessionRepo;
  */
 @RequiredArgsConstructor
 @Service
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class SessionMapper {
-    private final UserShoppingSessionRepo repo;
-    private final UserRepo urepo;
-    private final CartItemRepo crepo;
+      UserShoppingSessionRepo repo;
+      UserRepo urepo;
+      CartItemRepo crepo;
     
     public SessionResponseDTO toDTO(UserShoppingSession s){
         var list = s.getCartItems().stream().map(x -> x.getId()).collect(Collectors.toList());
