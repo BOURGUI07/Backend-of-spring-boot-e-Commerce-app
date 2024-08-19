@@ -7,7 +7,9 @@ package main.controller;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.service.CsvUploadService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,8 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="CSV file upload", description=" uploading csv files of product and category data")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CsvImportController {
-    private final CsvUploadService service;
+      CsvUploadService service;
     
     
     @PostMapping(value="/categories",consumes={"multipart/form-data"})

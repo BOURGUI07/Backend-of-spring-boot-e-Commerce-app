@@ -13,7 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.ProductRequestDTO;
 import main.dto.ProductResponseDTO;
 import main.page_dtos.ProductDTOPage;
@@ -45,8 +47,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="Product", description=" Product Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ProductController {
-    private final ProductService service;
+      ProductService service;
     
     @Operation(summary="Retrieve All Products", description="Paginated Retrieval for all products")
     @ApiResponses(value={

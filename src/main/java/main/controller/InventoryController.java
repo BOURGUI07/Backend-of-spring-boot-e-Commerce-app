@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.InventoryDTO;
 import main.page_dtos.InventoryDTOPage;
 import main.service.InventoryService;
@@ -44,8 +46,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasAnyRole('SUPERADMIN','ADMIN')")
 @Tag(name="Inventory", description=" Inventory Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class InventoryController {
-    private final InventoryService service;
+      InventoryService service;
     
     @Operation(summary="Retrieve All inventories", description="Paginated Retrieval for all inventories")
     @ApiResponses(value={

@@ -4,7 +4,9 @@
  */
 package main.util.mapper;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.ReviewsRequestDTO;
 import main.dto.ReviewsResponseDTO;
 import main.models.Reviews;
@@ -18,9 +20,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ReviewsMapper {
-    private final UserRepo userRepo;
-    private final ProductRepo productRepo;
+      UserRepo userRepo;
+      ProductRepo productRepo;
     
     public Reviews toEntity(ReviewsRequestDTO x){
         var r = new Reviews()

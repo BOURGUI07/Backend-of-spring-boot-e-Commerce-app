@@ -5,7 +5,9 @@
 package main.util.mapper;
 
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
 import main.models.User;
@@ -20,9 +22,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class AdminUserMapper {
-    private final PasswordEncoder encoder;
-    private final RoleRepo repo;
+      PasswordEncoder encoder;
+      RoleRepo repo;
     
     public User toEntity(UserRegistrationRequestDTO x){
         var role = repo.findByName(RoleEnum.ADMIN);

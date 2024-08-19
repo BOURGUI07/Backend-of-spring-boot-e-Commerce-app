@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.CategoryCsvRepresentation;
 import main.dto.ProductCsvRepresentation;
 import main.models.Category;
@@ -29,9 +31,10 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RequiredArgsConstructor
 @Service
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class CsvUploadService {
-    private final CategoryRepo repo;
-    private final ProductRepo prepo;
+      CategoryRepo repo;
+      ProductRepo prepo;
     
     
     public Integer uploadCategories(MultipartFile file) throws IOException{

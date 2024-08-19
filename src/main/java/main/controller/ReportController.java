@@ -7,7 +7,9 @@ package main.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.service.ReportService;
 import main.util.PaymentProvider;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="Reports", description=" Export Retrieved Data into csv files")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ReportController {
-    private final ReportService service;
+      ReportService service;
     
     @Operation(summary="Retrieve all products in a specific category")
     @GetMapping("/product_by_category_name/{category_name}")

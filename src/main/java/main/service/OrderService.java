@@ -9,8 +9,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.exception.EntityNotFoundException;
@@ -35,15 +38,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class OrderService {
-    private final OrderRepo repo;
-    private final UserRepo userRepo;
-    private final OrderItemRepo detailRepo;
-    private final PaymentDetailRepo paymentRepo;
-    private final OrderMapper mapper;
-    private final ProductRepo productRepo;
-    private final SalesTaxCalculationService taxService;
-    private Validator validator;
+      OrderRepo repo;
+      UserRepo userRepo;
+      OrderItemRepo detailRepo;
+      PaymentDetailRepo paymentRepo;
+      OrderMapper mapper;
+      ProductRepo productRepo;
+      SalesTaxCalculationService taxService;
+    @NonFinal Validator validator;
     
     
     

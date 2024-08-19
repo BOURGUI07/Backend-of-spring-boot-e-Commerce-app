@@ -4,7 +4,9 @@
  */
 package main.util.mapper;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.WishListCreationRequest;
 import main.dto.WishListMergeRequest;
 import main.dto.WishListResponse;
@@ -21,9 +23,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class WishListMapper {
-    private final UserRepo repo;
-    private final WishListRepo wrepo;
+      UserRepo repo;
+      WishListRepo wrepo;
     
     public WishList toEntity(WishListCreationRequest x){
         var w = new WishList()

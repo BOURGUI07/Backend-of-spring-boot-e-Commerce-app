@@ -11,7 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.UserLoginRequestDTO;
 import main.dto.UserLoginResponseDTO;
 import main.dto.UserRegistrationRequestDTO;
@@ -39,8 +41,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="User Authentication", description=" User Auth Controller")
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class UserAuthenticationController {
-    private final UserService service;
+      UserService service;
     
     
     @Operation(summary="Register a new  User")

@@ -9,8 +9,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.ProductRequestDTO;
 import main.dto.ProductResponseDTO;
 import main.exception.AlreadyExistsException;
@@ -40,15 +43,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Data
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ProductService {
-    private final ProductRepo repo;
-    private final CategoryRepo categoryRepo;
-    private final DiscountRepo discountRepo;
-    private final InventoryRepo invRepo;
-    private final OrderItemRepo orepo;
-    private final ProductMapper mapper;
-    private final ProductSpecification specification;
-    private Validator validator;
+      ProductRepo repo;
+      CategoryRepo categoryRepo;
+      DiscountRepo discountRepo;
+      InventoryRepo invRepo;
+      OrderItemRepo orepo;
+      ProductMapper mapper;
+      ProductSpecification specification;
+    @NonFinal Validator validator;
     
     @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size")
     public Page<ProductResponseDTO> findAll(int page, int size){

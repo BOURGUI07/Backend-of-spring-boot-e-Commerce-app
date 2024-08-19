@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.ReviewsRequestDTO;
 import main.dto.ReviewsResponseDTO;
 import main.dto.ReviewsUpdateRequestDTO;
@@ -45,9 +47,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequiredArgsConstructor
 @Tag(name="Reviews", description=" Reviews Controller")
-
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class ReviewsController {
-    private final ReviewsService service;
+      ReviewsService service;
     
     @Operation(summary="Retrieve All Reviews by rpdouct id", description="Paginated Retrieval for all reviews by product id")
     @ApiResponses(value={

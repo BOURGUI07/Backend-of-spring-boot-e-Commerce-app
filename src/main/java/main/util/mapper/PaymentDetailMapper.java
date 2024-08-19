@@ -4,7 +4,9 @@
  */
 package main.util.mapper;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
 import main.models.PaymentDetail;
@@ -17,8 +19,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class PaymentDetailMapper {
-    private final OrderRepo orepo;
+      OrderRepo orepo;
     
     public PaymentDetail toEntity(PaymentDetailDTO x){
         var d = new PaymentDetail()

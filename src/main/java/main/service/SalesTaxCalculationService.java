@@ -4,7 +4,9 @@
  */
 package main.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import main.client.SalesTaxApiClient;
 import main.models.Order;
 import main.repo.AddressRepo;
@@ -16,9 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class SalesTaxCalculationService {
-    private final AddressRepo addressRepo;
-    private final SalesTaxApiClient client;
+      AddressRepo addressRepo;
+      SalesTaxApiClient client;
     public void calculateTotalOrderPrice(Order o){
         /*
             to accuratley calculate the total order price
