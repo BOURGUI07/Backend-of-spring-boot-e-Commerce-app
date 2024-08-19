@@ -14,6 +14,7 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **Swagger**: A tool for generating API documentation and exploring API endpoints.
 - **Spring Security**: A comprehensive security framework for authentication, authorization, and more.
 - **Lombok**: A Java library that helps reduce boilerplate code by automatically generating getters, setters, constructors, and other   common methods through annotations.
+- **RestClient**: A tool for consuming external service APIs, such as a sales tax API.
 
 ## Features
 - **Modern Java Features**:
@@ -30,6 +31,7 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **JPA Auditing**: Automatically tracks and logs entity changes, providing an audit trail for database operations.
 - **Pagination, Filtering, Searching, and Sorting**: Comprehensive support for managing large datasets with ease.
 - **REST API Best Practices**: Follows industry standards to ensure robust, maintainable, and scalable API design.
+- **External API Consumption**: Integrates with external service APIs (e.g., sales tax API) using RestClient to retrieve and process data from third-party services.
 - **Comprehensive Exception Handling**: Ensures that the application gracefully handles and logs exceptions, providing meaningful error messages.
 - **Detailed Swagger Documentation**: Automatically generated API documentation for easy exploration and testing of endpoints.
 - **Unit Testing**: Extensive use of JUnit and Mockito for reliable and maintainable tests.
