@@ -12,7 +12,7 @@ import main.models.Order;
 import main.repo.OrderItemRepo;
 import main.repo.PaymentDetailRepo;
 import main.repo.UserRepo;
-import main.service.SalesTaxService;
+import main.service.SalesTaxCalculationService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +25,7 @@ public class OrderMapper {
     private final UserRepo userRepo;
     private final OrderItemRepo detailRepo;
     private final PaymentDetailRepo paymentRepo;
-    private final SalesTaxService taxService;
+    private final SalesTaxCalculationService taxService;
     
     public Order toEntity(OrderDTO x){
         var o = new Order();

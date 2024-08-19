@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import main.dto.SalesTaxResponse;
 import main.dto.WishListCreationRequest;
 import main.dto.WishListMergeRequest;
 import main.dto.WishListResponse;
@@ -50,7 +49,7 @@ public class WishListController {
     @Operation(summary="Create a new  wish list")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="wishlist is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = SalesTaxResponse.class)) }),
+                     schema = @Schema(implementation = WishListResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
@@ -69,7 +68,7 @@ public class WishListController {
     @Operation(summary="Create a new  wishList")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="wishList is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = SalesTaxResponse.class)) }),
+                     schema = @Schema(implementation = WishListResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 

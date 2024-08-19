@@ -2,20 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.service;
+package com.example.sales_tax_service.service;
 
+import com.example.sales_tax_service.dto.SalesTaxRequest;
+import com.example.sales_tax_service.dto.SalesTaxResponse;
+import com.example.sales_tax_service.exception.AlreadyExistsException;
+import com.example.sales_tax_service.exception.EntityNotFoundException;
+import com.example.sales_tax_service.exception.OptimisticLockException;
+import com.example.sales_tax_service.mapper.SalesTaxMapper;
+import com.example.sales_tax_service.repo.SalesTaxRepo;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import main.dto.SalesTaxRequest;
-import main.dto.SalesTaxResponse;
-import main.exception.AlreadyExistsException;
-import main.exception.EntityNotFoundException;
-import main.exception.OptimisticLockException;
-import main.models.Order;
-import main.repo.AddressRepo;
-import main.util.mapper.SalesTaxMapper;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import main.repo.SalesTaxRepo;
 
 /**
  *
@@ -33,47 +32,20 @@ import main.repo.SalesTaxRepo;
 @RequiredArgsConstructor
 public class SalesTaxService {
     private final SalesTaxRepo repo;
-    private final AddressRepo addressRepo;
     private Validator validator;
     private final SalesTaxMapper mapper;
     
-    public void calculateTotalOrderPrice(Order o){
-        /*
-            to accuratley calculate the total order price
-            we have to first check if the user retrieved by the request userId is existent
-            we have to find the country of the order
-            and since for every country has its own taxtRate, we gonna extract the taxrate based on the country
-            then we have to change the taxRate from like 56.2% to like 0.562
-            then we gonna multiply the result by the order total non-taxedPrice
-            after that we gonna add the result to the order non-taxed total
-            the result is the taxed total order price
-        */
-        if(o.getUser()!=null){
-            o.setTotal(o.getTotal() + o.getTotal()*changeTax(repo.getTaxRateForCountry(findOrderCountry(o))));
-        }
-    }
-    
-    private Double changeTax(Double taxtRate){
-        return taxtRate/100;
-    }
-    
-    private String findOrderCountry(Order o){
-        return (o.getUser()!=null) ? addressRepo.findByUserId(o.getUser().getId()).get().getCountry():null;
-    }
-    
-    
-    
     @Transactional
     @CacheEvict(value={
-        "allSalesTax", "salesTaxById"
+        "allSalesTax", "salesTaxById","salesTaxByCountry"
     }, allEntries=true)
     public SalesTaxResponse create(SalesTaxRequest x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        if(repo.existsByCountry(x.country())){
-            throw new AlreadyExistsException("");
+        if(repo.existsByCountryIgnoreCase(x.country())){
+            throw new AlreadyExistsException("A salesTax with this country name already exists.");
         }
         var salesTax = mapper.toEntity(x);
         var saved = repo.save(salesTax);
@@ -85,7 +57,7 @@ public class SalesTaxService {
     
     @Transactional
     @CacheEvict(value={
-        "allSalesTax", "salesTaxById"
+        "allSalesTax", "salesTaxById","salesTaxByCountry"
     }, allEntries=true)
     public SalesTaxResponse update(Integer id, SalesTaxRequest x){
         var violations = validator.validate(x);
@@ -112,6 +84,17 @@ public class SalesTaxService {
         return mapper.toDTO(salesTax);
     }
     
+    @Cacheable(value="salesTaxByCountry", key="#country")
+    public Double getTaxRateForCountry(String country){
+        if(!repo.existsByCountryIgnoreCase(country)){
+            throw new EntityNotFoundException("SalesTax with country: " + country + " isn't found");
+        }
+        if(country.isBlank()){
+            throw new IllegalArgumentException("SalesTax country shouldn't be blank!");
+        }
+        return repo.getTaxRateForCountry(country);
+    }
+    
     
     
     @Cacheable(value="allSalesTax", key = "'findAll_' + #page + '_' + #size")
@@ -124,7 +107,7 @@ public class SalesTaxService {
     
     @Transactional
     @CacheEvict(value={
-        "allSalesTax", "salesTaxById"
+        "allSalesTax", "salesTaxById","salesTaxByCountry"
     }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
@@ -136,7 +119,7 @@ public class SalesTaxService {
     
     
     @CacheEvict(value={
-        "allSalesTax", "salesTaxById"
+        "allSalesTax", "salesTaxById","salesTaxByCountry"
     }, allEntries=true)
     public void clearCache(){
         

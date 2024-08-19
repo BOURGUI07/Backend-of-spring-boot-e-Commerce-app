@@ -24,14 +24,13 @@ import main.repo.PaymentDetailRepo;
 import main.repo.ProductRepo;
 import main.repo.UserRepo;
 import main.service.OrderService;
-import main.service.SalesTaxService;
+import main.service.SalesTaxCalculationService;
 import main.util.mapper.OrderMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doNothing;
@@ -62,7 +61,7 @@ public class OrderServiceTest {
     @Mock
     private ProductRepo productRepo;
     @Mock
-    private SalesTaxService taxService;
+    private SalesTaxCalculationService taxService;
     @InjectMocks
     private OrderService service;
     

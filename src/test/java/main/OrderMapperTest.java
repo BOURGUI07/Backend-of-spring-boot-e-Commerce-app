@@ -19,7 +19,7 @@ import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
 import main.repo.UserRepo;
-import main.service.SalesTaxService;
+import main.service.SalesTaxCalculationService;
 import main.util.mapper.OrderMapper;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +47,7 @@ public class OrderMapperTest {
     @Mock
     private PaymentDetailRepo paymentRepo;
     @Mock
-    private SalesTaxService service;
+    private SalesTaxCalculationService service;
     @InjectMocks
     private OrderMapper mapper;
     
