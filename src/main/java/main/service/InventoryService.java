@@ -39,7 +39,7 @@ public class InventoryService {
       
     @Transactional
     @CacheEvict(value={
-        "allInventories", "inventoryById"
+        "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
     public InventoryDTO update(InventoryUpdateRequest x){
         var violations = validator.validate(x);
@@ -56,10 +56,9 @@ public class InventoryService {
         }catch(ObjectOptimisticLockingFailureException e){
             throw new OptimisticLockException("This discount has been updated by another user, Please review the changes");
         }
-        
-        
-        
     }
+    
+    
     @Cacheable(value="inventoryById", key="#id")
     public InventoryDTO findById(Integer id){
         if(id<=0){
@@ -67,6 +66,19 @@ public class InventoryService {
         }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"));
     }
+    
+    
+    @Cacheable(value="inventoryByProductId", key="#productId")
+    public InventoryDTO findByProductId(Integer productId){
+        if(productId<=0){
+            throw new IllegalArgumentException("id must be positive");
+        }
+        return repo.findByProductId(productId)
+                .map(mapper::toDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Inventory with productId: " + productId + " isn't found"));
+    }
+    
+    
     @Cacheable(value="allInventories", key = "'findAll_' + #page + '_' + #size")
     public Page<InventoryDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
@@ -74,7 +86,7 @@ public class InventoryService {
     
     @Transactional
     @CacheEvict(value={
-        "allInventories", "inventoryById"
+        "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
     public InventoryDTO create(InventoryDTO x){
         var s = mapper.toEntity(x);
@@ -84,7 +96,7 @@ public class InventoryService {
     
     @Transactional
     @CacheEvict(value={
-        "allInventories", "inventoryById"
+        "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
@@ -94,7 +106,7 @@ public class InventoryService {
     }
     
     @CacheEvict(value={
-        "allInventories", "inventoryById"
+        "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
     public void clearCache(){
         

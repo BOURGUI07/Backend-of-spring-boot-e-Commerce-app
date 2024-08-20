@@ -19,7 +19,6 @@ public record ProductResponseDTO(
         String sku,
         Double price,
         Optional<String> categoryName,
-        Integer quantity,
         Optional<String> discountName,
         List<Integer> orderItemIds,
         Integer version

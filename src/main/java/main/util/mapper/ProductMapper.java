@@ -16,7 +16,6 @@ import main.models.Discount;
 import main.models.Product;
 import main.repo.CategoryRepo;
 import main.repo.DiscountRepo;
-import main.repo.InventoryRepo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 public class ProductMapper {
       CategoryRepo categoryRepo;
       DiscountRepo discountRepo;
-      InventoryRepo inventoryRepo;
     
     public Product toEntity(ProductRequestDTO x){
         var p = new Product()
@@ -43,7 +41,6 @@ public class ProductMapper {
         x.discountId().ifPresent(id -> {
             discountRepo.findById(id).ifPresent(p::setDiscount);
         });
-        inventoryRepo.findById(x.inventoryId()).ifPresent(p::setInventory);
         return p;
     }
     
@@ -57,7 +54,6 @@ public class ProductMapper {
                 p.getSku(),
                 p.getPrice(),
                 categoryOp.map(Category::getName),
-                p.getInventory().getQuantity(),
                 discountOp.map(Discount::getName),
                 list,
                 p.getVersion()

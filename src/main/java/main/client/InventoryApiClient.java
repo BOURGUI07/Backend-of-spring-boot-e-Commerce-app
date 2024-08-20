@@ -32,4 +32,13 @@ public class InventoryApiClient {
                 .toEntity(InventoryDTO.class)
                 .getBody();
     }
+
+    public InventoryDTO findInventoryForProductid(Integer productId) {
+        return client
+                .get()
+                .uri("/product{id}", productId)
+                .retrieve()
+                .toEntity(InventoryDTO.class)
+                .getBody();
+    }
 }

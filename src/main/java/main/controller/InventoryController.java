@@ -96,6 +96,31 @@ public class InventoryController {
         
     }
     
+    
+    @Operation(summary="Get Inventory By Product Id", description="Retrieve a single Inventory by Product Id")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="404", description="Inventory isn't found", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Inventory was successfully Found",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = InventoryDTO.class)) }),
+        @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
+                     content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
+    })
+    @GetMapping(value="product/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<InventoryDTO> findByProductId(
+            @Parameter(description = "Id of the Product to retrieve inventory for", required = true)
+            @PathVariable Integer id){
+        var inventory = service.findByProductId(id);
+        
+            return ResponseEntity.status(HttpStatus.OK).body(inventory);
+        
+    }
+    
+    
+    
+    
     @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary="Create a new  Inventory")
     @ApiResponses(value={

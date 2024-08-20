@@ -108,7 +108,6 @@ public class ProductService {
                 .setSku(x.sku())
                 .setPrice(x.price());
                 x.desc().ifPresent(product::setDesc);
-        invRepo.findById(x.inventoryId()).ifPresent(product::setInventory);
         x.categoryId().ifPresent(categoryId->{
             categoryRepo.findById(categoryId).ifPresent(product::setCategory);
         });
