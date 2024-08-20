@@ -1,4 +1,4 @@
-# eCommerce Backend Project
+# Backend of Spring Boot e-Commerce App
 
 This eCommerce backend project is built with a robust and modern tech stack to provide a scalable, secure, and efficient solution for managing an online store. The project leverages Spring Boot, MySQL, Spring Data JPA, Maven, JUnit, Mockito, Redis, Swagger, and Spring Security to offer a comprehensive set of features, ensuring high performance and reliability.
 
