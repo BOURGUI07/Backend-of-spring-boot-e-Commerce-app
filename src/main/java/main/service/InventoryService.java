@@ -90,6 +90,10 @@ public class InventoryService {
         "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
     public InventoryResponse create(InventoryCreationRequest x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
+        }
         var s = mapper.toEntity(x);
         var saved = repo.save(s);
         return mapper.toDTO(saved);
