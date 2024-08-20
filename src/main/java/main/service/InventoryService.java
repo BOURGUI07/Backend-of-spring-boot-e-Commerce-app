@@ -5,10 +5,14 @@
 package main.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.InventoryDTO;
+import main.dto.InventoryUpdateRequest;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
 import main.repo.InventoryRepo;
@@ -30,24 +34,31 @@ import org.springframework.stereotype.Service;
 public class InventoryService {
       InventoryMapper mapper;
       InventoryRepo repo;
-    
+      @NonFinal Validator validator;
+      
+      
     @Transactional
     @CacheEvict(value={
         "allInventories", "inventoryById"
     }, allEntries=true)
-    public InventoryDTO update(Integer id, InventoryDTO x){
-        if(id<=0){
-            throw new IllegalArgumentException("id must be positive");
+    public InventoryDTO update(InventoryUpdateRequest x){
+        var violations = validator.validate(x);
+        if(!violations.isEmpty()){
+            throw new ConstraintViolationException(violations);
         }
-        var o = repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Inventory with id: " + id + " isn't found"))
-        .setQuantity(x.quantity());
+        var inventory = repo.findByProductId(x.productId())
+                .orElseThrow(() -> new EntityNotFoundException("No inventory was found for product id " + x.productId()))
+                ;
+        inventory.decreaseQtyBy(x.quantityToBeSubstracted());
         try{
-            var saved  = repo.save(o);
+            var saved = repo.save(inventory);
             return mapper.toDTO(saved);
         }catch(ObjectOptimisticLockingFailureException e){
-            throw new OptimisticLockException("This inventory has been updated by another user, Please review the changes");
+            throw new OptimisticLockException("This discount has been updated by another user, Please review the changes");
         }
+        
+        
+        
     }
     @Cacheable(value="inventoryById", key="#id")
     public InventoryDTO findById(Integer id){

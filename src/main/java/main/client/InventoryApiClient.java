@@ -5,6 +5,7 @@
 package main.client;
 
 import main.dto.InventoryDTO;
+import main.dto.InventoryUpdateRequest;
 import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,10 @@ public class InventoryApiClient {
         this.client = RestClient.create(BASE_URL);
     }
     
-    public InventoryDTO updateInventory( Integer inventoryId, InventoryDTO request){
+    public InventoryDTO updateInventory(InventoryUpdateRequest x){
         return client
                 .put()
-                .uri("/{id}",inventoryId)
-                .body(request)
+                .body(x)
                 .retrieve()
                 .toEntity(InventoryDTO.class)
                 .getBody();

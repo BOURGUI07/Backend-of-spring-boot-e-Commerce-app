@@ -5,9 +5,8 @@
 package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import main.models.Product;
-import main.models.UserShoppingSession;
-import main.validation.ValidQuantity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import main.validation.ValidId;
 
 /**
@@ -15,14 +14,14 @@ import main.validation.ValidId;
  * @author hp
  */
 @Schema(title = "CartItemDTO", description = "Parameters required to create/update a cart item")
-@ValidQuantity(productIdField = "productId", quantityField = "quantity",
-    message = "Quantity is required, Quantity must be positive, Requested quantity exceeds available inventory")
 public record CartItemDTO(
         Integer id,
         @ValidId(message="Id must be not null, must by positive")
         Integer sessionId,
         @ValidId(message="Id must be not null, must by positive")
         Integer productId,
+        @NotNull
+        @Positive
         Integer quantity
         ) {
 }

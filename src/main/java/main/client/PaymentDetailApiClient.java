@@ -6,6 +6,7 @@ package main.client;
 
 import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -25,6 +26,7 @@ public class PaymentDetailApiClient {
     public PaymentDetailResponseDTO createPayment(PaymentDetailDTO request){
         return client
                 .post()
+                .accept(APPLICATION_JSON)
                 .body(request)
                 .retrieve()
                 .toEntity(PaymentDetailResponseDTO.class)

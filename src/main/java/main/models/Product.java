@@ -19,7 +19,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.util.ArrayList;
@@ -73,11 +72,7 @@ public class Product extends BaseEntity{
     @JsonBackReference
     @JoinColumn(name="category_id")
     private Category category;
-    
-    @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
-    @JoinColumn(name="inventory_id")
-    private Inventory inventory;
-    
+        
     @Column(name="price")
     private Double price;
     
@@ -112,13 +107,6 @@ public class Product extends BaseEntity{
         w.removeProduct(this);
     }
     
-    public void addOrderItem(OrderItem orderItem){
-        if(orderItem.getQuantity()<=inventory.getQuantity()){
-            orderItems.add(orderItem);
-            orderItem.setProduct(this);
-        }
-    }
-    
     public void addReview(Reviews r){
         reviews.add(r);
     }
@@ -127,8 +115,5 @@ public class Product extends BaseEntity{
         Double actualPrice = (price!=null) ? price :0.0;
         return (discount!=null && discount.getActive())? actualPrice*(1-discount.getPercent()):actualPrice;
     }
-    
-    public Inventory getInventory(){
-        return inventory==null? new Inventory().setQuantity(0):inventory;
-    }
+
 }

@@ -6,7 +6,7 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import java.util.Set;
+import java.util.Map;
 import main.util.PaymentProvider;
 import main.validation.ValidId;
 
@@ -21,7 +21,7 @@ public record OrderDTO(
         Integer userId,
         @ValidId(message="Id must be not null, must by positive")
         PaymentProvider provider,
-        @NotEmpty(message="The Order Item List should Contain at least one element")
-        Set<Integer> orderItemIds        ) {
+        @NotEmpty(message="The ProductIds and Quantity Map should Contain at least one element")
+        Map<Integer,Integer> productIdQtyMap        ) {
 
 }

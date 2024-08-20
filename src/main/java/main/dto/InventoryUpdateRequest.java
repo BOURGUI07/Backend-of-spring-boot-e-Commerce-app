@@ -13,16 +13,13 @@ import main.validation.ValidId;
  *
  * @author hp
  */
-@Schema(title = "OrderItemDTO", description = "Parameters required to create/update an order")
-public record OrderItemDTO(
-        Integer id,
-        @ValidId(message="Id must be not null, must by positive")
-        Integer orderId,
-        @ValidId(message="Id must be not null, must by positive")
-        Integer productid,
-        @NotNull
+@Schema(title = "InventoryUpdateRequest", description = "Parameters required to update a product inventory")
+public record InventoryUpdateRequest(
+        @ValidId
+        Integer productId,
         @Positive
-        Integer quantity
+        @NotNull
+        Integer quantityToBeSubstracted
         ) {
 
 }
