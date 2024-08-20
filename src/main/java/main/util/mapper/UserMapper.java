@@ -7,6 +7,7 @@ package main.util.mapper;
 import java.util.stream.Collectors;
 import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
+import main.dto.UserResponse;
 import main.models.User;
 import main.repo.RoleRepo;
 import main.util.RoleEnum;
@@ -45,5 +46,9 @@ public class UserMapper {
     public UserRegistrationResponseDTO toDTO(User u){
         var list = u.getOrders().stream().map(o -> o.getId()).collect(Collectors.toList());
         return new UserRegistrationResponseDTO(u.getId(),u.getUsername(),u.getFirstname(),u.getLastname(),u.getEmail(),u.getPhone(),u.getRole(),list,u.getVersion());
+    }
+    
+    public UserResponse toDTOEmail(User u){
+        return new UserResponse(u.getUsername(),u.getFirstname(),u.getLastname(),u.getEmail());
     }
 }
