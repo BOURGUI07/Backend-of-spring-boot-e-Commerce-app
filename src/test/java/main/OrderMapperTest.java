@@ -4,7 +4,9 @@
  */
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import main.dto.OrderDTO;
@@ -17,6 +19,7 @@ import main.models.User;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.PaymentDetailRepo;
+import main.repo.ProductRepo;
 import main.repo.UserRepo;
 import main.service.SalesTaxCalculationService;
 import main.util.PaymentProvider;
@@ -48,24 +51,29 @@ public class OrderMapperTest {
     private PaymentDetailRepo paymentRepo;
     @Mock
     private SalesTaxCalculationService service;
+    @Mock
+    private ProductRepo productRepo;
+    
+    
     @InjectMocks
     private OrderMapper mapper;
     
     private User user = new User().setId(1);
-    private Order order = new Order().setId(1).setUser(user);
-    private Inventory inv = new Inventory().setQuantity(50);
-    private Product product = new Product().setInventory(inv).setId(1).setPrice(10.0);
+    private Order order = new Order().setId(1);
+    private Product product = new Product().setId(1).setPrice(10.0);
+    Map map = Map.of(product.getId(), 1);
+    private Inventory inv = new Inventory().setQuantity(50).setProduct(product);
     private OrderItem orderItem = new OrderItem(1,order,product,1);
-    private OrderDTO x = new OrderDTO(1,1,PaymentProvider.OTHER,Set.of(1));
-    private OrderResponseDTO y = new OrderResponseDTO(1,1,10.0,List.of(1),1);
+    private OrderDTO x = new OrderDTO(1,1,PaymentProvider.OTHER, map);
+    private OrderResponseDTO y = new OrderResponseDTO(1,1,10.0,new ArrayList<>(),1);
     
-    
+    public OrderMapperTest() {
+    }
     @Test
     void test0(){
         when(userRepo.findById(1)).thenReturn(Optional.of(user));
-        when(detailRepo.findAllById(anySet())).thenReturn(List.of(orderItem));
-        when(detailRepo.saveAll(anyList())).thenReturn(List.of(orderItem));
         when(userRepo.save(any(User.class))).thenReturn(user);
+        when(productRepo.findAllById(anySet())).thenReturn(List.of(product));
         var order1 = mapper.toEntity(x).setId(1);
         assertEquals(order,order1);
         assertEquals(y,mapper.toDTO(order1.setVersion(1)));

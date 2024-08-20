@@ -35,6 +35,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -57,6 +58,9 @@ public class ProductServiceTest {
     private  OrderItemRepo orepo;
     @Mock
     private  ProductMapper mapper;
+    
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
     @InjectMocks
     private ProductService service;
     
@@ -64,18 +68,16 @@ public class ProductServiceTest {
     private Validator validator;
     
     private ProductRequestDTO x;
-    private Inventory i = new Inventory().setId(1).setQuantity(50);
     private Product p = new Product()
             .setCategory(null)
             .setDiscount(null)
-            .setInventory(i)
             .setDesc("desc")
             .setPrice(10.4)
             .setSku("sku")
             .setName("name")
             .setId(1);
-    
-    private ProductResponseDTO y = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.empty(),50,Optional.empty(),List.of(),p.getVersion());
+    private Inventory i = new Inventory().setId(1).setQuantity(50).setProduct(p);
+    private ProductResponseDTO y = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.empty(),Optional.empty(),List.of(),p.getVersion());
     public ProductServiceTest() {
         i.setId(1);
         i.setQuantity(10);

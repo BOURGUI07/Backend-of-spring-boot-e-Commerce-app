@@ -8,6 +8,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import main.dto.OrderDTO;
@@ -24,6 +25,7 @@ import main.repo.PaymentDetailRepo;
 import main.repo.ProductRepo;
 import main.repo.UserRepo;
 import main.service.OrderService;
+import main.service.ProductAvailability;
 import main.service.SalesTaxCalculationService;
 import main.util.PaymentProvider;
 import main.util.mapper.OrderMapper;
@@ -39,6 +41,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -61,6 +64,12 @@ public class OrderServiceTest {
     private  OrderMapper mapper;
     @Mock
     private ProductRepo productRepo;
+    
+    @Mock
+    private ProductAvailability productAvailability;
+    
+    @Mock
+    private ApplicationEventPublisher ebentPublisher;
     @Mock
     private SalesTaxCalculationService taxService;
     @InjectMocks
@@ -72,14 +81,16 @@ public class OrderServiceTest {
                                     "email","phone",null,
                                         new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),null);
     
-    private Order  p =new Order().setId(1).setUser(user);
-    private Inventory inv = new Inventory().setQuantity(50);
-    private Product product = new Product().setInventory(inv).setId(1);
+    private Order  p =new Order().setId(1);
+    private Product product = new Product().setId(1);
+    private Inventory inv = new Inventory().setQuantity(50).setProduct(product);
     private OrderItem orderItem = new OrderItem(1,p,product,1);
-    private OrderDTO x = new OrderDTO(1,1,PaymentProvider.OTHER,Set.of(1));
+    Map map = Map.of(product.getId(), 1);
+    private OrderDTO x = new OrderDTO(1,1,PaymentProvider.OTHER, map);
     private OrderResponseDTO y = new OrderResponseDTO(1,1,0.0,null,null);
     
     public OrderServiceTest() {
+        p.setUser(user);
     }
     
 
@@ -94,6 +105,8 @@ public class OrderServiceTest {
 void testCreate() {
     
     when(mapper.toEntity(x)).thenReturn(p);
+    when(userRepo.findById(1)).thenReturn(Optional.of(user));
+    when(productAvailability.checkAvailability(x)).thenReturn(Boolean.TRUE);
     when(repo.save(p)).thenReturn(p);
     when(mapper.toDTO(p)).thenReturn(y);
 

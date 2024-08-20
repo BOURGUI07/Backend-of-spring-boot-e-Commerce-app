@@ -19,7 +19,6 @@ public record OrderDTO(
         Integer id,
         @ValidId(message="Id must be not null, must by positive")
         Integer userId,
-        @ValidId(message="Id must be not null, must by positive")
         PaymentProvider provider,
         @NotEmpty(message="The ProductIds and Quantity Map should Contain at least one element")
         Map<Integer,Integer> productIdQtyMap        ) {
