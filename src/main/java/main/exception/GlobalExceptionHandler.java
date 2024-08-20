@@ -45,13 +45,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientInventoryException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResourceError> handleInsufficientInventoryExcpetion(InsufficientInventoryException ex) {
-        var errorResponse = new ResourceError(HttpStatus.NOT_FOUND.value(), ex.getMessage(), System.currentTimeMillis());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        var errorResponse = new ResourceError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(InvalidBodyRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResourceError> handleInvalidBodyRequestException(InvalidBodyRequestException ex) {
+        var errorResponse = new ResourceError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ResourceError> handleGeneralException(Exception ex) {
+        var errorResponse = new ResourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected error occurred", System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    @ExceptionHandler(CustomServerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ResourceError> handleServerException(CustomServerException ex) {
         var errorResponse = new ResourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected error occurred", System.currentTimeMillis());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

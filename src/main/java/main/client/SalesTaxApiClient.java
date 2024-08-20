@@ -4,6 +4,8 @@
  */
 package main.client;
 
+import main.exception.CustomServerException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -25,6 +27,12 @@ public class SalesTaxApiClient {
                 .get()
                 .uri("/country/{country}",country)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request,response) -> {
+                     throw new IllegalArgumentException("The client entered a blank country");
+                 })
+                .onStatus(HttpStatusCode::is5xxServerError, (request,response) -> {
+                     throw new CustomServerException("Server is down");
+                 })
                 .toEntity(Double.class)
                 .getBody();
     }

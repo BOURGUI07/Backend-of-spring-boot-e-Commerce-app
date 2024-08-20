@@ -6,6 +6,9 @@ package main.client;
 
 import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
+import main.exception.CustomServerException;
+import main.exception.InvalidBodyRequestException;
+import org.springframework.http.HttpStatusCode;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -23,12 +26,18 @@ public class PaymentDetailApiClient {
         this.client = RestClient.create(BASE_URL);
     }
     
-    public PaymentDetailResponseDTO createPayment(PaymentDetailDTO request){
+    public PaymentDetailResponseDTO createPayment(PaymentDetailDTO detailRequest){
         return client
                 .post()
                 .accept(APPLICATION_JSON)
-                .body(request)
+                .body(detailRequest)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request,response) -> {
+                     throw new InvalidBodyRequestException("The client entered an invalid request body");
+                 })
+                .onStatus(HttpStatusCode::is5xxServerError, (request,response) -> {
+                     throw new CustomServerException("Server is down");
+                 })
                 .toEntity(PaymentDetailResponseDTO.class)
                 .getBody();
     }

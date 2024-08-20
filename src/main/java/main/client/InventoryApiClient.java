@@ -7,6 +7,10 @@ package main.client;
 import main.dto.InventoryCreationRequest;
 import main.dto.InventoryResponse;
 import main.dto.InventoryUpdateRequest;
+import main.exception.CustomServerException;
+import main.exception.InvalidBodyRequestException;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -28,6 +32,12 @@ public class InventoryApiClient {
                 .put()
                 .body(x)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request,response) -> {
+                     throw new InvalidBodyRequestException("The client entered an invalid request body");
+                 })
+                .onStatus(HttpStatusCode::is5xxServerError, (request,response) -> {
+                     throw new CustomServerException("Server is down");
+                 })
                 .toEntity(InventoryResponse.class)
                 .getBody();
     }
@@ -37,6 +47,13 @@ public class InventoryApiClient {
                 .get()
                 .uri("/product{id}", productId)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request,response) -> {
+                     throw new IllegalArgumentException("Either The Client Entered an Id that's below 1 or "
+                             + "no inventory was found for product id");
+                 })
+                .onStatus(HttpStatusCode::is5xxServerError, (request,response) -> {
+                     throw new CustomServerException("Server is down");
+                 })
                 .toEntity(InventoryResponse.class)
                 .getBody();
     }
@@ -44,8 +61,15 @@ public class InventoryApiClient {
     public InventoryResponse createInventory(InventoryCreationRequest x){
         return client
                 .post()
+                .accept(MediaType.APPLICATION_JSON)
                 .body(x)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request,response) -> {
+                     throw new InvalidBodyRequestException("The client entered an invalid request body");
+                 })
+                .onStatus(HttpStatusCode::is5xxServerError, (request,response) -> {
+                     throw new CustomServerException("Server is down");
+                 })
                 .toEntity(InventoryResponse.class)
                 .getBody();
     }
