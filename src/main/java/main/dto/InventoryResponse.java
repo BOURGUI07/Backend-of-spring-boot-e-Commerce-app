@@ -5,19 +5,15 @@
 package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.PositiveOrZero;
-import main.validation.ValidId;
 
 /**
  *
  * @author hp
  */
-@Schema(title = "InventoryDTO", description = "Parameters required to create/update an inventory")
-public record InventoryDTO(
+@Schema(title = "InventoryResponse", description = "Parameters required to create/update an inventory")
+public record InventoryResponse(
         Integer id,
-        @ValidId
         Integer productId,
-        @PositiveOrZero(message="Product quantity should be positive")
         Integer quantity,
         Integer version
         ) {

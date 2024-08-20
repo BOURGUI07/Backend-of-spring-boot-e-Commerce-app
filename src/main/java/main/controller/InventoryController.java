@@ -15,7 +15,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import main.dto.InventoryDTO;
+import main.dto.InventoryCreationRequest;
+import main.dto.InventoryResponse;
 import main.dto.InventoryUpdateRequest;
 import main.page_dtos.InventoryDTOPage;
 import main.service.InventoryService;
@@ -61,7 +62,7 @@ public class InventoryController {
                      content = @Content)
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<InventoryDTO>> findAll(
+    public ResponseEntity<Page<InventoryResponse>> findAll(
             @Parameter(description = "The page number to retrieve", example = "0")
             @RequestParam(defaultValue = "0") int page,
         
@@ -80,14 +81,14 @@ public class InventoryController {
         @ApiResponse(responseCode="404", description="Inventory isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Inventory was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = InventoryDTO.class)) }),
+                     schema = @Schema(implementation = InventoryResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InventoryDTO> findById(
+    public ResponseEntity<InventoryResponse> findById(
             @Parameter(description = "Id of the inventory to retrieve", required = true)
             @PathVariable Integer id){
         var inventory = service.findById(id);
@@ -102,14 +103,14 @@ public class InventoryController {
         @ApiResponse(responseCode="404", description="Inventory isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Inventory was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = InventoryDTO.class)) }),
+                     schema = @Schema(implementation = InventoryResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
     @GetMapping(value="product/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<InventoryDTO> findByProductId(
+    public ResponseEntity<InventoryResponse> findByProductId(
             @Parameter(description = "Id of the Product to retrieve inventory for", required = true)
             @PathVariable Integer id){
         var inventory = service.findByProductId(id);
@@ -125,15 +126,15 @@ public class InventoryController {
     @Operation(summary="Create a new  Inventory")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="Inventory is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = InventoryDTO.class)) }),
+                     schema = @Schema(implementation = InventoryResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<InventoryDTO> create(
+    public ResponseEntity<InventoryResponse> create(
             @Parameter(description = "inventory to create", required = true)
-            @Valid @RequestBody  InventoryDTO x){
+            @Valid @RequestBody  InventoryCreationRequest x){
         var inventory = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(inventory);
@@ -146,14 +147,14 @@ public class InventoryController {
         @ApiResponse(responseCode="404", description="inventory isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="inventory was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = InventoryDTO.class)) }),
+                     schema = @Schema(implementation = InventoryResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<InventoryDTO> update(
+    public ResponseEntity<InventoryResponse> update(
             @Parameter(description = "updatedInventory details", required = true)
             @Valid @RequestBody  InventoryUpdateRequest x){
         var updatedInventory = service.update(x);

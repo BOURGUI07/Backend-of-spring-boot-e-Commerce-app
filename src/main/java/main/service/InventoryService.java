@@ -11,7 +11,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import main.dto.InventoryDTO;
+import main.dto.InventoryCreationRequest;
+import main.dto.InventoryResponse;
 import main.dto.InventoryUpdateRequest;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
@@ -41,7 +42,7 @@ public class InventoryService {
     @CacheEvict(value={
         "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
-    public InventoryDTO update(InventoryUpdateRequest x){
+    public InventoryResponse update(InventoryUpdateRequest x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -60,7 +61,7 @@ public class InventoryService {
     
     
     @Cacheable(value="inventoryById", key="#id")
-    public InventoryDTO findById(Integer id){
+    public InventoryResponse findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -69,7 +70,7 @@ public class InventoryService {
     
     
     @Cacheable(value="inventoryByProductId", key="#productId")
-    public InventoryDTO findByProductId(Integer productId){
+    public InventoryResponse findByProductId(Integer productId){
         if(productId<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -80,7 +81,7 @@ public class InventoryService {
     
     
     @Cacheable(value="allInventories", key = "'findAll_' + #page + '_' + #size")
-    public Page<InventoryDTO> findAll(int page, int size){
+    public Page<InventoryResponse> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     
@@ -88,7 +89,7 @@ public class InventoryService {
     @CacheEvict(value={
         "allInventories", "inventoryById","inventoryByProductId"
     }, allEntries=true)
-    public InventoryDTO create(InventoryDTO x){
+    public InventoryResponse create(InventoryCreationRequest x){
         var s = mapper.toEntity(x);
         var saved = repo.save(s);
         return mapper.toDTO(saved);

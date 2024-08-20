@@ -4,10 +4,9 @@
  */
 package main.client;
 
-import main.dto.InventoryDTO;
+import main.dto.InventoryCreationRequest;
+import main.dto.InventoryResponse;
 import main.dto.InventoryUpdateRequest;
-import main.dto.PaymentDetailDTO;
-import main.dto.PaymentDetailResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -24,21 +23,30 @@ public class InventoryApiClient {
         this.client = RestClient.create(BASE_URL);
     }
     
-    public InventoryDTO updateInventory(InventoryUpdateRequest x){
+    public InventoryResponse updateInventory(InventoryUpdateRequest x){
         return client
                 .put()
                 .body(x)
                 .retrieve()
-                .toEntity(InventoryDTO.class)
+                .toEntity(InventoryResponse.class)
                 .getBody();
     }
 
-    public InventoryDTO findInventoryForProductid(Integer productId) {
+    public InventoryResponse findInventoryForProductid(Integer productId) {
         return client
                 .get()
                 .uri("/product{id}", productId)
                 .retrieve()
-                .toEntity(InventoryDTO.class)
+                .toEntity(InventoryResponse.class)
+                .getBody();
+    }
+    
+    public InventoryResponse createInventory(InventoryCreationRequest x){
+        return client
+                .post()
+                .body(x)
+                .retrieve()
+                .toEntity(InventoryResponse.class)
                 .getBody();
     }
 }
