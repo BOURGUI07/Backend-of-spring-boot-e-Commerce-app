@@ -14,9 +14,9 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import main.dto.OrderItemDTO;
+import main.dto.OrderItemCreationRequest;
+import main.dto.OrderItemResponse;
 import main.exception.EntityNotFoundException;
-import main.exception.InsufficientInventoryException;
 import main.repo.OrderItemRepo;
 import main.repo.OrderRepo;
 import main.repo.ProductRepo;
@@ -46,7 +46,7 @@ public class OrderItemService {
     @CacheEvict(value={
         "allOrderItems", "orderItemById"
     }, allEntries=true)
-    public OrderItemDTO update(Integer id, OrderItemDTO x){
+    public OrderItemResponse update(Integer id, OrderItemCreationRequest x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
@@ -54,11 +54,6 @@ public class OrderItemService {
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var product = prepo.findById(x.productid())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id: " + x.productid() + "isn't found"));
-        if(x.quantity()>product.getInventory().getQuantity()){
-            throw new InsufficientInventoryException("Quantity Ordered Exceeds Product Inventory");
-        }else{
             var o = repo.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"))
             .setQuantity(x.quantity());
@@ -66,18 +61,17 @@ public class OrderItemService {
             orepo.findById(x.orderId()).ifPresent(o::setOrder);
             var saved = repo.save(o);
             return mapper.toDTO(saved);
-        }
         
     }
     @Cacheable(value="orderItemById", key="#id")
-    public OrderItemDTO findById(Integer id){
+    public OrderItemResponse findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"));
     }
     @Cacheable(value="allOrderItems", key = "'findAll_' + #page + '_' + #size")
-    public Page<OrderItemDTO> findAll(int page, int size){
+    public Page<OrderItemResponse> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
     
@@ -85,20 +79,14 @@ public class OrderItemService {
     @CacheEvict(value={
         "allOrderItems", "orderItemById"
     }, allEntries=true)
-    public OrderItemDTO create(OrderItemDTO x){
+    public OrderItemResponse create(OrderItemCreationRequest x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
         }
-        var product = prepo.findById(x.productid())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id: " + x.productid() + "isn't found"));
-        if(x.quantity()>product.getInventory().getQuantity()){
-            throw new InsufficientInventoryException("Quantity Ordered Exceeds Product Inventory");
-        }else{
             var s = mapper.toEntity(x);
             var saved = repo.save(s);
             return mapper.toDTO(saved);
-        }
         
     }
     
@@ -113,7 +101,7 @@ public class OrderItemService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
-    public List<OrderItemDTO> findOrderDetailsforProduct(Integer id){
+    public List<OrderItemResponse> findOrderDetailsforProduct(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }

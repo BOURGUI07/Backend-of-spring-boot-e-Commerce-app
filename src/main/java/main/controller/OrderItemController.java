@@ -16,7 +16,8 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import main.dto.OrderItemDTO;
+import main.dto.OrderItemCreationRequest;
+import main.dto.OrderItemResponse;
 import main.page_dtos.OrderItemDTOPage;
 import main.service.OrderItemService;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,7 @@ public class OrderItemController {
                      content = @Content)
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<OrderItemDTO>> findAll(
+    public ResponseEntity<Page<OrderItemResponse>> findAll(
             @Parameter(description = "The page number to retrieve", example = "0")
             @RequestParam(defaultValue = "0") int page,
         
@@ -80,14 +81,14 @@ public class OrderItemController {
         @ApiResponse(responseCode="404", description="Order Item isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="Order Item was successfully Found",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = OrderItemDTO.class)) }),
+                     schema = @Schema(implementation = OrderItemResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
     @GetMapping(value="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderItemDTO> findById(
+    public ResponseEntity<OrderItemResponse> findById(
             @Parameter(description = "Id of the orderItem to retrieve", required = true)
             @PathVariable Integer id){
         var orderItem = service.findById(id);
@@ -100,16 +101,16 @@ public class OrderItemController {
     @Operation(summary="Create a new  OrderItem")
     @ApiResponses(value={
         @ApiResponse(responseCode="201", description="OrderItem is successfully created",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = OrderItemDTO.class)) }),
+                     schema = @Schema(implementation = OrderItemResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a non Valid Entity Body"
                 + " Or Ordered Quantity That Exceeds Product Inventory", 
                      content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<OrderItemDTO> create(
+    public ResponseEntity<OrderItemResponse> create(
             @Parameter(description = "orderItem to create", required = true)
-            @Valid @RequestBody  OrderItemDTO x){
+            @Valid @RequestBody  OrderItemCreationRequest x){
         var orderItem = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(orderItem);
@@ -122,7 +123,7 @@ public class OrderItemController {
         @ApiResponse(responseCode="404", description="order item isn't found", 
                      content = @Content),
         @ApiResponse(responseCode="200", description="order item was successfully Updated",content = { @Content(mediaType = "application/json", 
-                     schema = @Schema(implementation = OrderItemDTO.class)) }),
+                     schema = @Schema(implementation = OrderItemResponse.class)) }),
         @ApiResponse(responseCode="400", description="Client Entered a Negative id Or "
                 + "a Non Valid Entity Body "
                 + "Or Ordered Quantity That Exceeds Product Inventory", 
@@ -130,11 +131,11 @@ public class OrderItemController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    public ResponseEntity<OrderItemDTO> update(
+    public ResponseEntity<OrderItemResponse> update(
             @Parameter(description = "Id of the orderItem to update", required = true)
             @PathVariable Integer id,
             @Parameter(description = "updatedOrderItme details", required = true)
-            @Valid @RequestBody  OrderItemDTO x){
+            @Valid @RequestBody  OrderItemCreationRequest x){
         var updatedOrderItme = service.update(id, x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedOrderItme);
@@ -163,7 +164,7 @@ public class OrderItemController {
     }
     
     @GetMapping("/product/{id}")
-    public ResponseEntity<List<OrderItemDTO>> findOrderDetailsWithProductId(@PathVariable Integer id){
+    public ResponseEntity<List<OrderItemResponse>> findOrderDetailsWithProductId(@PathVariable Integer id){
         var list = service.findOrderDetailsforProduct(id);
         
             if(list.isEmpty()){

@@ -25,7 +25,7 @@ public class UpdateInventoryService {
     InventoryApiClient client;
     
     @EventListener
-    @Order(4)
+    @Order(3)
     public void updateInventory(OrderCreationEvent event){
         var order = event.getOrderRequest();
         var map = order.productIdQtyMap();

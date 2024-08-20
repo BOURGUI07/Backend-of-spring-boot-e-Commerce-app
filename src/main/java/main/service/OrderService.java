@@ -109,13 +109,7 @@ public class OrderService {
         }
         var o = repo.findById(id).orElseThrow(() -> 
             new EntityNotFoundException("Order with id: " + id + " isn't found" ));
-        var list = x.orderItemIds();
-        if(list!=null){
-            var itemList = detailRepo.findAllById(list);
-            itemList.forEach(o::addOrderItem);
             taxService.calculateTotalOrderPrice(o);
-            detailRepo.saveAll(itemList);
-        }
         userRepo.findById(x.userId()).ifPresent(o::setUser);
         try{
             var saved  = repo.save(o);

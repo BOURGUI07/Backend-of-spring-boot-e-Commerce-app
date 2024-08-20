@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.models.Order;
+import main.repo.UserRepo;
 import main.service.SalesTaxCalculationService;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,12 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 public class OrderMapper {
      SalesTaxCalculationService taxService;
+     UserRepo repo;
     
     public Order toEntity(OrderDTO x){
         var o = new Order();
+        repo.findById(x.userId()).ifPresent(o::setUser);
+            repo.save(o.getUser());
             taxService.calculateTotalOrderPrice(o);
         
         return o;
