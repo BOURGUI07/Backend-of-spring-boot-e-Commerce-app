@@ -6,6 +6,7 @@ package main.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.util.Optional;
@@ -30,8 +31,9 @@ public record ProductRequestDTO(
         @Positive(message="Product price must be positive")
         Double price,
         Optional<Integer> categoryId,
-        @ValidId(message="Id must be not null, must by positive")
-        Integer inventoryId,
+        @NotNull
+        @Positive
+        Integer quantity,
         Optional<Integer> discountId
         ) {
 }

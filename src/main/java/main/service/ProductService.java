@@ -15,8 +15,10 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import main.dto.InventoryCreationRequest;
 import main.dto.ProductRequestDTO;
 import main.dto.ProductResponseDTO;
+import main.event.ProductCreationEvent;
 import main.exception.AlreadyExistsException;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
@@ -29,6 +31,7 @@ import main.util.mapper.ProductMapper;
 import main.util.specification.ProductSpecification;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -53,6 +56,7 @@ public class ProductService {
       OrderItemRepo orepo;
       ProductMapper mapper;
       ProductSpecification specification;
+      ApplicationEventPublisher eventPublisher;
     @NonFinal Validator validator;
     
     @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size")
@@ -84,8 +88,10 @@ public class ProductService {
             throw new AlreadyExistsException("product with either input name or input sku already exists");
         }
         var product = mapper.toEntity(x);
-        
             var saved = repo.save(product);
+            
+            var inventoryCreationRequest = new InventoryCreationRequest(saved.getId(),x.quantity());
+            eventPublisher.publishEvent(new ProductCreationEvent(this,inventoryCreationRequest));
             return mapper.toDTO(saved);
         
     }

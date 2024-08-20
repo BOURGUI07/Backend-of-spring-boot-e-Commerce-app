@@ -5,7 +5,7 @@
 package main.page_dtos;
 
 import java.util.List;
-import main.dto.InventoryDTO;
+import main.dto.InventoryResponse;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -13,12 +13,12 @@ import org.springframework.data.domain.PageRequest;
  *
  * @author hp
  */
-public class InventoryDTOPage extends PageImpl<InventoryDTO>{
-    public InventoryDTOPage(List<InventoryDTO> content, int page, int size, long total) {
+public class InventoryDTOPage extends PageImpl<InventoryResponse>{
+    public InventoryDTOPage(List<InventoryResponse> content, int page, int size, long total) {
         super(content, PageRequest.of(page, size), total);
     }
 
-    public InventoryDTOPage(List<InventoryDTO> content) {
+    public InventoryDTOPage(List<InventoryResponse> content) {
         super(content);
     }
 }
