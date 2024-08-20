@@ -7,10 +7,7 @@ package main.service.event_listeners;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import main.client.PaymentDetailApiClient;
-import main.dto.PaymentDetailDTO;
 import main.event.OrderCreationEvent;
-import main.util.PaymentStatus;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -22,14 +19,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal=true,level=AccessLevel.PRIVATE)
 @Service
-public class ProcessPaymentService {
-    PaymentDetailApiClient client;
+public class OrderItemCreationService {
+    
     
     @EventListener
-    @Order(1)
-    public void processPayment(OrderCreationEvent event){
+    @Order(2)
+    public void createOrderItem(OrderCreationEvent event){
         var order = event.getOrderRequest();
-        var paymentRequest = new PaymentDetailDTO(order.id(),order.provider(),PaymentStatus.PENDING);
-        client.createPayment(paymentRequest);
     }
 }

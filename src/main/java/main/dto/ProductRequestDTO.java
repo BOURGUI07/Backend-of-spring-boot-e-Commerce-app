@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.util.Optional;
-import main.models.Inventory;
 import main.validation.ValidOptionalString;
 import main.validation.ValidId;
 

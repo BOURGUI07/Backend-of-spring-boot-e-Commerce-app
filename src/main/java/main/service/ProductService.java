@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -161,5 +162,13 @@ public class ProductService {
     }, allEntries=true)
     public void clearCache(){
         
+    }
+    
+    
+    public List<ProductResponseDTO> findAllByIds(Set<Integer> productIds){
+        if(productIds.stream().allMatch(id-> id<1)){
+            throw new IllegalArgumentException("id must be positive");
+        }
+        return repo.findAllById(productIds).stream().map(mapper::toDTO).toList();
     }
 }

@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import main.dto.InventoryDTO;
+import main.dto.InventoryUpdateRequest;
 import main.page_dtos.InventoryDTOPage;
 import main.service.InventoryService;
 import org.springframework.data.domain.Page;
@@ -128,11 +129,9 @@ public class InventoryController {
                      content = @Content)
     })
     public ResponseEntity<InventoryDTO> update(
-            @Parameter(description = "Id of the inventory to update", required = true)
-            @PathVariable Integer id,
             @Parameter(description = "updatedInventory details", required = true)
-            @Valid @RequestBody  InventoryDTO x){
-        var updatedInventory = service.update(id, x);
+            @Valid @RequestBody  InventoryUpdateRequest x){
+        var updatedInventory = service.update(x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedInventory);
       

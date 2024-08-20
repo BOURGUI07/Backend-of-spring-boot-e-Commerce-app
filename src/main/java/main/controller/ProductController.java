@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -73,6 +74,31 @@ public class ProductController {
         }
         return ResponseEntity.ok(result);
     }
+    
+    
+    
+    @Operation(summary="Retrieve Products by Set of Ids")
+    @ApiResponses(value={
+        @ApiResponse(responseCode="204", description="List of products is empty", 
+                     content = @Content),
+        @ApiResponse(responseCode="200", description="Successfull Retrieval of Product List",content = { @Content(mediaType = "application/json", 
+                     schema = @Schema(implementation = ProductResponseDTO.class)) }),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+                     content = @Content)
+    })
+    @GetMapping(value="/product_ids",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ProductResponseDTO>> findAllByIds(
+            @Parameter(description = "The Set of products Ids to find")
+            @RequestBody Set<Integer> ids){
+        var result = service.findAllByIds(ids);
+        if(result.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(result);
+    }
+    
+    
+    
     
     
     

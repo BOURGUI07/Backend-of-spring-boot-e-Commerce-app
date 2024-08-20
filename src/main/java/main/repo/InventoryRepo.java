@@ -4,6 +4,7 @@
  */
 package main.repo;
 
+import java.util.Optional;
 import main.models.Inventory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,5 @@ import org.springframework.stereotype.Repository;
 public interface InventoryRepo extends JpaRepository<Inventory,Integer>{
     @Override
     Page<Inventory> findAll(Pageable pageable);
+    Optional<Inventory> findByProductId(Integer productId);
 }

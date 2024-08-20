@@ -25,15 +25,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductAvailability {
     ProductRepo repo;
-    OrderItemRepo detailRepo;
     
     public boolean checkAvailability(OrderDTO x){
-        var orderItems  = detailRepo.findAllById(x.orderItemIds());
-        var map = orderItems.stream().collect(Collectors.toMap(OrderItem::getProduct, OrderItem::getQuantity));
-        var desiredProductsIds = map.keySet().stream().map(Product::getId).toList();
+        var map = x.productIdQtyMap();
+        var desiredProductsIds = map.keySet();
         var availableProducts = repo.findAllById(desiredProductsIds);
         if(availableProducts.size()==map.keySet().size()){
-            var isQtyValid = availableProducts.stream().allMatch(p-> p.getInventory().getQuantity()>=map.get(p));
+            var isQtyValid = availableProducts.stream().allMatch(p-> p.getInventory().getQuantity()>=map.get(p.getId()));
             return isQtyValid;
         }else{
             throw new EntityNotFoundException("At least one products isn't found");
