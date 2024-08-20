@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.models.Order;
+import main.repo.ProductRepo;
 import main.repo.UserRepo;
 import main.service.SalesTaxCalculationService;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,20 @@ import org.springframework.stereotype.Service;
 public class OrderMapper {
      SalesTaxCalculationService taxService;
      UserRepo repo;
+     ProductRepo productRepo;
     
     public Order toEntity(OrderDTO x){
         var o = new Order();
         repo.findById(x.userId()).ifPresent(o::setUser);
-            repo.save(o.getUser());
-            taxService.calculateTotalOrderPrice(o);
+        repo.save(o.getUser());
+        var map = x.productIdQtyMap();
+        var products = productRepo.findAllById(map.keySet());
+        var orderAmount = products
+                .stream()
+                .mapToDouble(p -> p.discountedPrice()*map.get(p.getId()))
+                .sum();
+        o.setTotal(orderAmount);
+        taxService.calculateTotalOrderPrice(o);
         
         return o;
     }

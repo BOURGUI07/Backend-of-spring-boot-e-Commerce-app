@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -79,6 +80,7 @@ public class User extends BaseEntity implements UserDetails{
     
     @OneToMany(mappedBy="user", cascade=CascadeType.ALL,orphanRemoval=true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
     
     
@@ -111,7 +113,6 @@ public class User extends BaseEntity implements UserDetails{
     
     public void addOrder(Order order){
         orders.add(order);
-        order.setUser(this);
     }
  
 

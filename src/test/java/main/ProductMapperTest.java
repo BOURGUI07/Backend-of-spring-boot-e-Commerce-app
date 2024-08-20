@@ -42,21 +42,21 @@ public class ProductMapperTest {
     private InventoryRepo inventoryRepo;
     @InjectMocks
     private ProductMapper mapper;
-    private final Inventory i = new Inventory().setQuantity(50).setId(1);
+    
     private final Product product = new Product()
         .setCategory(null)
         .setDiscount(null)
-        .setInventory(i)
         .setDesc("desc")
         .setPrice(10.4)
         .setSku("sku")
         .setName("name")
         .setId(1);
     private ProductRequestDTO x = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.ofNullable(null),1,Optional.ofNullable(null));
-    private ProductResponseDTO y = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.empty(),50,Optional.empty(),List.of(),product.getVersion());
+    private ProductResponseDTO y = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.empty(),Optional.empty(),List.of(),product.getVersion());
     private final Category category = new Category().setId(1).setName("categoryName");
     private final Discount discount = new Discount().setId(1).setName("discoutName");
     private final OrderItem orderItem = new OrderItem().setId(1);
+    private final Inventory i = new Inventory().setQuantity(50).setId(1).setProduct(product);
     
     
     public ProductMapperTest() {
@@ -64,7 +64,6 @@ public class ProductMapperTest {
 
     @Test
     void test0(){
-        when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
         assertEquals(product,mapper.toEntity(x).setId(1));
         assertEquals(y,mapper.toDTO(product));
     }
@@ -73,9 +72,8 @@ public class ProductMapperTest {
     void test1(){
         product.setCategory(category);
         ProductRequestDTO a = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.of(1),1,Optional.ofNullable(null));
-        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),50,Optional.empty(),List.of(),product.getVersion());
+        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),Optional.empty(),List.of(),product.getVersion());
         when(categoryRepo.findById(1)).thenReturn(Optional.of(category));
-        when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
         assertEquals(product,mapper.toEntity(a).setId(1));
         assertEquals(b,mapper.toDTO(product));
         
@@ -87,10 +85,9 @@ public class ProductMapperTest {
         product.setCategory(category);
         product.setDiscount(discount);
         ProductRequestDTO a = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.of(1),1,Optional.of(1));
-        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),50,Optional.of("discoutName"),List.of(),product.getVersion());
+        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),Optional.of("discoutName"),List.of(),product.getVersion());
         when(categoryRepo.findById(1)).thenReturn(Optional.of(category));
         when(discountRepo.findById(1)).thenReturn(Optional.of(discount));
-        when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
         assertEquals(product,mapper.toEntity(a).setId(1));
         assertEquals(b,mapper.toDTO(product));
 
@@ -102,10 +99,9 @@ public class ProductMapperTest {
         product.setDiscount(discount);
         product.setOrderItems(List.of(orderItem));
         ProductRequestDTO a = new ProductRequestDTO("name",Optional.of("desc"),"sku", 10.4,Optional.of(1),1,Optional.of(1));
-        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),50,Optional.of("discoutName"),List.of(1),product.getVersion());
+        ProductResponseDTO b = new ProductResponseDTO(1,"name","desc","sku",10.4,Optional.of("categoryName"),Optional.of("discoutName"),List.of(1),product.getVersion());
         when(categoryRepo.findById(1)).thenReturn(Optional.of(category));
         when(discountRepo.findById(1)).thenReturn(Optional.of(discount));
-        when(inventoryRepo.findById(1)).thenReturn(Optional.of(i));
         assertEquals(product,mapper.toEntity(a).setId(1).setOrderItems(List.of(orderItem)));
         assertEquals(b,mapper.toDTO(product));
     }

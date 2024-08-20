@@ -11,6 +11,8 @@ import main.dto.UserLoginRequestDTO;
 import main.dto.UserLoginResponseDTO;
 import main.dto.UserRegistrationRequestDTO;
 import main.dto.UserRegistrationResponseDTO;
+import main.dto.UserResponse;
+import main.exception.EntityNotFoundException;
 import main.repo.UserRepo;
 import main.security.service.JwtService;
 import main.util.mapper.AdminUserMapper;
@@ -71,4 +73,12 @@ public class UserService {
     }
     
     
+    public UserResponse findById(Integer id){
+        if(id<1){
+            throw new IllegalArgumentException("");
+        }
+        return repo.findById(id)
+                .map(mapper::toDTOEmail)
+                .orElseThrow(() -> new EntityNotFoundException("no user was found for id " + id));
+    }
 }
