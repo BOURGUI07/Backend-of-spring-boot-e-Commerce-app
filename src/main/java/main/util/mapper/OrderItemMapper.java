@@ -7,7 +7,8 @@ package main.util.mapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import main.dto.OrderItemDTO;
+import main.dto.OrderItemCreationRequest;
+import main.dto.OrderItemResponse;
 import main.models.OrderItem;
 import main.repo.OrderRepo;
 import main.repo.ProductRepo;
@@ -24,17 +25,17 @@ public class OrderItemMapper {
       ProductRepo prepo;
       OrderRepo orepo;
     
-    public OrderItem toEntity(OrderItemDTO x){
+    public OrderItem toEntity(OrderItemCreationRequest x){
         var o = new OrderItem().setQuantity(x.quantity());
         prepo.findById(x.productid()).ifPresent(o::setProduct);
         orepo.findById(x.orderId()).ifPresent(o::setOrder);
         return o;
     }
     
-    public OrderItemDTO toDTO(OrderItem i){
+    public OrderItemResponse toDTO(OrderItem i){
         var p = i.getProduct();
         var o = i.getOrder();
-        return (o!=null && p!=null) ? new OrderItemDTO(i.getId(),o.getId(),p.getId(),i.getQuantity()):null;
+        return (o!=null && p!=null) ? new OrderItemResponse(i.getId(),o.getId(),p.getId(),i.getQuantity()):null;
     }
     
 }

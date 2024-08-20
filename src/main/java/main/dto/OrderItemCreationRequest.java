@@ -13,9 +13,8 @@ import main.validation.ValidId;
  *
  * @author hp
  */
-@Schema(title = "OrderItemDTO", description = "Parameters required to create/update an order")
-public record OrderItemDTO(
-        Integer id,
+@Schema(title = "OrderItemCreationRequest", description = "Parameters required to create/update an order")
+public record OrderItemCreationRequest(
         @ValidId(message="Id must be not null, must by positive")
         Integer orderId,
         @ValidId(message="Id must be not null, must by positive")

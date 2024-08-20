@@ -57,6 +57,11 @@ public class Order extends BaseEntity{
     @JoinColumn(name="user_id",nullable=false)
     private User user;
     
+    public void setUser(User user){
+        this.user=user;
+        user.addOrder(this);
+    }
+    
     @OneToMany(mappedBy="order",cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();
