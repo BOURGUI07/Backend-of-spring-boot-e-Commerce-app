@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import main.dto.UserAddressDTO;
+import main.dto.UserAddressRequest;
 import main.models.UserAddress;
 import main.repo.UserRepo;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class AddressMapper {
       UserRepo userRepo;
     
-    public UserAddress toEntity(UserAddressDTO x){
+    public UserAddress toEntity(UserAddressRequest x){
         var a = new UserAddress()
         .setAddressLine1(x.addressLine1())
         .setCity(x.city())

@@ -32,13 +32,13 @@ public class OrderConfirmationEmailService {
      ProductApiClient productClient;
      
     @EventListener
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
      public void sendEmail(OrderProcessedEvent event){
          sendOrderEmailConfirmation(event.getProcessedOrder());
      }
      
      @Async
-     public void sendOrderEmailConfirmation(OrderDTO order){
+     private void sendOrderEmailConfirmation(OrderDTO order){
          var userId = order.userId();
          var user = client.findUserById(userId);
          var message = new SimpleMailMessage();

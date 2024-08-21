@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import main.dto.UserAddressDTO;
+import main.dto.UserAddressRequest;
 import main.exception.EntityNotFoundException;
 import main.repo.AddressRepo;
 import main.repo.UserRepo;
@@ -53,7 +54,7 @@ public class UserAddressService {
     @CacheEvict(value={
         "allUserAddresses", "userAddressById"
     }, allEntries=true)
-    public UserAddressDTO create(UserAddressDTO x){
+    public UserAddressDTO create(UserAddressRequest x){
         var violations = validator.validate(x);
         if(!violations.isEmpty()){
             throw new ConstraintViolationException(violations);
@@ -67,7 +68,7 @@ public class UserAddressService {
     @CacheEvict(value={
         "allUserAddresses", "userAddressById"
     }, allEntries=true)
-    public UserAddressDTO update(Integer id, UserAddressDTO x){
+    public UserAddressDTO update(Integer id, UserAddressRequest x){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }

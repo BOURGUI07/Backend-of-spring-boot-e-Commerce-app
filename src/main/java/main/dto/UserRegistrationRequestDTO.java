@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java.util.Optional;
 
 /**
  *
@@ -47,7 +48,19 @@ public record UserRegistrationRequestDTO (
     
     @Schema(title="phone",nullable=false)
             @NotNull
-     String phone
+     String phone,
+    String addressLine1,
+        @Schema(title="addressLine2",nullable=true)
+        Optional<String> addressLine2,
+        @NotBlank
+                @Schema(title="city",nullable=false)
+        String city,
+        @NotBlank
+                @Schema(title="postalcode",nullable=false)
+        String postalcode,
+        @NotBlank
+                @Schema(title="country",nullable=false)
+        String country
     
         ){
 
