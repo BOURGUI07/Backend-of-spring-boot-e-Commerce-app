@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import main.dto.UserAddressDTO;
+import main.dto.UserAddressRequest;
 import main.page_dtos.UserAddressDTOPage;
 import main.service.UserAddressService;
 import org.springframework.data.domain.Page;
@@ -107,7 +108,7 @@ public class UserAddressController {
     })
     public ResponseEntity<UserAddressDTO> create(
             @Parameter(description = "userAddress to create", required = true)
-            @Valid @RequestBody  UserAddressDTO x){
+            @Valid @RequestBody  UserAddressRequest x){
         var userAddress = service.create(x);
         
             return ResponseEntity.status(HttpStatus.CREATED).body(userAddress);
@@ -130,7 +131,7 @@ public class UserAddressController {
             @Parameter(description = "Id of the userAddress to update", required = true)
             @PathVariable Integer id,
             @Parameter(description = "updatedUserAddress details", required = true)
-            @Valid @RequestBody  UserAddressDTO x){
+            @Valid @RequestBody  UserAddressRequest x){
         var updatedUserAddress = service.update(id, x);
         
             return ResponseEntity.status(HttpStatus.OK).body(updatedUserAddress);
