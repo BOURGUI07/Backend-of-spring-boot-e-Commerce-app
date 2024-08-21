@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "ReviewsUpdateRequestDTO", description = "Parameters required to update a review")
 public record ReviewsUpdateRequestDTO(
             @NotNull(message="rating is required")

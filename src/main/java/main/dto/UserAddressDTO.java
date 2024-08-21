@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import main.validation.ValidId;
@@ -12,6 +13,7 @@ import main.validation.ValidId;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "UserAddressDTO", description = "Parameters required to create/update a user address")
 public record UserAddressDTO(
         Integer id,

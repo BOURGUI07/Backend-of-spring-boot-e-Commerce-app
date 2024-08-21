@@ -36,7 +36,7 @@ public class UserAddressService {
       AddressRepo repo;
       UserRepo urepo;
     @NonFinal Validator validator;
-    @Cacheable(value="userAddressById", key="#id")
+    @Cacheable(value="userAddressById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public UserAddressDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -44,7 +44,7 @@ public class UserAddressService {
         return repo.findById(id).map(mapper::toDTO)
                 .orElseThrow(() -> new EntityNotFoundException("Address with id: " + id + " isn't found"));
     }
-    @Cacheable(value="allUserAddresses", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allUserAddresses", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<UserAddressDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }

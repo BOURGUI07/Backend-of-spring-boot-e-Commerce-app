@@ -38,7 +38,7 @@ public class ReviewsService {
     @NonFinal Validator validator;
     
     
-    @Cacheable(value="allReviewsOf_a_Product", key = "'findAll_' + #page + '_' + #size + '_' + #productId")
+    @Cacheable(value="allReviewsOf_a_Product", key = "'findAll_' + #page + '_' + #size + '_' + #productId",unless="#result.isEmpty()")
     public Page<ReviewsResponseDTO> findAll(int page, int size, Integer productId){
         var pageable = PageRequest.of(page, size);
         return repo.findByProductId(pageable, productId).map(mapper::toDTO);
@@ -50,7 +50,7 @@ public class ReviewsService {
     }
     
     
-    @Cacheable(value="reviewById", key="#id")
+    @Cacheable(value="reviewById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public ReviewsResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

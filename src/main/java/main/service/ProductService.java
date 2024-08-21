@@ -59,13 +59,13 @@ public class ProductService {
       ApplicationEventPublisher eventPublisher;
     @NonFinal Validator validator;
     
-    @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allProducts", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<ProductResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page,size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
     
-    @Cacheable(value="productById", key="#id")
+    @Cacheable(value="productById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public ProductResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -77,7 +77,7 @@ public class ProductService {
     
     @Transactional
     @CacheEvict(value={
-        "allProducts", "productById"
+        "allProducts", "productById","FindSetOfProductsByIds","findProductsByCategoryId"
     }, allEntries=true)
     public ProductResponseDTO create(ProductRequestDTO x){
         var violations = validator.validate(x);
@@ -98,7 +98,7 @@ public class ProductService {
     
     @Transactional
     @CacheEvict(value={
-        "allProducts", "productById"
+        "allProducts", "productById","FindSetOfProductsByIds","findProductsByCategoryId"
     }, allEntries=true)
     public ProductResponseDTO update(Integer id, ProductRequestDTO x){
         var violations = validator.validate(x);
@@ -133,7 +133,7 @@ public class ProductService {
     
     @Transactional
     @CacheEvict(value={
-        "allProducts", "productById"
+        "allProducts", "productById","FindSetOfProductsByIds","findProductsByCategoryId"
     }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
@@ -142,6 +142,7 @@ public class ProductService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
+    @Cacheable(value="findProductsByCategoryId",key="#id",condition="#id!=null && #id>0")
     public List<ProductResponseDTO> findProductsWithCategoryId(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -163,13 +164,13 @@ public class ProductService {
         return new PageImpl<>(productDTOs,pageable, products.getTotalElements());
     }
     @CacheEvict(value={
-        "allProducts", "productById"
+        "allProducts", "productById","FindSetOfProductsByIds","findProductsByCategoryId"
     }, allEntries=true)
     public void clearCache(){
         
     }
     
-    
+    @Cacheable(value="FindSetOfProductsByIds", key="#productIds",condition="#productIds.stream().allMatch(id->id!=null && id>0)")
     public List<ProductResponseDTO> findAllByIds(Set<Integer> productIds){
         if(productIds.stream().allMatch(id-> id<1)){
             throw new IllegalArgumentException("id must be positive");

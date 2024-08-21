@@ -4,11 +4,11 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import main.models.User;
 import main.util.WishListVisibility;
 import main.validation.ValidId;
 
@@ -16,6 +16,7 @@ import main.validation.ValidId;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "WishListCreationRequest", description = "Parameters required to create a wishList")
 public record WishListCreationRequest(
         @Size(min=3,max=100,message="wish list name must be between 3 and 100 characters")

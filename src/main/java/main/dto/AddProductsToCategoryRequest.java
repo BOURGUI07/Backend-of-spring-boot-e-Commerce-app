@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
@@ -13,6 +14,7 @@ import main.validation.ValidId;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "AddProductsToCategoryRequest", description = "Parameters of adding products to category request")
 public record AddProductsToCategoryRequest(
         @ValidId(message="Id must be not null, must by positive")

@@ -41,12 +41,12 @@ public class SessionService {
     @NonFinal Validator validator;
     
     
-    @Cacheable(value="allSessions", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allSessions", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<SessionResponseDTO> findAll(int page, int size){
         var p = PageRequest.of(page,size);
         return repo.findAll(p).map(mapper::toDTO);
     }
-    @Cacheable(value="sessionById", key="#id")
+    @Cacheable(value="sessionById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public SessionResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

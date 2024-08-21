@@ -43,11 +43,11 @@ public class DiscountService {
       ProductRepo productRepo;
     @NonFinal Validator validator;
     
-    @Cacheable(value="allDiscounts", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allDiscounts", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<DiscountResponseDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
-    @Cacheable(value="discountById", key="#id")
+    @Cacheable(value="discountById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public DiscountResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

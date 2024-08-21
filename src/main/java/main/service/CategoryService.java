@@ -48,13 +48,13 @@ public class CategoryService {
       CategorySpecification specification;
     @NonFinal Validator validator;
     
-    @Cacheable(value="allCategories", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allCategories", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<CategoryResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page,size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
     
-    @Cacheable(value="categoryById", key="#id")
+    @Cacheable(value="categoryById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public CategoryResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

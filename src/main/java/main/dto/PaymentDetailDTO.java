@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import main.util.PaymentProvider;
@@ -14,6 +15,7 @@ import main.validation.ValidId;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "PaymentDetailDTO", description = "Parameters required to create/update a payment detail")
 public record PaymentDetailDTO(
         @ValidId(message="Id must be not null, must by positive")

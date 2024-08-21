@@ -56,7 +56,7 @@ public class OrderService {
     
     @Transactional
     @CacheEvict(value={
-        "allOrders", "orderById"
+        "allOrders", "orderById","findOrdersByUsers"
     }, allEntries=true)
     public OrderResponseDTO create(OrderDTO x){
         var violations = validator.validate(x);
@@ -81,12 +81,12 @@ public class OrderService {
     
     
     
-    @Cacheable(value="allOrders", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allOrders", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<OrderResponseDTO> findAll(int page, int size){
         var pageable = PageRequest.of(page, size);
         return repo.findAll(pageable).map(mapper::toDTO);
     }
-    @Cacheable(value="orderById", key="#id")
+    @Cacheable(value="orderById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public OrderResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -97,7 +97,7 @@ public class OrderService {
     
     @Transactional
     @CacheEvict(value={
-        "allOrders", "orderById"
+        "allOrders", "orderById","findOrdersByUsers"
     }, allEntries=true)
     public OrderResponseDTO update(Integer id,OrderDTO x){
         if(id<=0){
@@ -122,7 +122,7 @@ public class OrderService {
     
     @Transactional
     @CacheEvict(value={
-        "allOrders", "orderById"
+        "allOrders", "orderById","findOrdersByUsers"
     }, allEntries=true)
     public void delete(Integer id){
         if(id<=0){
@@ -131,6 +131,7 @@ public class OrderService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
+    @Cacheable(value="findOrdersByUsers",key="#id",condition="#id!=null && #id>0")
     public List<OrderResponseDTO> findOrdersByUser(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -139,7 +140,7 @@ public class OrderService {
     }
     
     @CacheEvict(value={
-        "allOrders", "orderById"
+        "allOrders", "orderById","findOrdersByUsers"
     }, allEntries=true)
     public void clearCache(){
         
