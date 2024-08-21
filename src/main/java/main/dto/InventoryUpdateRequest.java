@@ -18,9 +18,11 @@ import main.validation.ValidId;
 @Schema(title = "InventoryUpdateRequest", description = "Parameters required to update a product inventory")
 public record InventoryUpdateRequest(
         @ValidId
+        @Schema(title="productId",nullable=false)
         Integer productId,
         @Positive
         @NotNull
+        @Schema(description="Product Requested Quantity",nullable=false)
         Integer quantityToBeSubstracted
         ) {
 

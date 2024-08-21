@@ -18,7 +18,9 @@ import main.validation.ValidId;
 @Schema(title = "WishListMergeRequest", description = "Parameters of wishlist merge request")
 public record WishListMergeRequest(
         @ValidId(message="Id must be not null, must by positive")
+                @Schema(title="targetWishListid",description="the wishlist we wanna merge other wishlists into",nullable=false)
         Integer targetWishId,
+        @Schema(title="wishListIds",nullable=false)
         @NotEmpty(message="wish list Id list should contain at least one element")
         Set<Integer> wishListIds
         ) {

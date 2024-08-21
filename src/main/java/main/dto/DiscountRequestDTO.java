@@ -19,11 +19,15 @@ import main.validation.ValidOptionalString;
 @Schema(title = "DiscountRequestDTO", description = "Parameters required to create/update a discount")
 public record DiscountRequestDTO(
         @NotBlank(message="discount name is required")
+        @Schema(title="name",description="Discount Name",nullable=false)
         String name,
         @ValidOptionalString(max=500, message="Product desc must be at max 500 characters")
+        @Schema(title="desc",description="Discount Description",nullable=true)
         Optional<String> desc,
         @Positive
+        @Schema(title="percent",description="dicount percent",nullable=false,maximum="1")
         Double percent,
+        @Schema(title="active",description="discount status",nullable=true)
         Optional<Boolean> active
         ) {
 

@@ -4,6 +4,7 @@
  */
 package main.util.mapper;
 
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,10 +26,10 @@ public class AddressMapper {
     public UserAddress toEntity(UserAddressDTO x){
         var a = new UserAddress()
         .setAddressLine1(x.addressLine1())
-        .setAddressLine2(x.addressLine2())
         .setCity(x.city())
         .setPostalCode(x.postalcode())
         .setCountry(x.country());
+        x.addressLine2().ifPresent(a::setAddressLine2);
         var user = userRepo.findById(x.userId());
         if(user.isPresent()){
             a.setUser(user.get());
@@ -37,7 +38,8 @@ public class AddressMapper {
     }
     
     public UserAddressDTO toDTO(UserAddress a){
+        var addressLine2 = Optional.ofNullable(a.getAddressLine2());
         return a.getUser()!=null ? new UserAddressDTO(a.getId(),a.getUser().getId(),
-                a.getAddressLine1(),a.getAddressLine2(),a.getCity(),a.getPostalCode(),a.getCountry()) : null;
+                a.getAddressLine1(),addressLine2,a.getCity(),a.getPostalCode(),a.getCountry()) : null;
     }
 }

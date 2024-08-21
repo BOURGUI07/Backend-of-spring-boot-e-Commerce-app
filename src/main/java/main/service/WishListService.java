@@ -76,9 +76,8 @@ public class WishListService {
                         + "wish list with id: " + id + " isn't found"))
                 .setName(x.name())
                 .setVisibility(x.visibility());
-        if(x.desc()!=null){
-            w.setDesc(x.desc());
-        }
+                x.desc().ifPresent(w::setDesc);
+        
         try{
             var saved = repo.save(w);
             return mapper.toDTO(saved);

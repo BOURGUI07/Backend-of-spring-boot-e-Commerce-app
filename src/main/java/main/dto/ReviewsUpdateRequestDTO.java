@@ -20,8 +20,11 @@ public record ReviewsUpdateRequestDTO(
             @NotNull(message="rating is required")
             @Min(value=1, message="Rating must be at least 1")
             @Max(value=5, message="Rating must be at most 5")
+                    @Schema(title="rating",nullable=false,minimum="1",maximum="5")
             Integer rating,
+            @Schema(title="title",nullable=true)
             String title,
+            @Schema(title="title",nullable=true)
             String content
         ) {
 

@@ -8,6 +8,7 @@ import main.dto.OrderItemCreationRequest;
 import main.dto.OrderItemResponse;
 import main.exception.CustomServerException;
 import main.exception.InvalidBodyRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import org.springframework.web.client.RestClient;
  */
 @Service
 public class OrderItemApiClient {
-    private static final String BASE_URL = "http://localhost:8080/api/orderitems";
+    @Value("${orderitem.api.url}")
+    private  String BASE_URL;
     private final RestClient client;
 
     public OrderItemApiClient(RestClient client) {

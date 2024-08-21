@@ -18,11 +18,14 @@ import main.validation.ValidId;
 @Schema(title = "OrderItemCreationRequest", description = "Parameters required to create/update an order")
 public record OrderItemCreationRequest(
         @ValidId(message="Id must be not null, must by positive")
+        @Schema(title="orderId",nullable=false)
         Integer orderId,
         @ValidId(message="Id must be not null, must by positive")
+        @Schema(title="productId",nullable=false)
         Integer productid,
         @NotNull
         @Positive
+        @Schema(title="quantity",description="Ordered Product Qty",nullable=false)
         Integer quantity
         ) {
 

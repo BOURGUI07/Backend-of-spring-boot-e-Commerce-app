@@ -17,9 +17,11 @@ import main.validation.ValidId;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "UserShoppingSessionDTO", description = "Parameters required to create/update a user shopping session")
 public record UserShoppingSessionDTO(
+        @Schema(title="userId",nullable=false)
         @ValidId(message="Id must be not null, must by positive")
         Integer userId,
         @NotEmpty
+                @Schema(title="cartItemIds",nullable=false)
         Set<Integer> cartItemIds
         ) {
 
