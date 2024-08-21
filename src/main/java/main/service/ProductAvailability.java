@@ -4,7 +4,6 @@
  */
 package main.service;
 
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,10 +11,6 @@ import main.client.InventoryApiClient;
 import main.client.ProductApiClient;
 import main.dto.OrderDTO;
 import main.exception.EntityNotFoundException;
-import main.models.OrderItem;
-import main.models.Product;
-import main.repo.OrderItemRepo;
-import main.repo.ProductRepo;
 import org.springframework.stereotype.Service;
 
 /**

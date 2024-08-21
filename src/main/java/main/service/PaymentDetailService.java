@@ -43,11 +43,11 @@ public class PaymentDetailService {
     
     
     
-    @Cacheable(value="allPaymentDetails", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allPaymentDetails", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<PaymentDetailResponseDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page,size)).map(mapper::toDTO);
     }
-    @Cacheable(value="paymentDetailById", key="#id")
+    @Cacheable(value="paymentDetailById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public PaymentDetailResponseDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

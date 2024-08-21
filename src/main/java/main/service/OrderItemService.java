@@ -63,14 +63,14 @@ public class OrderItemService {
             return mapper.toDTO(saved);
         
     }
-    @Cacheable(value="orderItemById", key="#id")
+    @Cacheable(value="orderItemById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public OrderItemResponse findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
         }
         return repo.findById(id).map(mapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Order Item with id: " + id + " isn't found"));
     }
-    @Cacheable(value="allOrderItems", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allOrderItems", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<OrderItemResponse> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
@@ -101,6 +101,8 @@ public class OrderItemService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
+    
+    @Cacheable(value="findOrderDetailsByProductId",key="#id",unless = "#result.isEmpty()",condition="#id!=null && id>0")
     public List<OrderItemResponse> findOrderDetailsforProduct(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

@@ -40,11 +40,11 @@ public class UserPaymentService {
       UserPaymentRepo repo;
       UserPaymentMapper mapper;
     @NonFinal Validator validator;
-    @Cacheable(value="allUserPayments", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allUserPayments", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<UserPaymentDTO> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }
-    @Cacheable(value="userPaymentById", key="#id")
+    @Cacheable(value="userPaymentById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public UserPaymentDTO findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -102,6 +102,7 @@ public class UserPaymentService {
         repo.findById(id).ifPresent(repo::delete);
     }
     
+    @Cacheable(value="pyamentByUserId",key="#id",condition="#id!=null && #id>0",unless="#result==null")
     public UserPaymentDTO findPaymentByUserId(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");

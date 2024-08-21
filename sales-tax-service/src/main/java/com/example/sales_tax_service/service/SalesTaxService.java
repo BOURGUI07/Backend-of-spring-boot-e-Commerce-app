@@ -81,7 +81,7 @@ public class SalesTaxService {
     }
     
     
-    @Cacheable(value="salesTaxById", key="#id")
+    @Cacheable(value="salesTaxById", key="#id",condition="#id!=null && #id>0",unless = "#result == null")
     public SalesTaxResponse findById(Integer id){
         var salesTax = repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("SalesTax with id: " + id + " isn't found"));
@@ -101,7 +101,7 @@ public class SalesTaxService {
     
     
     
-    @Cacheable(value="allSalesTax", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allSalesTax", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<SalesTaxResponse> findAll(int page, int size){
         var pageable = PageRequest.of(page,size);
         return repo.findAll(pageable).map(mapper::toDTO);

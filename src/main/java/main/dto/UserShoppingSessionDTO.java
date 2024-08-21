@@ -4,16 +4,17 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
-import main.models.User;
 import main.validation.ValidId;
 
 /**
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "UserShoppingSessionDTO", description = "Parameters required to create/update a user shopping session")
 public record UserShoppingSessionDTO(
         @ValidId(message="Id must be not null, must by positive")

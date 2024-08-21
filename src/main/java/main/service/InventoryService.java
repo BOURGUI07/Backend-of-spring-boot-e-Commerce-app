@@ -60,7 +60,7 @@ public class InventoryService {
     }
     
     
-    @Cacheable(value="inventoryById", key="#id")
+    @Cacheable(value="inventoryById", key="#id", condition="#id!=null && #id>0",unless = "#result == null")
     public InventoryResponse findById(Integer id){
         if(id<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -69,7 +69,7 @@ public class InventoryService {
     }
     
     
-    @Cacheable(value="inventoryByProductId", key="#productId")
+    @Cacheable(value="inventoryByProductId", key="#productId", condition="#productId!=null && #productId>0",unless = "#result == null")
     public InventoryResponse findByProductId(Integer productId){
         if(productId<=0){
             throw new IllegalArgumentException("id must be positive");
@@ -80,7 +80,7 @@ public class InventoryService {
     }
     
     
-    @Cacheable(value="allInventories", key = "'findAll_' + #page + '_' + #size")
+    @Cacheable(value="allInventories", key = "'findAll_' + #page + '_' + #size",unless="#result.isEmpty()")
     public Page<InventoryResponse> findAll(int page, int size){
         return repo.findAll(PageRequest.of(page, size)).map(mapper::toDTO);
     }

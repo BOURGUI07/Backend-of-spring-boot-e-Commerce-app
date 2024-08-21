@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import main.util.WishListVisibility;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "WishListUpdateRequest", description = "Parameters required to update a wishList")
 public record WishListUpdateRequest(
         @Size(min=3,max=100,message="wish list name must be between 3 and 100 characters")

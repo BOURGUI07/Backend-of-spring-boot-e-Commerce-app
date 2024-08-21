@@ -4,6 +4,7 @@
  */
 package com.example.sales_tax_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "SalesTaxRequest", description = "Parameters required to create/update a sales tax")
 public record SalesTaxRequest(
         @NotBlank(message="country is required")

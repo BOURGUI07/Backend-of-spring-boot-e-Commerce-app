@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,6 +15,7 @@ import main.validation.ValidOptionalString;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "CategoryRequestDTO", description = "Parameters required to create/update a category")
 public record CategoryRequestDTO(
         @NotBlank

@@ -4,6 +4,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.Pattern;
  *
  * @author hp
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(title = "UserRegistrationRequestDTO", description = "Parameters required to register a user")
 public record UserRegistrationRequestDTO (
       
