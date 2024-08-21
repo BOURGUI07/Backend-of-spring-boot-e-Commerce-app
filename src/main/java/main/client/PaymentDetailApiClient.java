@@ -8,6 +8,7 @@ import main.dto.PaymentDetailDTO;
 import main.dto.PaymentDetailResponseDTO;
 import main.exception.CustomServerException;
 import main.exception.InvalidBodyRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import org.springframework.web.client.RestClient;
  */
 @Service
 public class PaymentDetailApiClient {
-    private static final String BASE_URL = "http://localhost:8080/api/payment_details";
+    @Value("${paymentdetail.api.url}")
+    private String BASE_URL;
     private final RestClient client;
 
     public PaymentDetailApiClient(RestClient client) {

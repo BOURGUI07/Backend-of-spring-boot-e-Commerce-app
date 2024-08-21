@@ -5,6 +5,7 @@
 package main.client;
 
 import main.exception.CustomServerException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -15,7 +16,8 @@ import org.springframework.web.client.RestClient;
  */
 @Service
 public class SalesTaxApiClient {
-    private static final String BASE_URL = "http://localhost:9090/api/sales_taxes";
+    @Value("${salestax.api.url}")
+    private String BASE_URL;
 
     public SalesTaxApiClient(RestClient client) {
         this.client = RestClient.create(BASE_URL);

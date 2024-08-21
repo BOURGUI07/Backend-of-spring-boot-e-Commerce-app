@@ -23,18 +23,25 @@ import main.validation.ValidOptionalString;
 public record ProductRequestDTO(
         @NotBlank
         @Size(min=3,max=100,message="Product name must be between 3 and 100 characters")
+        @Schema(title="name",description="product Name",nullable=false)
         String name,
         @ValidOptionalString(max=500, message="Product desc must be at max 500 characters")
+        @Schema(title="desc",description="product description",nullable=true)
         Optional<String> desc,
         @NotBlank
         @Size(max=16)
+        @Schema(title="sku",nullable=false,maximum="16")
         String sku,
+        @NotNull
         @Positive(message="Product price must be positive")
+        @Schema(title="price",description="product unit price",nullable=false)
         Double price,
+        @Schema(title="categoryId",nullable=true)
         Optional<Integer> categoryId,
         @NotNull
         @Positive
         Integer quantity,
+        @Schema(title="discountId",nullable=true)
         Optional<Integer> discountId
         ) {
 }

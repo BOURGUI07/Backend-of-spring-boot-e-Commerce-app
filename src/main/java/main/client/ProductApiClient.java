@@ -9,9 +9,10 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import main.dto.ProductResponseDTO;
-import main.dto.UserResponse;
 import main.exception.CustomServerException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,8 +29,8 @@ import org.springframework.web.client.RestTemplate;
 @FieldDefaults(makeFinal=true,level=AccessLevel.PRIVATE)
 public class ProductApiClient {
 
-
-     static  String BASE_URL = "http://localhost:8080/api/products";
+      @Value("${orderitem.api.url}")
+     @NonFinal  String BASE_URL;
       RestTemplate restTemplate = new RestTemplate();
       RestClient client=RestClient.create(BASE_URL);
     

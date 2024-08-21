@@ -9,6 +9,7 @@ import main.dto.InventoryResponse;
 import main.dto.InventoryUpdateRequest;
 import main.exception.CustomServerException;
 import main.exception.InvalidBodyRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ import org.springframework.web.client.RestClient;
  */
 @Service
 public class InventoryApiClient {
-    private static final String BASE_URL = "http://localhost:8080/api/inventories";
+    @Value("${inventory.api.url}")
+    private  String BASE_URL;
     private final RestClient client;
 
     public InventoryApiClient(RestClient client) {

@@ -20,6 +20,7 @@ import jakarta.validation.constraints.Pattern;
 public record UserRegistrationRequestDTO (
       
     @NotBlank
+            @Schema(title="username",nullable=false)
      String username,
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
@@ -28,18 +29,24 @@ public record UserRegistrationRequestDTO (
                      + " one uppercase letter,"
                      + " one number,"
                      + " and one special character")
+            @Schema(title="password",nullable=false)
      String password,
 
     @NotBlank
+            @Schema(title="firstname",nullable=false)
      String firstname,
 
     @NotBlank
+            @Schema(title="lastname",nullable=false)
      String lastname,
 
     @Email(message = "email should be valid")
     @NotNull
+            @Schema(title="email",nullable=false)
      String email,
     
+    @Schema(title="phone",nullable=false)
+            @NotNull
      String phone
     
         ){

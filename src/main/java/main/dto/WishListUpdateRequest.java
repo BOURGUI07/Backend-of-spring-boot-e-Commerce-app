@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.Optional;
 import main.util.WishListVisibility;
 
 /**
@@ -20,10 +21,13 @@ import main.util.WishListVisibility;
 public record WishListUpdateRequest(
         @Size(min=3,max=100,message="wish list name must be between 3 and 100 characters")
         @NotBlank(message="wish list name is required")
+                @Schema(title="name",description="wishlist name",nullable=false)
         String name,
         @Size(max=500,message="wishlist desc must be at max 500 characters")
-        String desc,
+                @Schema(title="desc",description="wishlist description",nullable=true)
+        Optional<String> desc,
         @NotNull(message="wishlist visibility is required")
+                @Schema(title="visibility",nullable=false,description="wishlist visibility",allowableValues = {"PRIVATE", "PUBLIC"})
         WishListVisibility visibility
         ) {
 

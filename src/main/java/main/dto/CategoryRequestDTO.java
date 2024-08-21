@@ -21,8 +21,10 @@ public record CategoryRequestDTO(
         @NotBlank
         @Size(min=3,max=100,message="Category name must be"
                 + "between 3 and 100 characters")
+        @Schema(title="name",description="Catgeory Name",nullable=false)
         String name,
         @ValidOptionalString(max=500, message="Product desc must be at max 500 characters")
+        @Schema(title="desc",description="Catgeory Description",nullable=true)
         Optional<String> desc
         ) {
 

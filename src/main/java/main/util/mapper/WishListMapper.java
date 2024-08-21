@@ -32,9 +32,7 @@ public class WishListMapper {
         var w = new WishList()
                 .setName(x.name())
                 .setVisibility(x.visibility());
-        if(x.desc()!=null){
-            w.setDesc(x.desc());
-        }
+        x.desc().ifPresent(w::setDesc);
         repo.findById(x.userId()).ifPresent(w::setUser);
         return w;
     }

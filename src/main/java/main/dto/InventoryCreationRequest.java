@@ -18,9 +18,11 @@ import main.validation.ValidId;
 @Schema(title = "InventoryCreationRequest", description = "Parameters required to create an inventory")
 public record InventoryCreationRequest(
         @ValidId
+        @Schema(title="productId",nullable=false)
         Integer productId,
         @Positive(message="Product quantity should be positive")
-        @NotNull   
+        @NotNull
+        @Schema(title="quantity",description="product quantity",nullable=false,minimum="1")
         Integer quantity
         ) {
 
