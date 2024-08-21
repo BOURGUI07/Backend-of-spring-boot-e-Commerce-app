@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import main.client.OrderItemApiClient;
 import main.dto.OrderItemCreationRequest;
-import main.event.OrderCreationEvent;
+import main.event.OrderProcessedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,9 @@ public class OrderItemCreationService {
     OrderItemApiClient client;
     
     @EventListener
-    @Order(2)
-    public void createOrderItem(OrderCreationEvent event){
-        var order = event.getOrderRequest();
+    @Order(1)
+    public void createOrderItem(OrderProcessedEvent event){
+        var order = event.getProcessedOrder();
         var map = order.productIdQtyMap();
         map.
                 keySet().

@@ -17,6 +17,7 @@ import lombok.experimental.NonFinal;
 import main.dto.OrderDTO;
 import main.dto.OrderResponseDTO;
 import main.event.OrderCreationEvent;
+import main.event.OrderFailedEvent;
 import main.exception.EntityNotFoundException;
 import main.exception.OptimisticLockException;
 import main.repo.OrderItemRepo;
@@ -67,7 +68,11 @@ public class OrderService {
         if(user.isPresent()){
             var areProductsAvailable = productAvailability.checkAvailability(x);
             if(areProductsAvailable){
-                eventPublisher.publishEvent(new OrderCreationEvent(this, x));
+                try{
+                    eventPublisher.publishEvent(new OrderCreationEvent(this, x));
+                }catch(Exception e){
+                    eventPublisher.publishEvent(new OrderFailedEvent(this,"Failed to place the order"));
+                }
                 var o = mapper.toEntity(x);
                 var saved = repo.save(o);
                 return mapper.toDTO(saved);

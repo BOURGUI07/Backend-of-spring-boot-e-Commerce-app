@@ -9,12 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import main.client.ProductApiClient;
 import main.client.UserApiClient;
-import main.event.OrderCreationEvent;
+import main.dto.OrderDTO;
+import main.event.OrderProcessedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
  *
@@ -29,9 +32,14 @@ public class OrderConfirmationEmailService {
      ProductApiClient productClient;
      
     @EventListener
-    @Async
-     public void sendEmail(OrderCreationEvent event){
-         var userId = event.getOrderRequest().userId();
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION)
+     public void sendEmail(OrderProcessedEvent event){
+         sendOrderEmailConfirmation(event.getProcessedOrder());
+     }
+     
+     @Async
+     public void sendOrderEmailConfirmation(OrderDTO order){
+         var userId = order.userId();
          var user = client.findUserById(userId);
          var message = new SimpleMailMessage();
          var subject = "Order Confirmation";
@@ -41,7 +49,7 @@ public class OrderConfirmationEmailService {
          body.append("""
                      Product_Name\tProduct_Desc\tProduct_Quantity
                      """);
-         var map = event.getOrderRequest().productIdQtyMap();
+         var map = order.productIdQtyMap();
          for(var productId:map.keySet()){
              var product = productClient.findProductById(productId);
              body.append(product.name()).append("\t").append(product.desc()).append("\t").append(map.get(productId)).append("\n");
