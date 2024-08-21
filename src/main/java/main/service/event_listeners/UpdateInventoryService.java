@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import main.client.InventoryApiClient;
 import main.dto.InventoryUpdateRequest;
 import main.event.OrderCreationEvent;
+import main.event.OrderProcessedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,9 @@ public class UpdateInventoryService {
     InventoryApiClient client;
     
     @EventListener
-    @Order(3)
-    public void updateInventory(OrderCreationEvent event){
-        var order = event.getOrderRequest();
+    @Order(2)
+    public void updateInventory(OrderProcessedEvent event){
+        var order = event.getProcessedOrder();
         var map = order.productIdQtyMap();
         map.keySet()
                 .forEach(id->client.updateInventory(new InventoryUpdateRequest(id,map.get(id))));

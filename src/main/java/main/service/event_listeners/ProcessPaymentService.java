@@ -10,9 +10,11 @@ import lombok.experimental.FieldDefaults;
 import main.client.PaymentDetailApiClient;
 import main.dto.PaymentDetailDTO;
 import main.event.OrderCreationEvent;
+import main.event.OrderFailedEvent;
+import main.event.OrderProcessedEvent;
 import main.util.PaymentStatus;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,12 +26,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProcessPaymentService {
     PaymentDetailApiClient client;
+    ApplicationEventPublisher eventPublisher;
     
     @EventListener
-    @Order(1)
     public void processPayment(OrderCreationEvent event){
         var order = event.getOrderRequest();
         var paymentRequest = new PaymentDetailDTO(order.id(),order.provider(),PaymentStatus.PENDING);
-        client.createPayment(paymentRequest);
+        try{
+            client.createPayment(paymentRequest);
+            eventPublisher.publishEvent(new OrderProcessedEvent(this,order));
+        }catch(Exception ex){
+            eventPublisher.publishEvent(new OrderFailedEvent(this,"failed to process the order"));
+        }
     }
 }
