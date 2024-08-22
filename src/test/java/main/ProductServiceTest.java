@@ -48,19 +48,25 @@ import org.springframework.data.domain.PageRequest;
 public class ProductServiceTest {
     @Mock
     private  ProductRepo repo;
+    
     @Mock
     private  CategoryRepo categoryRepo;
+    
     @Mock
     private  DiscountRepo discountRepo;
+    
     @Mock
     private  InventoryRepo invRepo;
+    
     @Mock
     private  OrderItemRepo orepo;
+    
     @Mock
     private  ProductMapper mapper;
     
     @Mock
     private ApplicationEventPublisher eventPublisher;
+    
     @InjectMocks
     private ProductService service;
     

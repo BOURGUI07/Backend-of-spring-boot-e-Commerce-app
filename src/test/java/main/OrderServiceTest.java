@@ -54,14 +54,19 @@ import org.springframework.data.domain.PageRequest;
 public class OrderServiceTest {
     @Mock
     private  OrderRepo repo;
+    
     @Mock
     private  UserRepo userRepo;
+    
     @Mock
     private  OrderItemRepo detailRepo;
+    
     @Mock
     private  PaymentDetailRepo paymentRepo;
+    
     @Mock
     private  OrderMapper mapper;
+    
     @Mock
     private ProductRepo productRepo;
     
@@ -70,8 +75,10 @@ public class OrderServiceTest {
     
     @Mock
     private ApplicationEventPublisher ebentPublisher;
+    
     @Mock
     private SalesTaxCalculationService taxService;
+    
     @InjectMocks
     private OrderService service;
     

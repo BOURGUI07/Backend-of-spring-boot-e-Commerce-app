@@ -19,9 +19,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SalesTaxRepo extends JpaRepository<SalesTax,Integer>{
     @Query(value = """
-        SELECT COALESCE(tax_rate, 0.0)
-        FROM sales_tax
-        WHERE country = :country
+        SELECT COALESCE(
+                    (SELECT tax_rate FROM sales_tax WHERE country = :country),
+                    0.0
+                )
         """, nativeQuery = true)
     public Double getTaxRateForCountry(@Param("country") String country);
     boolean existsByCountryIgnoreCase(String country);
