@@ -30,7 +30,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @Table(name="inventory",indexes={
     @Index(name = "idx_inventory_id", columnList = "id"),
-    @Index(name = "idx_quantity", columnList = "quantity")
+    @Index(name = "idx_quantity", columnList = "quantity"),
+    @Index(name = "idx_product_id", columnList = "product_id")
 })
 @Data
 @EqualsAndHashCode(callSuper=true)
