@@ -21,8 +21,8 @@ public record SalesTaxRequest(
         @NotBlank(message="country is required")
         String country,
         @NotNull(message="taxRate is required")
-            @Min(value=0, message="Rating must be at least 0")
-            @Max(value=100, message="Rating must be at most 100")
+            @Min(value=0, message="tax rate must be at least 0")
+            @Max(value=100, message="tax rate must be at most 100")
         Double taxRate
         ) {
 

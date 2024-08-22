@@ -16,6 +16,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
 @Service
 @FieldDefaults(makeFinal=true, level=AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@Setter
 public class SalesTaxService {
       SalesTaxRepo repo;
     @NonFinal Validator validator;
@@ -69,9 +71,10 @@ public class SalesTaxService {
             throw new ConstraintViolationException(violations);
         }
         var salesTax = repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("SalesTax with id: " + id + " isn't found"));
+                .orElseThrow(() -> new EntityNotFoundException("SalesTax with id: " + id + " isn't found"))
+                .setCountry(x.country()).setTaxRate(x.taxRate());
         try{
-            var saved = salesTax.setCountry(x.country()).setTaxRate(x.taxRate());
+            var saved = repo.save(salesTax);
             return mapper.toDTO(saved);
         }catch(DataIntegrityViolationException e){
             throw new AlreadyExistsException("A salesTax with this country name already exists.");
