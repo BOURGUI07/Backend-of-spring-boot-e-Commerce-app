@@ -15,6 +15,7 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **Spring Security**: A comprehensive security framework for authentication, authorization, and more.
 - **Lombok**: A Java library that helps reduce boilerplate code by automatically generating getters, setters, constructors, and other   common methods through annotations.
 - **RestClient and RestTemplate**: Tools for consuming external service APIs, such as a sales tax API and internal APIs as well.
+- **RabbitMQ**: A message broker used for sending and receiving messages, particularly for handling order email confirmations asynchronously.
 
 ## Features
 
@@ -43,6 +44,7 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 - **CSV Import and Persistence**: Supports uploading CSV files and automatically persists the data into the database, streamlining data management and integration.
 - **Data Validation**: Ensures that data integrity and correctness are maintained through comprehensive validation mechanisms at various layers.
 - **Data Caching**: Implements efficient caching strategies to enhance application performance and reduce the load on the database by storing frequently accessed data in memory.
+- **Spring Application Events**: Utilized for handling `OrderCreation`, `ProductCreation`, and `UserCreation` events.
 
 
 # CategoryController REST Endpoints
@@ -224,6 +226,14 @@ This eCommerce backend project is built with a robust and modern tech stack to p
   - `204 No Content` - No products found for the category.
   - `500 Internal Server Error` - An error occurred on the server.
 
+---
+
+### 8. Retrieve Products by Set of Ids
+- **Endpoint:** `GET /api/products/product_ids`
+- **Responses:**
+  - `200 OK` - Successfully retrieved the list of products for the category.
+  - `204 No Content` - No products found for the category.
+  - `500 Internal Server Error` - An error occurred on the server.
 
 
 # DiscountController REST Endpoints
@@ -337,10 +347,23 @@ This eCommerce backend project is built with a robust and modern tech stack to p
   - `404 Not Found` - Inventory not found.
   - `400 Bad Request` - Invalid ID (e.g., negative ID).
   - `500 Internal Server Error` - An error occurred on the server.
+ 
+---
+
+### 3. Get Inventory By Product Id
+- **Endpoint:** `GET /api/inventories/product/{id}`
+- **Description:** Retrieve a single Inventory by Product Id.
+- **Path Variable:**
+  - `id` - Id of the Product to retrieve inventory for.
+- **Responses:**
+  - `200 OK` - Successfully found the inventory.
+  - `404 Not Found` - Inventory not found.
+  - `400 Bad Request` - Invalid ID (e.g., negative ID).
+  - `500 Internal Server Error` - An error occurred on the server.
 
 ---
 
-### 3. Create a New Inventory
+### 4. Create a New Inventory
 - **Endpoint:** `POST /api/inventories`
 - **Description:** Create a new inventory.
 - **PreAuthorize:** `hasAnyRole('SUPERADMIN', 'ADMIN')`
@@ -352,7 +375,7 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 
 ---
 
-### 4. Update Inventory
+### 5. Update Inventory
 - **Endpoint:** `PUT /api/inventories/{id}`
 - **Description:** Update an existing inventory.
 - **PreAuthorize:** `hasAnyRole('SUPERADMIN', 'ADMIN')`
@@ -367,7 +390,7 @@ This eCommerce backend project is built with a robust and modern tech stack to p
 
 ---
 
-### 5. Delete Inventory By ID
+### 6. Delete Inventory By ID
 - **Endpoint:** `DELETE /api/inventories/{id}`
 - **Description:** Delete an inventory by ID.
 - **PreAuthorize:** `hasAnyRole('SUPERADMIN', 'ADMIN')`
@@ -956,7 +979,18 @@ This eCommerce backend project is built with a robust and modern tech stack to p
   - `400 Bad Request` - Invalid request body (e.g., missing required fields, validation errors).
 - **Security:** Requires `SUPERADMIN` role.
 
+---
 
+### 2. Get User By ID
+- **Endpoint:** `GET /api/users/{id}`
+- **Description:** Retrieve a single User by ID.
+- **Path Variable:**
+  - `id` - The ID of the User to retrieve.
+- **Responses:**
+  - `200 OK` - Successfully found the user.
+  - `404 Not Found` - user not found.
+  - `400 Bad Request` - Invalid ID (e.g., negative ID).
+  - `500 Internal Server Error` - An error occurred on the server.
 
 
 
