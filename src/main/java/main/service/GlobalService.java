@@ -172,7 +172,7 @@ public class GlobalService {
         SELECT p.id, p.product_name
         FROM product p
         JOIN inventory c
-        ON p.inventory_id = c.id
+        ON p.id = c.product_id
         WHERE c.quantity = 0
         """;
 
