@@ -47,7 +47,7 @@ public class InventoryApiClient {
     public InventoryResponse findInventoryForProductid(Integer productId) {
         return client
                 .get()
-                .uri("/product{id}", productId)
+                .uri("/products/{productId}", productId)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request,response) -> {
                      throw new IllegalArgumentException("Either The Client Entered an Id that's below 1 or "
