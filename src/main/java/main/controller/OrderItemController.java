@@ -163,9 +163,9 @@ public class OrderItemController {
         
     }
     
-    @GetMapping("/product/{id}")
-    public ResponseEntity<List<OrderItemResponse>> findOrderDetailsWithProductId(@PathVariable Integer id){
-        var list = service.findOrderDetailsforProduct(id);
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<List<OrderItemResponse>> findOrderDetailsWithProductId(@PathVariable Integer productId){
+        var list = service.findOrderDetailsforProduct(productId);
         
             if(list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

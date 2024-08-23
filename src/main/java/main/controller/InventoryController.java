@@ -109,11 +109,11 @@ public class InventoryController {
         @ApiResponse(responseCode = "500", description = "Internal server error", 
                      content = @Content)
     })
-    @GetMapping(value="product/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="products/{productId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<InventoryResponse> findByProductId(
             @Parameter(description = "Id of the Product to retrieve inventory for", required = true)
-            @PathVariable Integer id){
-        var inventory = service.findByProductId(id);
+            @PathVariable Integer productId){
+        var inventory = service.findByProductId(productId);
         
             return ResponseEntity.status(HttpStatus.OK).body(inventory);
         

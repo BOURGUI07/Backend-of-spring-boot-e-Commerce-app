@@ -160,9 +160,9 @@ public class OrderController {
         
     }
     
-    @GetMapping("/user/{id}")
-    public ResponseEntity<List<OrderResponseDTO>> findOrdersWithUserId(@PathVariable Integer id){
-        var list = service.findOrdersByUser(id);
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> findOrdersWithUserId(@PathVariable Integer userId){
+        var list = service.findOrdersByUser(userId);
         
             if(list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

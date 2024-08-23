@@ -224,12 +224,12 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     
-    @GetMapping(value="/category/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="/categories/{categoryId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductResponseDTO>> findProductsWithCategoryId(
             @Parameter(description = "Id of the category to retrieve products for", required = true)
-            @PathVariable Integer id){
-        var list = service.findProductsWithCategoryId(id);
+            @PathVariable Integer categoryId){
+        var list = service.findProductsWithCategoryId(categoryId);
         
             if(list.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
